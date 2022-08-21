@@ -1,0 +1,8 @@
+POST http://localhost:3300/api/v1/admin/admin/account/path2
+Content-Type: application/json
+
+{
+    "name": "taky",
+    "email": "taky@example.com",
+    "password": "12345678"
+}

@@ -1,0 +1,704 @@
+<template>
+  <div v-if="displayData" class="dashboard-section mt-5 px-3 py-5 p-md-5">
+    <div class="row flex-wrap">
+      <div class="col-12 col-md-6">
+        <div
+          class="dashboard-user-box b-color-0 box-shadow-style px-3 px-md-4 py-4"
+        >
+          <div class="d-flex justify-content-between">
+            <div class="d-flex">
+              <div class="d-flex align-items-center">
+                <div class="me-3">
+                  <img
+                    v-if="data.picture"
+                    :src="data.picture"
+                    class="avatar-img rounded-circle"
+                    alt="admin picture"
+                  />
+                  <span v-else class="avatar">{{
+                    data.name.charAt(0).toUpperCase()
+                  }}</span>
+                </div>
+                <div>
+                  <span class="d-block f-color-3">{{ data.name }}</span>
+                  <small class="f-color-3_3">Admin</small>
+                  <span
+                    class="f-color-3_3 cursor-pointer float-end"
+                    @click="logout()"
+                    ><i class="mr-0 fal fa-sign-out"></i
+                  ></span>
+                </div>
+              </div>
+            </div>
+            <div
+              class="edit"
+              data-bs-toggle="modal"
+              data-bs-target="#editUserModal"
+            >
+              <i class="fas fa-edit"></i>
+            </div>
+          </div>
+          <EditAccount :userID="userID" />
+          <div class="mt-3 d-flex justify-content-between align-items-center">
+            <small class="f-color-3_3">Now</small>
+            <h3 class="f-color-3">{{ userTime }}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-3 mt-3 mt-md-0 top-small-boxes">
+        <div
+          class="b-color-1 f-color-0 box-shadow-style px-3 px-md-4 py-4 h-100"
+        >
+          <span class="d-block">Done Hours</span>
+
+          <h3 class="numb text-end">
+            {{ usersData.hours ? (usersData.hours / 60).toFixed(2) : 0 }}
+          </h3>
+        </div>
+      </div>
+      <div class="col-12 col-md-3 mt-3 mt-md-0 top-small-boxes">
+        <div
+          class="b-color-4 f-color-0 box-shadow-style px-3 px-md-4 py-4 h-100"
+        >
+          <span class="d-block">Active Students</span>
+          <h3 class="numb text-end">
+            {{
+              usersData.activeStudentsCount ? usersData.activeStudentsCount : 0
+            }}
+          </h3>
+        </div>
+      </div>
+    </div>
+    <div class="mt-4 row flex-wrap">
+      <div class="col-12 col-md-8">
+        <div class="b-color-0 box-shadow-style px-3 px-md-4 py-4 mb-4">
+          <div class="d-flex justify-content-between">
+            <div style="display: flex">
+              <!-- <input
+                class="form-check-input"
+                type="checkbox"
+                value=""
+                id="flexCheckDefault"
+                v-model="isEmailEnabled"
+                @change="enableEmails"
+              /> -->
+              <label class="switch">
+                <input
+                  v-model="isEmailEnabled"
+                  @change="enableEmails"
+                  type="checkbox"
+                />
+                <span class="slider round"></span>
+              </label>
+
+              <!-- :checked="isEmailEnabled" -->
+
+              <div style="margin-top: 5px; margin-left: 10px">
+                Email Notifications
+              </div>
+            </div>
+
+            <!-- <div> -->
+            <!-- Tabs -->
+            <!-- </div> -->
+
+            <div
+              class="opacity-75 opacity-100-on-hover"
+              data-bs-toggle="modal"
+              data-bs-target="#addAdmin"
+            >
+              <i class="fas fa-plus"></i
+              ><span class="d-none d-md-inline">Add an admin</span>
+            </div>
+            <AddAdmin />
+          </div>
+        </div>
+        <div class="b-color-0 box-shadow-style px-3 px-md-4 py-4">
+          <div class="d-flex flex-column flex-lg-row">
+            <div class="me-lg-4 me-sm-0 flex-fill">
+              <div class="h3 text-center f-color-0 b-color-1">Students</div>
+              <table class="table table-bordered border-light">
+                <thead>
+                  <tr class="table-light">
+                    <th scope="col">Active</th>
+                    <th scope="col">Vacation</th>
+                    <th scope="col">Inactive</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="table-light">
+                    <td>
+                      {{
+                        usersData.activeStudentsCount
+                          ? usersData.activeStudentsCount
+                          : 0
+                      }}
+                    </td>
+                    <td>
+                      {{
+                        usersData.vacationStudentsCount
+                          ? usersData.vacationStudentsCount
+                          : 0
+                      }}
+                    </td>
+                    <td>
+                      {{
+                        usersData.inactiveStudentsCount
+                          ? usersData.inactiveStudentsCount
+                          : 0
+                      }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="flex-fill">
+              <div class="h3 text-center f-color-0 b-color-1">Teachers</div>
+              <table class="table table-bordered border-light">
+                <thead>
+                  <tr class="table-light">
+                    <th scope="col">Active</th>
+                    <th scope="col">Vacation</th>
+                    <th scope="col">Inactive</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="table-light">
+                    <td>
+                      {{
+                        usersData.activeTeachersCount
+                          ? usersData.activeTeachersCount
+                          : 0
+                      }}
+                    </td>
+                    <td>
+                      {{
+                        usersData.vacationTeachersCount
+                          ? usersData.vacationTeachersCount
+                          : 0
+                      }}
+                    </td>
+                    <td>
+                      {{
+                        usersData.inactiveTeachersCount
+                          ? usersData.inactiveTeachersCount
+                          : 0
+                      }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!--           
+          <div class="d-flex">
+            <div
+              class="h3 text-center f-color-0 b-color-1 mx-1"
+              style="flex: 1"
+            >
+              Students
+            </div>
+            <div
+              class="h3 text-center f-color-0 b-color-1 mx-1"
+              style="flex: 1"
+            >
+              Teachers
+            </div>
+          </div>
+
+          <div class="d-flex">
+            <table class="table table-bordered border-light mx-1">
+              <thead>
+                <tr class="table-light">
+                  <th scope="col">Active</th>
+                  <th scope="col">Vacation</th>
+                  <th scope="col">Inactive</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="table-light">
+                  <td>
+                    {{
+                      usersData.activeStudentsCount
+                        ? usersData.activeStudentsCount
+                        : 0
+                    }}
+                  </td>
+                  <td>
+                    {{
+                      usersData.vacationStudentsCount
+                        ? usersData.vacationStudentsCount
+                        : 0
+                    }}
+                  </td>
+                  <td>
+                    {{
+                      usersData.inactiveStudentsCount
+                        ? usersData.inactiveStudentsCount
+                        : 0
+                    }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <table class="table table-bordered border-light mx-1">
+              <thead>
+                <tr class="table-light">
+                  <th scope="col">Active</th>
+                  <th scope="col">Vacation</th>
+                  <th scope="col">Inactive</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="table-light">
+                  <td>
+                    {{
+                      usersData.activeTeachersCount
+                        ? usersData.activeTeachersCount
+                        : 0
+                    }}
+                  </td>
+                  <td>
+                    {{
+                      usersData.vacationTeachersCount
+                        ? usersData.vacationTeachersCount
+                        : 0
+                    }}
+                  </td>
+                  <td>
+                    {{
+                      usersData.inactiveTeachersCount
+                        ? usersData.inactiveTeachersCount
+                        : 0
+                    }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div> -->
+
+          <!-- <div class="d-flex flex-column">
+            <div class="d-flex">
+              <div
+                class="h3 text-center f-color-0 b-color-1 mx-1"
+                style="flex: 1"
+              >
+                Hours
+              </div>
+              <div
+                class="h3 text-center f-color-0 b-color-1 mx-1"
+                style="flex: 1"
+              >
+                Invoices
+              </div>
+              <div
+                class="h3 text-center f-color-0 b-color-1 mx-1"
+                style="flex: 1"
+              >
+                Payment
+              </div>
+            </div>
+
+            <div class="d-flex">
+              <table class="table table-bordered border-light mx-1">
+                <thead>
+                  <tr class="table-light">
+                    <th scope="col">Attended</th>
+                    <th scope="col">Scheduled</th>
+                    <th scope="col">Paid</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="table-light">
+                    <td>
+                      {{
+                        usersData.attendedClassHours
+                          ? (usersData.attendedClassHours / 60).toFixed(2)
+                          : 0
+                      }}
+                    </td>
+                    <td>
+                      {{
+                        usersData.scheduledClassHours
+                          ? (usersData.scheduledClassHours / 60).toFixed(2)
+                          : 0
+                      }}
+                    </td>
+                    <td>
+                      {{
+                        usersData.paidClassHours
+                          ? (usersData.paidClassHours / 60).toFixed(2)
+                          : 0
+                      }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <table class="table table-bordered border-light mx-1">
+                <thead>
+                  <tr class="table-light">
+                    <th scope="col">Due</th>
+                    <th scope="col">Paid</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="table-light">
+                    <td>
+                      {{ usersData.dueInvoice ? usersData.dueInvoice : 0 }}
+                    </td>
+                    <td>
+                      {{
+                        usersData.paidInvoicesHours
+                          ? (usersData.paidInvoicesHours / 60).toFixed(2)
+                          : 0
+                      }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <table class="table table-bordered border-light mx-1">
+                <thead>
+                  <tr class="table-light">
+                    <th scope="col">Advance</th>
+                    <th scope="col">Arrears</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="table-light">
+                    <td>
+                      {{ usersData.AdvancePay ? usersData.AdvancePay : 0 }}
+                    </td>
+                    <td>
+                      {{ usersData.ArrearsPay ? usersData.ArrearsPay : 0 }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div> -->
+          <div class="d-flex flex-column flex-lg-row">
+            <div class="flex-fill me-lg-2 me-sm-0">
+              <div class="h3 text-center f-color-0 b-color-1">Hours</div>
+              <table class="table table-bordered border-light">
+                <thead>
+                  <tr class="table-light">
+                    <th scope="col">Attended</th>
+                    <th scope="col">Scheduled</th>
+                    <th scope="col">Paid</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="table-light">
+                    <td>
+                      {{
+                        usersData.attendedClassHours
+                          ? (usersData.attendedClassHours / 60).toFixed(2)
+                          : 0
+                      }}
+                    </td>
+                    <td>
+                      {{
+                        usersData.scheduledClassHours
+                          ? (usersData.scheduledClassHours / 60).toFixed(2)
+                          : 0
+                      }}
+                    </td>
+                    <td>
+                      {{
+                        usersData.paidClassHours
+                          ? (usersData.paidClassHours / 60).toFixed(2)
+                          : 0
+                      }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="d-flex flex-fill flex-column flex-sm-row">
+              <div class="flex-fill me-sm-2 me-0">
+                <div class="h3 text-center f-color-0 b-color-1">Invoices</div>
+
+                <table class="table table-bordered border-light">
+                  <thead>
+                    <tr class="table-light">
+                      <th scope="col">Due</th>
+                      <th scope="col">Paid</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="table-light">
+                      <td>
+                        {{ usersData.dueInvoice ? usersData.dueInvoice : 0 }}
+                      </td>
+                      <td>
+                        {{
+                          usersData.paidInvoicesHours
+                            ? (usersData.paidInvoicesHours / 60).toFixed(2)
+                            : 0
+                        }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="flex-fill">
+                <div class="h3 text-center f-color-0 b-color-1">Payment</div>
+                <table class="table table-bordered border-light">
+                  <thead>
+                    <tr class="table-light">
+                      <th scope="col">Advance</th>
+                      <th scope="col">Arrears</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="table-light">
+                      <td>
+                        {{ usersData.AdvancePay ? usersData.AdvancePay : 0 }}
+                      </td>
+                      <td>
+                        {{ usersData.ArrearsPay ? usersData.ArrearsPay : 0 }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-4 mt-3 mt-md-0">
+        <Notifications />
+      </div>
+    </div>
+  </div>
+</template>
+<style>
+.top-small-boxes small {
+  font-size: 72%;
+}
+.top-small-boxes .numb {
+  margin-top: 0.5em;
+}
+.dashboard-user-box .avatar {
+  width: 3em;
+  height: 3em;
+  /* font-size: 17px; */
+}
+.dashboard-section .tab-hr {
+  border: 1px solid var(--color-1);
+}
+.dashboard-section .text-on-hover:hover {
+  color: var(--color-1) !important;
+}
+</style>
+<script>
+import axios from "axios";
+import moment from "moment";
+import Notifications from "@/components/admin/sections/dashboard/notifications/Notifications";
+import EditAccount from "@/components/admin/sections/dashboard/EditAccount";
+import AddAdmin from "@/components/admin/sections/dashboard/AddAdmin";
+export default {
+  components: { Notifications, EditAccount, AddAdmin },
+  data() {
+    return {
+      userTime: null,
+      userID: null,
+      data: [],
+      usersData: null,
+      hours: null,
+      activeStudentsCount: null,
+      vacationStudentsCount: null,
+      inactiveStudentsCount: null,
+      activeTeachersCount: null,
+      inactiveTeachersCount: null,
+      vacationTeachersCount: null,
+      displayData: false,
+      isEmailEnabled: true,
+    };
+  },
+  methods: {
+    logout() {
+      localStorage.removeItem("waraqaPanelToken");
+      location.reload();
+    },
+    getUserData() {
+      if (!localStorage.getItem("waraqaPanelToken")) {
+        return (this.isAuthorized = false);
+      }
+      axios.defaults.headers.common["Authorization"] =
+        localStorage.getItem("waraqaPanelToken");
+      axios
+        .get("http://localhost:3300/auth/v1/path11")
+        .then((res) => {
+          if (!res.data.success) {
+            this.$router.push("/manage");
+          }
+          (this.userID = res.data.data[0].id), (this.data = res.data.data[0]);
+          this.getHoursAndStudentsNum();
+          this.getDueInvoices();
+          this.displayData = true;
+        })
+        .catch(() => {
+          this.$router.push("/manage");
+        });
+    },
+    getHoursAndStudentsNum() {
+      let queryReq = { params: { userType: "Admin" } };
+      axios
+        .get("http://localhost:3300/api/v1/client/classes/path0", queryReq)
+        .then((res) => {
+          if (res.data.success) {
+            this.usersData = res.data.rows[0];
+            // console.log(this.usersData.dueInvoicesHours);
+
+            // (this.hours = res.data.rows[0].hours),
+            //   (this.activeStudentsCount = res.data.rows[0].activeStudentsCount);
+            // this.vacationStudentsCount = res.data.rows[0].vacationStudentsCount;
+            // this.inactiveStudentsCount = res.data.rows[0].inactiveStudentsCount;
+
+            // this.activeTeachersCount = res.data.rows[0].activeTeachersCount;
+            // this.inactiveTeachersCount = res.data.rows[0].inactiveTeachersCount;
+            // this.vacationTeachersCount = res.data.rows[0].vacationTeachersCount;
+            // this.attendedClassHours = res.data.rows[0].attendedClassHours;
+
+            // this.savedPaidHours = res.data.rows[0].savedPaidHours;
+          }
+        })
+        .catch(() => {
+          this.$router.push("/");
+        });
+    },
+    getDueInvoices() {
+      axios
+        .get("http://localhost:3300/api/v1/client/hours/path0")
+        .then((res) => {
+          if (res.data.success) {
+            // console.log(res.data.rows.filter(row => row.paidHours != null));
+            let rows = res.data.rows;
+            let due = 0;
+            for (let i = 0; i < rows.length; i++) {
+              // console.log(parseInt(rows[i].paidHours));
+              let hours = parseInt(rows[i].hours ? rows[i].hours : 0);
+              let paidHours = parseInt(
+                rows[i].paidHours ? rows[i].paidHours : 0
+              );
+              if (hours > paidHours) {
+                due += paidHours - hours;
+              }
+            }
+            this.usersData["dueInvoice"] = Math.abs(due / 60);
+            // (this.hours = res.data.rows[0].hours),
+            //   (this.activeStudentsCount = res.data.rows[0].activeStudentsCount);
+            // this.vacationStudentsCount = res.data.rows[0].vacationStudentsCount;
+            // this.inactiveStudentsCount = res.data.rows[0].inactiveStudentsCount;
+
+            // this.activeTeachersCount = res.data.rows[0].activeTeachersCount;
+            // this.inactiveTeachersCount = res.data.rows[0].inactiveTeachersCount;
+            // this.vacationTeachersCount = res.data.rows[0].vacationTeachersCount;
+            // this.attendedClassHours = res.data.rows[0].attendedClassHours;
+
+            // this.savedPaidHours = res.data.rows[0].savedPaidHours;
+          }
+        })
+        .catch(() => {
+          this.$router.push("/");
+        });
+    },
+    getEmailsStatus() {
+      let url = "http://localhost:3300/api/v1/admin/emails/path2";
+      axios
+        .get(url)
+        .then((res) => {
+          console.log(res.data);
+          this.isEmailEnabled = res.data.status;
+        })
+        .catch((e) => console.log(e));
+    },
+    enableEmails() {
+      let url = "http://localhost:3300/api/v1/admin/emails/path1";
+      axios
+        .post(url, { enable: this.isEmailEnabled })
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((e) => console.log(e));
+    },
+  },
+  created() {
+    this.getUserData();
+    this.getEmailsStatus();
+    window.setInterval(() => {
+      // Display local current time of user
+      // this.userTime = moment().tz("Africa/Algiers").format("HH:mm");
+      this.userTime = moment().format("HH:mm");
+    }, 1000);
+  },
+};
+</script>
+
+<style>
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: #2196f3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196f3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+</style>
