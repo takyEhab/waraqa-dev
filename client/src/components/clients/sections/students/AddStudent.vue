@@ -225,7 +225,7 @@ export default {
       let name = this.firstName + " " + this.lastName;
       data.name = name;
 
-      let url = `http://localhost:3300/api/v1/guardian/students/path0`;
+      let url = `http://64.227.76.156:3300/api/v1/guardian/students/path0`;
       axios
         .post(url, data)
         .then((res) => {

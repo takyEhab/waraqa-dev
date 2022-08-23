@@ -529,7 +529,7 @@ export default {
       return moment(date);
     },
     getUserData() {
-      let url = `http://localhost:3300/api/v1/admin/teachers/path1/${this.userID}`;
+      let url = `http://64.227.76.156:3300/api/v1/admin/teachers/path1/${this.userID}`;
       axios
         .get(url)
         .then((res) => {
@@ -600,7 +600,7 @@ export default {
       Object.entries(data[0]).forEach(([key, value]) =>
         formData.append(key, value)
       );
-      let url = `http://localhost:3300/api/v1/admin/teachers/path2/${this.userID}`;
+      let url = `http://64.227.76.156:3300/api/v1/admin/teachers/path2/${this.userID}`;
       axios
         .post(url, formData)
         .then((res) => {
@@ -632,7 +632,7 @@ export default {
         newPassword: this.newPassword,
       };
 
-      let url = `http://localhost:3300/api/v1/admin/teachers/path4/${this.userID}`;
+      let url = `http://64.227.76.156:3300/api/v1/admin/teachers/path4/${this.userID}`;
       axios
         .post(url, data)
         .then((res) => {

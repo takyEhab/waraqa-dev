@@ -162,7 +162,7 @@ export default {
       axios.defaults.headers.common["Authorization"] =
         localStorage.getItem("waraqaToken");
       axios
-        .get("http://localhost:3300/auth/v1/path2")
+        .get("http://64.227.76.156:3300/auth/v1/path2")
         .then((res) => {
           if (!res.data.success) {
             this.$router.push("/");
@@ -178,7 +178,7 @@ export default {
     getHoursAndStudentsNum() {
       let queryReq = { params: { userType: this.userType } };
       axios
-        .get("http://localhost:3300/api/v1/client/classes/path0", queryReq)
+        .get("http://64.227.76.156:3300/api/v1/client/classes/path0", queryReq)
         .then((res) => {
           console.log(res.data.rows[0]);
 

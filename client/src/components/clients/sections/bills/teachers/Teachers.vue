@@ -167,7 +167,7 @@ export default {
           offset: this.pagination.offset,
         },
       };
-      let url = "http://localhost:3300/api/v1/teacher/bills/path0";
+      let url = "http://64.227.76.156:3300/api/v1/teacher/bills/path0";
       axios
         .get(url, queryReq)
         .then((res) => {

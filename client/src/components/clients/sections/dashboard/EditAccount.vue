@@ -266,7 +266,7 @@ export default {
     },
     getUserData() {
       axios
-        .get("http://localhost:3300/auth/v1/path11")
+        .get("http://64.227.76.156:3300/auth/v1/path11")
         .then((res) => {
           if (!res.data.success) {
             this.data = [];
@@ -331,7 +331,7 @@ export default {
         formData.append(key, value)
       );
 
-      let url = `http://localhost:3300/api/v1/admin/admin/account/path1/${this.userID}`;
+      let url = `http://64.227.76.156:3300/api/v1/admin/admin/account/path1/${this.userID}`;
       axios
         .post(url, formData)
         .then((res) => {
@@ -361,7 +361,7 @@ export default {
         newPassword: this.newPassword,
       };
 
-      let url = `http://localhost:3300/api/v1/admin/admin/account/path2/${this.userID}`;
+      let url = `http://64.227.76.156:3300/api/v1/admin/admin/account/path2/${this.userID}`;
       axios
         .post(url, data)
         .then((res) => {

@@ -190,6 +190,14 @@
                         name: 'ClassInfo',
                         params: {
                           id: row.id,
+                          // tap: true,
+                          // page: pagination.page,
+                          // offset: pagination.offset,
+                          // filter: Object.keys(filters).find(
+                          //   (key) => filters[key] == true
+                          // ),
+                        },
+                        query: {
                           tap: true,
                           page: pagination.page,
                           offset: pagination.offset,
@@ -252,7 +260,16 @@
                         name: 'ClassInfo',
                         params: {
                           id: row.id,
-                          submitClassReport: true,
+                          // submitClassReport: true,
+                          // tap: true,
+                          // page: pagination.page,
+                          // offset: pagination.offset,
+                          // filter: Object.keys(filters).find(
+                          //   (key) => filters[key] == true
+                          // ),
+                        },
+                        query: {
+                          isSubmit: true,
                           tap: true,
                           page: pagination.page,
                           offset: pagination.offset,

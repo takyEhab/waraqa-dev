@@ -235,7 +235,7 @@ export default {
       this.loadingBtn = 4;
     },
     getData() {
-      let url = `http://localhost:3300/api/v1/admin/bills/path7/${this.invoiceID}`;
+      let url = `http://64.227.76.156:3300/api/v1/admin/bills/path7/${this.invoiceID}`;
       axios
         .get(url)
         .then((res) => {
@@ -295,7 +295,7 @@ export default {
       const formData = new FormData();
       formData.append("image", this.file); //('a name', 'the file or image uploaded')
 
-      let url = `http://localhost:3300/api/v1/admin/bills/path9/${this.invoiceID}`;
+      let url = `http://64.227.76.156:3300/api/v1/admin/bills/path9/${this.invoiceID}`;
       axios
         .post(url, this.data)
         .then((res) => {

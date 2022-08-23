@@ -286,7 +286,7 @@ export default {
           studentID: this.userID,
         },
       };
-      let url = `http://localhost:3300/api/v1/admin/classes/path13`;
+      let url = `http://64.227.76.156:3300/api/v1/admin/classes/path13`;
       axios
         .get(url, queryData)
         .then((res) => {
@@ -301,7 +301,7 @@ export default {
         });
     },
     getUserData() {
-      let url = `http://localhost:3300/api/v1/admin/teachers/path1/${this.userID}`;
+      let url = `http://64.227.76.156:3300/api/v1/admin/teachers/path1/${this.userID}`;
       axios
         .get(url)
         .then((res) => {

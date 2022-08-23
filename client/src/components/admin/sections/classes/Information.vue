@@ -3,7 +3,7 @@
     <div class="f-color-1">
       <small
         class="text-on-hover"
-        @click="$router.push({ name: 'AdminClassMain', params: $route.params })"
+        @click="$router.push({ name: 'AdminClassMain', query: $route.query })"
         ><i class="fas fa-long-arrow-alt-left"></i> Back</small
       >
     </div>
@@ -459,6 +459,7 @@
           class="soft-button-style rounded px-3 py-2"
           data-bs-toggle="modal"
           data-bs-target="#AddReportModal"
+          ref="submitRef"
           >Submit</span
         >
       </div>
@@ -537,13 +538,7 @@ export default {
           this.displayData = true;
         })
         .then(() => {
-          if (this.$route.params.submitClassReport) {
-            let btn = document.createElement("button");
-            btn.setAttribute("data-bs-toggle", "modal");
-            btn.setAttribute("data-bs-target", "#AddReportModal");
-            document.body.appendChild(btn);
-            btn.click();
-          }
+          this.$route.query.isSubmit == "true" && this.$refs.submitRef.click();
         })
         .catch(() => {
           console.log("Class Info/Error catched");

@@ -327,7 +327,9 @@ export default {
         studentID: this.studentID, //Props //To check count of missed classes of this student && If is his last class
         teacherID: this.teacherID, //Props // If is the last class of student with this teacher
         status: this.status,
-        previousAssignment: this.previousAssignment? this.previousAssignment : null,
+        previousAssignment: this.previousAssignment
+          ? this.previousAssignment
+          : null,
         classPerformance: this.classPerformance,
         newAssignment: this.newAssignment,
         supervisorNotes: this.supervisorNotes,

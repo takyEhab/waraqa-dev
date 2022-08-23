@@ -68,6 +68,11 @@
                         name: 'ClassInfo',
                         params: {
                           id: row.id,
+                          // tap: false,
+                          // page: pagination.page,
+                          // offset: pagination.offset,
+                        },
+                        query: {
                           tap: false,
                           page: pagination.page,
                           offset: pagination.offset,

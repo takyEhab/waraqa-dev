@@ -169,7 +169,7 @@ export default {
           type: this.type,
         },
       };
-      let url = "http://localhost:3300/api/v1/admin/notifications/path1";
+      let url = "http://64.227.76.156:3300/api/v1/admin/notifications/path1";
       axios
         .get(url, queryReq)
         .then((res) => {
@@ -198,7 +198,7 @@ export default {
         } else if (this.userType == "Teacher") {
           data.seenByTeacher = 1;
         }
-        let url = `http://localhost:3300/api/v1/admin/notifications/path3/${id}`;
+        let url = `http://64.227.76.156:3300/api/v1/admin/notifications/path3/${id}`;
         axios
           .post(url, data)
           .then((res) => {
@@ -219,7 +219,7 @@ export default {
       this.alerts.success = null;
       axios
         .delete(
-          `http://localhost:3300/api/v1/admin/notifications/path2/${this.deleteNotificationID}`
+          `http://64.227.76.156:3300/api/v1/admin/notifications/path2/${this.deleteNotificationID}`
         )
         .then((res) => {
           if (!res.data.success) {

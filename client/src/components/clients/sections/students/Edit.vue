@@ -252,7 +252,7 @@ export default {
       this.avatar = data.file;
     },
     getUserData() {
-      let url = `http://localhost:3300/api/v1/admin/students/path2/${this.userID}`;
+      let url = `http://64.227.76.156:3300/api/v1/admin/students/path2/${this.userID}`;
       axios
         .get(url)
         .then((res) => {
@@ -314,7 +314,7 @@ export default {
         formData.append(key, value)
       );
 
-      let url = `http://localhost:3300/api/v1/admin/students/path3/${this.userID}`;
+      let url = `http://64.227.76.156:3300/api/v1/admin/students/path3/${this.userID}`;
       axios
         .post(url, formData)
         .then((res) => {

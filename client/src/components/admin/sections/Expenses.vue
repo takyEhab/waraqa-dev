@@ -237,7 +237,7 @@ export default {
   },
   methods: {
     getData() {
-      let url = `http://localhost:3300/api/v1/admin/expenses/path2`;
+      let url = `http://64.227.76.156:3300/api/v1/admin/expenses/path2`;
       axios
         .get(url)
         .then((res) => {
@@ -263,7 +263,7 @@ export default {
         amount: this.amount,
       };
 
-      let url = `http://localhost:3300/api/v1/admin/expenses/path1`;
+      let url = `http://64.227.76.156:3300/api/v1/admin/expenses/path1`;
       axios
         .post(url, data)
         .then((res) => {

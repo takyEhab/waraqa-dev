@@ -174,6 +174,14 @@
                         name: 'ClientClassInfo',
                         params: {
                           id: row.id,
+                          // tap: true,
+                          // page: pagination.page,
+                          // offset: pagination.offset,
+                          // filter: Object.keys(filters).find(
+                          //   (key) => filters[key] == true
+                          // ),
+                        },
+                        query: {
                           tap: true,
                           page: pagination.page,
                           offset: pagination.offset,
@@ -216,7 +224,13 @@
                         name: 'ClientClassInfo',
                         params: {
                           id: row.id,
-                          reschedule: true,
+                          //   isReschedule: true,
+                          //   tap: false,
+                          //   page: pagination.page,
+                          //   offset: pagination.offset,
+                        },
+                        query: {
+                          isReschedule: true,
                           tap: false,
                           page: pagination.page,
                           offset: pagination.offset,
@@ -238,7 +252,18 @@
                         name: 'ClientClassInfo',
                         params: {
                           id: row.id,
-                          submitClassReport: true,
+                          // submitClassReport: true,
+                          // isReschedule: false,
+
+                          // tap: true,
+                          // page: pagination.page,
+                          // offset: pagination.offset,
+                          // filter: Object.keys(filters).find(
+                          //   (key) => filters[key] == true
+                          // ),
+                        },
+                        query: {
+                          isReschedule: false,
                           tap: true,
                           page: pagination.page,
                           offset: pagination.offset,

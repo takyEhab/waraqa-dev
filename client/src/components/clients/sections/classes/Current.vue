@@ -107,6 +107,11 @@
                           name: 'ClientClassInfo',
                           params: {
                             id: row.id,
+                            // tap: false,
+                            // page: pagination.page,
+                            // offset: pagination.offset,
+                          },
+                          query: {
                             tap: false,
                             page: pagination.page,
                             offset: pagination.offset,
@@ -163,7 +168,13 @@
                           name: 'ClientClassInfo',
                           params: {
                             id: row.id,
-                            reschedule: true,
+                            // isReschedule: true,
+                            // tap: false,
+                            // page: pagination.page,
+                            // offset: pagination.offset,
+                          },
+                          query: {
+                            isReschedule: true,
                             tap: false,
                             page: pagination.page,
                             offset: pagination.offset,
@@ -188,7 +199,6 @@
     </div>
 
     <!-- Pagination -->
-
     <vue-awesome-paginate
       :current-page="pagination.page"
       :total-items="pageCount"

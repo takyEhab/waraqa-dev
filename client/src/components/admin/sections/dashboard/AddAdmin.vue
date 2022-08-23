@@ -124,7 +124,7 @@ export default {
         email: this.email,
         password: this.password,
       };
-      let url = "http://localhost:3300/api/v1/admin/admin/account/path2";
+      let url = "http://64.227.76.156:3300/api/v1/admin/admin/account/path2";
       axios
         .post(url, data)
         .then((res) => {

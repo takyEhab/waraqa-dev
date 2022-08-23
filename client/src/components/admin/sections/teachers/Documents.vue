@@ -126,7 +126,7 @@ export default {
   },
   methods: {
     getData() {
-      let url = `http://localhost:3300/api/v1/admin/bills/path7/${this.invoiceID}`;
+      let url = `http://64.227.76.156:3300/api/v1/admin/bills/path7/${this.invoiceID}`;
       axios
         .get(url)
         .then((res) => {
@@ -191,7 +191,7 @@ export default {
       formData.append("cv", this.cv);
       formData.append("edu", this.edu);
 
-      let url = `http://localhost:3300/api/v1/admin/teachers/path5/${this.teacherID}`;
+      let url = `http://64.227.76.156:3300/api/v1/admin/teachers/path5/${this.teacherID}`;
       axios
         .post(url, this.data)
         .then((res) => {

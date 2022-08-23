@@ -221,7 +221,7 @@ export default {
     },
 
     getData() {
-      let url = `http://localhost:3300/api/v1/admin/bills/path2/${this.invoiceID}`;
+      let url = `http://64.227.76.156:3300/api/v1/admin/bills/path2/${this.invoiceID}`;
       axios
         .get(url)
         .then((res) => {
@@ -245,7 +245,7 @@ export default {
         });
     },
     getPayEveryClasses() {
-      let url = `http://localhost:3300/api/v1/admin/bills/guardian/path10/${this.invoiceID}`;
+      let url = `http://64.227.76.156:3300/api/v1/admin/bills/guardian/path10/${this.invoiceID}`;
       axios
         .get(url)
         .then((res) => {
@@ -279,7 +279,7 @@ export default {
         });
     },
     getPrepaidClasses() {
-      let url = `http://localhost:3300/api/v1/admin/bills/path3/${this.invoiceID}`;
+      let url = `http://64.227.76.156:3300/api/v1/admin/bills/path3/${this.invoiceID}`;
       axios
         .get(url)
         .then((res) => {
@@ -303,7 +303,7 @@ export default {
         });
     },
     getPostPaidClasses() {
-      let url = `http://localhost:3300/api/v1/admin/bills/path5/${this.invoiceID}`;
+      let url = `http://64.227.76.156:3300/api/v1/admin/bills/path5/${this.invoiceID}`;
       let queryReq = {
         params: { InvoiceActivatedAt: this.data[0].activatedAt },
       };
@@ -334,7 +334,7 @@ export default {
       if (window.confirm("Are you sure you want to delete this Invoice?")) {
         axios
           .delete(
-            `http://localhost:3300/api/v1/admin/bills/path5/${this.invoiceID}`
+            `http://64.227.76.156:3300/api/v1/admin/bills/path5/${this.invoiceID}`
           )
           .then((res) => {
             if (!res.data.success) {

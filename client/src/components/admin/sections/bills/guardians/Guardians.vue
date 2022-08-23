@@ -73,11 +73,10 @@
           <div class="px-2 d-flex f-color-3">
             <span class="col-2">{{ row.guardianName }}</span>
             <span class="col-2">{{
-              
-              row.invoiceNumber != null ? row.invoiceNumber : 'null'
+              row.invoiceNumber != null ? row.invoiceNumber : "null"
             }}</span>
             <span class="col-2">
-              {{row.savedPaidHours / 60}} Hour
+              {{ row.savedPaidHours / 60 }} Hour
               <!-- {{
                 row.paymentMethod == 0
                   ? "Not Selected"

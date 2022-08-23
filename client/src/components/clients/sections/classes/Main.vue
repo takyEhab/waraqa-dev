@@ -30,13 +30,13 @@
       v-if="previousTab"
       :userType="userType"
       :offsetNum="offsetNum"
-      :params="$route.params"
+      :params="$route.query"
     />
     <Current
       v-else
       :userType="userType"
       :offsetNum="offsetNum"
-      :params="$route.params"
+      :params="$route.query"
     />
   </div>
 </template>
@@ -61,11 +61,11 @@ export default {
     };
   },
   created() {
-    if (this.$route.params.tap) {
-      this.previousTab = JSON.parse(this.$route.params.tap);
+    if (this.$route.query.tap) {
+      this.previousTab = JSON.parse(this.$route.query.tap);
     }
     this.$watch("previousTab", () => {
-      this.$route.params = {};
+      this.$route.query = {};
     });
   },
 };

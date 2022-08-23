@@ -8,6 +8,6 @@ module.exports = {
   outputDir: path.resolve(__dirname, "../backend/public"),
 
   devServer: {
-    proxy: "http://64.227.76.156:3300",
+    proxy: "http://localhost:3300",
   },
 };

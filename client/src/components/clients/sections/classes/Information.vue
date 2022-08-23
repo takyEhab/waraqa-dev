@@ -3,9 +3,7 @@
     <div class="f-color-1">
       <small
         class="text-on-hover"
-        @click="
-          $router.push({ name: 'ClientClassMain', params: $route.params })
-        "
+        @click="$router.push({ name: 'ClientClassMain', query: $route.query })"
         ><i class="fas fa-long-arrow-alt-left"></i> Back</small
       >
     </div>
@@ -361,15 +359,18 @@
           ref="rescheduleRef"
           >Reschedule</span
         >
+        <!-- :ref="$route.params.rescheduleRef ? 'rescheduleRef' : 'y'" -->
+
         <span
           v-if="userType == 'Teacher' && reportPermission"
           class="soft-button-style rounded ms-2 px-3 py-2"
           data-bs-toggle="modal"
           data-bs-target="#AddReportModal"
           ref="submitRef"
-
           >Submit</span
         >
+        <!-- :ref="$route.params.submitClassReport ? 'submitRef' : 'x'" -->
+
         <RescheduleReq :classID="classID" />
       </div>
     </div>
@@ -409,7 +410,7 @@ export default {
   components: { EndClass, RescheduleReq },
   data() {
     return {
-      displayData: true,
+      displayData: false,
       loadingBtn: false,
       alerts: {
         success: null,
@@ -430,7 +431,7 @@ export default {
       return moment(date);
     },
     getData() {
-      let url = `http://64.227.76.156:3300/api/v1/admin/classes/path2/${this.classID}`;
+      let url = `http://localhost:3300/api/v1/admin/classes/path2/${this.classID}`;
       axios
         .get(url)
         .then((res) => {
@@ -448,7 +449,7 @@ export default {
             moment(),
             "hours"
           );
-          console.log("DIFF " + diffNowAndStartingDate);
+          // console.log("DIFF " + diffNowAndStartingDate);
           //Display cancel req before 3hours
           if (diffNowAndStartingDate < 3) {
             this.closeSendCancelReq = true;
@@ -464,44 +465,13 @@ export default {
             moment().isAfter(this.data[0].startingDate) &&
             this.data[0].canReport;
           this.displayData = true;
-          // let classRep = this.$route.params.submitClassReport;
-          // let reschedule = this.$route.params.reschedule;
-          // if (classRep || reschedule) {
-          //   console.log(classRep);
-          //   console.log(reschedule);
-          //   let btn = document.createElement("button");
-          //   btn.setAttribute("data-bs-toggle", "modal");
-          //   btn.setAttribute(
-          //     "data-bs-target",
-          //     classRep ? "#AddReportModal" : "#RescheduleClassModal"
-          //   );
-
-          //   document.body.appendChild(btn);
-          //   btn.click();
-          // }
-
-          // setTimeout(() => {
-          // }, 1000);
         })
-        // .then(() => {
-        //   let classRep = this.$route.params.submitClassReport;
-        //   let reschedule = this.$route.params.reschedule;
-        //   if (classRep || reschedule) {
-        //     reschedule ? this.$refs.rescheduleRef.click() : this.$refs.submitRef.click()
-        //     // let btn = document.createElement("button");
-        //     // btn.setAttribute("data-bs-toggle", "modal");
-        //     // btn.setAttribute(
-        //     //   "data-bs-target",
-        //     //   reschedule ? "#RescheduleClassModal" : "#AddReportModal"
-        //     // );
-
-        //     // document.body.appendChild(btn);
-
-        //     // setTimeout(() => {
-        //     //   btn.click();
-        //     // }, 4000);
-        //   }
-        // })
+        .then(() => {
+          this.$route.query.isReschedule == "true" &&
+            this.$refs.rescheduleRef.click();
+          this.$route.query.isReschedule == "false" &&
+            this.$refs.submitRef.click();
+        })
         .catch(() => {
           console.log("Class Info/Error catched");
         });
@@ -519,7 +489,7 @@ export default {
           startingDate: this.data[0].startingDate,
         };
 
-        let url = `http://64.227.76.156:3300/api/v1/admin/classes/path7`;
+        let url = `http://localhost:3300/api/v1/admin/classes/path7`;
         axios
           .post(url, data)
           .then((res) => {
@@ -542,26 +512,6 @@ export default {
     this.classID = this.$route.params.id;
     this.getData();
   },
-  mounted() {
-    console.log('mounted')
-    let classRep = this.$route.params.submitClassReport;
-          let reschedule = this.$route.params.reschedule;
-          if (classRep || reschedule) {
-            reschedule ? this.$refs.rescheduleRef.click() : this.$refs.submitRef.click()
-            // let btn = document.createElement("button");
-            // btn.setAttribute("data-bs-toggle", "modal");
-            // btn.setAttribute(
-            //   "data-bs-target",
-            //   reschedule ? "#RescheduleClassModal" : "#AddReportModal"
-            // );
-
-            // document.body.appendChild(btn);
-
-            // setTimeout(() => {
-            //   btn.click();
-            // }, 4000);
-          }
-  }
 };
 </script>
 <style>

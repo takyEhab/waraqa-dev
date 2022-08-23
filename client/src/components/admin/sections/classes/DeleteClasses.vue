@@ -127,7 +127,6 @@ export default {
         .catch(() => {
           console.log("Error catched");
           this.loadingBtn = false;
-
         });
     },
   },
