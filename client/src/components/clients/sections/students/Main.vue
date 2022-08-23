@@ -261,10 +261,10 @@ export default {
       };
       let url =
         this.userType == "Teacher"
-          ? "http://64.227.76.156:3300/api/v1/teacher/students/path0"
-          : "http://64.227.76.156:3300/api/v1/teacher/students/path1";
-      // let url = 'http://64.227.76.156:3300/api/v1/teacher/students/path0'; //Teacher
-      // let url = 'http://64.227.76.156:3300/api/v1/teacher/students/path1'; //Guardian
+          ? "http://localhost:3300/api/v1/teacher/students/path0"
+          : "http://localhost:3300/api/v1/teacher/students/path1";
+      // let url = 'http://localhost:3300/api/v1/teacher/students/path0'; //Teacher
+      // let url = 'http://localhost:3300/api/v1/teacher/students/path1'; //Guardian
       axios.defaults.headers.common["Authorization"] =
         localStorage.getItem("waraqaToken");
       axios

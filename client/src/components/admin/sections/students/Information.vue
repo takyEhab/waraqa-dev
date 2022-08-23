@@ -360,7 +360,7 @@ export default {
           studentID: this.userID,
         },
       };
-      let url = `http://64.227.76.156:3300/api/v1/admin/classes/path13`;
+      let url = `http://localhost:3300/api/v1/admin/classes/path13`;
       axios
         .get(url, queryData)
         .then((res) => {
@@ -375,7 +375,7 @@ export default {
         });
     },
     getUserData() {
-      let url = `http://64.227.76.156:3300/api/v1/admin/students/path2/${this.userID}`;
+      let url = `http://localhost:3300/api/v1/admin/students/path2/${this.userID}`;
       axios
         .get(url)
         .then((res) => {
@@ -394,7 +394,7 @@ export default {
         });
     },
     getPeriodicEvaluation() {
-      let url = `http://64.227.76.156:3300/api/v1/admin/students/path6/${this.userID}`;
+      let url = `http://localhost:3300/api/v1/admin/students/path6/${this.userID}`;
       axios
         .get(url)
         .then((res) => {
@@ -414,7 +414,7 @@ export default {
       if (window.confirm("Are you sure you want to delete this Student?")) {
         axios
           .delete(
-            `http://64.227.76.156:3300/api/v1/admin/students/path4/${this.userID}`
+            `http://localhost:3300/api/v1/admin/students/path4/${this.userID}`
           )
           .then((res) => {
             if (!res.data.success) {

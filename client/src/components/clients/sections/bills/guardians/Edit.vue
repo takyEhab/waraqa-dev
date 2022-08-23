@@ -165,7 +165,7 @@ export default {
   },
   methods: {
     getData() {
-      let url = `http://64.227.76.156:3300/api/v1/admin/bills/path2/${this.invoiceID}`;
+      let url = `http://localhost:3300/api/v1/admin/bills/path2/${this.invoiceID}`;
       axios
         .get(url)
         .then((res) => {
@@ -195,7 +195,7 @@ export default {
 
       this.data.savedPaidHours = this.hoursCalculted * 60; //Save as minutes
 
-      let url = `http://64.227.76.156:3300/api/v1/admin/bills/path4/${this.invoiceID}`;
+      let url = `http://localhost:3300/api/v1/admin/bills/path4/${this.invoiceID}`;
       axios
         .post(url, this.data)
         .then((res) => {

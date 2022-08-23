@@ -236,7 +236,7 @@ export default {
       this.getData();
     },
     sendPaywages() {
-      let url = "http://64.227.76.156:3300/api/v1/admin/bills/path10";
+      let url = "http://localhost:3300/api/v1/admin/bills/path10";
       axios
         .get(url)
         .then((res) => {
@@ -266,7 +266,7 @@ export default {
           offset: this.pagination.offset,
         },
       };
-      let url = "http://64.227.76.156:3300/api/v1/admin/teachers/path0";
+      let url = "http://localhost:3300/api/v1/admin/teachers/path0";
       axios
         .get(url, queryReq)
         .then((res) => {

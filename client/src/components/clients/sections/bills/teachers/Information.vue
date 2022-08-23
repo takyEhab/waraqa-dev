@@ -196,7 +196,7 @@ export default {
     },
 
     getData() {
-      let url = `http://64.227.76.156:3300/api/v1/admin/bills/path7/${this.invoiceID}`;
+      let url = `http://localhost:3300/api/v1/admin/bills/path7/${this.invoiceID}`;
       axios
         .get(url)
         .then((res) => {
@@ -220,7 +220,7 @@ export default {
           InvoiceActivatedAt: this.data[0].activatedAt,
         },
       };
-      let url = "http://64.227.76.156:3300/api/v1/admin/bills/path8";
+      let url = "http://localhost:3300/api/v1/admin/bills/path8";
       axios
         .get(url, queryReq)
         .then((res) => {
@@ -245,7 +245,7 @@ export default {
       if (window.confirm("Are you sure you want to delete this Invoice?")) {
         axios
           .delete(
-            `http://64.227.76.156:3300/api/v1/admin/bills/path9/${this.invoiceID}`
+            `http://localhost:3300/api/v1/admin/bills/path9/${this.invoiceID}`
           )
           .then((res) => {
             if (!res.data.success) {

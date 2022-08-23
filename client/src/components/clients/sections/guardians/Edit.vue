@@ -375,7 +375,7 @@ export default {
       this.avatar = data.file;
     },
     getUserData() {
-      let url = `http://64.227.76.156:3300/api/v1/admin/guardians/path1/${this.userID}`;
+      let url = `http://localhost:3300/api/v1/admin/guardians/path1/${this.userID}`;
       axios
         .get(url)
         .then((res) => {
@@ -446,7 +446,7 @@ export default {
         formData.append(key, value)
       );
       console.log(formData);
-      let url = `http://64.227.76.156:3300/api/v1/admin/guardians/path2/${this.userID}`;
+      let url = `http://localhost:3300/api/v1/admin/guardians/path2/${this.userID}`;
       axios
         .post(url, formData)
         .then((res) => {
@@ -476,7 +476,7 @@ export default {
         newPassword: this.newPassword,
       };
 
-      let url = `http://64.227.76.156:3300/api/v1/admin/guardians/path4/${this.userID}`;
+      let url = `http://localhost:3300/api/v1/admin/guardians/path4/${this.userID}`;
       axios
         .post(url, data)
         .then((res) => {
