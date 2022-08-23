@@ -24,7 +24,7 @@
         <div class="mt-3 px-3 px-md-5 py-5">
           <!-- Form -->
           <form @submit.prevent="submitForm">
-            <div class="col-12 col-md-6 mt-3">
+            <div class="col-12 col-md-9 mt-3">
               <ul class="list-unstyled m-0 days-list d-flex">
                 <li
                   v-for="day in days"
@@ -43,6 +43,9 @@
                 <label class="f-color-3 mb-1">Sunday</label>
 
                 <Datepicker
+                autoApply
+                  minutesGridIncrement="15"
+                  minutesIncrement="15"
                   placeholder="Choose time"
                   v-model="daysTime.Sun"
                   :disabled="selectedDays.Sun ? disabled : ''"
@@ -56,6 +59,9 @@
               <div class="col-12 col-md-6 mt-3">
                 <label class="f-color-3 mb-1">Monday</label>
                 <Datepicker
+                autoApply
+                  minutesGridIncrement="15"
+                  minutesIncrement="15"
                   placeholder="Choose time"
                   v-model="daysTime.Mon"
                   :disabled="selectedDays.Mon ? disabled : ''"
@@ -69,6 +75,9 @@
               <div class="col-12 col-md-6 mt-3">
                 <label class="f-color-3 mb-1">Tuesday</label>
                 <Datepicker
+                autoApply
+                  minutesGridIncrement="15"
+                  minutesIncrement="15"
                   placeholder="Choose time"
                   v-model="daysTime.Tue"
                   :disabled="selectedDays.Tue ? disabled : ''"
@@ -82,6 +91,9 @@
               <div class="col-12 col-md-6 mt-3">
                 <label class="f-color-3 mb-1">Wednesday</label>
                 <Datepicker
+                autoApply
+                  minutesGridIncrement="15"
+                  minutesIncrement="15"
                   placeholder="Choose time"
                   v-model="daysTime.Wed"
                   :disabled="selectedDays.Wed ? disabled : ''"
@@ -95,7 +107,11 @@
               <div class="col-12 col-md-6 mt-3">
                 <label class="f-color-3 mb-1">Thursday</label>
 
+
                 <Datepicker
+                autoApply
+                  minutesGridIncrement="15"
+                  minutesIncrement="15"
                   placeholder="Choose time"
                   v-model="daysTime.Thu"
                   :disabled="selectedDays.Thu ? disabled : ''"
@@ -109,6 +125,9 @@
               <div class="col-12 col-md-6 mt-3">
                 <label class="f-color-3 mb-1">Friday</label>
                 <Datepicker
+                autoApply
+                  minutesGridIncrement="15"
+                  minutesIncrement="15"
                   placeholder="Choose time"
                   v-model="daysTime.Fri"
                   :disabled="selectedDays.Fri ? disabled : ''"
@@ -123,6 +142,9 @@
                 <label class="f-color-3 mb-1">Saturday</label>
 
                 <Datepicker
+                autoApply
+                  minutesGridIncrement="15"
+                  minutesIncrement="15"
                   placeholder="Choose time"
                   v-model="daysTime.Sat"
                   :disabled="selectedDays.Sat ? disabled : ''"
@@ -154,7 +176,7 @@ import "@vuepic/vue-datepicker/dist/main.css";
 import Datepicker from "@vuepic/vue-datepicker";
 
 export default {
-  props: ["day", "selectedDays"],
+  props: ["selectedDays"],
   components: {
     Datepicker,
   },
@@ -230,9 +252,9 @@ export default {
 };
 </script>
 <style scoped>
-@media (min-width: 576px) {
+@media (min-width: 900px) {
   .modal-dialog {
-    max-width: 70%;
+    max-width: 45%;
   }
 }
 .days-list li {

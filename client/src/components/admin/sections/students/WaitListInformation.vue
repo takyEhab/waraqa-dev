@@ -209,7 +209,7 @@ export default {
               return (this.alerts.error = res.data.msg);
             }
             this.alerts.success = res.data.msg;
-            this.$router.push("/manage/students");
+            this.$router.push("/admin/students");
           });
       }
     },

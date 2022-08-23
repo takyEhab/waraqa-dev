@@ -50,7 +50,7 @@
               <div class="col-12 col-md mt-3">
                 <label class="f-color-3 mb-1">Transfer Fees</label>
                 <input
-                  type="text"
+                  type="number"
                   class="form-control"
                   placeholder="Transfer Fess"
                   v-model="data.transferFess"
@@ -63,7 +63,7 @@
               <div class="col-12 col-md mt-3">
                 <label class="f-color-3 mb-1">Extra amount</label>
                 <input
-                  type="text"
+                  type="number"
                   class="form-control"
                   placeholder="Enter Extra amount"
                   v-model="data.extraAmount"
@@ -73,7 +73,7 @@
               <div class="col-12 col-md mt-3">
                 <label class="f-color-3 mb-1">Paid Hours</label>
                 <input
-                  type="text"
+                  type="number"
                   class="form-control"
                   ref="totalHours"
                   placeholder="Enter Paid Hours"
@@ -92,7 +92,7 @@
               <div class="col-12 col-md mt-3">
                 <label class="f-color-3 mb-1">Total amount paid</label>
                 <input
-                  type="text"
+                  type="number"
                   class="form-control"
                   placeholder="Edit total amount paid"
                   v-model="data.totalAmountPaid"
@@ -115,13 +115,6 @@
                   <option value="4">Western Union</option>
                   <option value="5">Other</option>
                 </select>
-
-                <!-- <input
-                  type="text"
-                  class="form-control"
-                  v-model="data.paymentMethod"
-                  required
-                /> -->
               </div>
             </div>
             <!-- Invoice Number & Payment date -->
@@ -130,7 +123,7 @@
               <div class="col-12 col-md-6 mt-3">
                 <label class="f-color-3 mb-1">Invoice Number</label>
                 <input
-                  type="text"
+                  type="number"
                   class="form-control"
                   placeholder="Enter the Invoice number"
                   v-model="data.invoiceNumber"
@@ -216,22 +209,17 @@ export default {
   },
   methods: {
     getData() {
-      console.log("a  ");
-
       let url = `http://localhost:3300/api/v1/admin/bills/path2/${this.invoiceID}`;
       axios
         .get(url)
         .then((res) => {
-          console.log(res.data);
-
           if (!res.data.success) {
-            this.$router.push("/manage/bills");
+            this.$router.push("/admin/bills");
             return (this.alerts.error = res.data.msg);
           }
           this.alerts.error = null;
           this.data = res.data.rows[0];
 
-          console.log(this.data);
           this.data.isSent = this.data.isSent === 1 ? true : false;
           this.data.paymentDate = moment(this.data.paymentDate).format(
             "YYYY-MM-DD"
@@ -258,7 +246,6 @@ export default {
           : this.$refs.totalHours * 60; //Save as minutes
       this.data.classesIDs = this.classesIDs; //Store invoiceID as paid classes
       this.data.isSent = this.data.isSent ? 1 : 0;
-      console.log(this.data);
       delete this.data.hoursPrice;
       delete this.data.transferPrice;
       let url = `http://localhost:3300/api/v1/admin/bills/path4/${this.invoiceID}`;
@@ -267,7 +254,6 @@ export default {
         .then((res) => {
           if (!res.data.success) {
             this.loadingBtn = false;
-            console.log(res.data);
             return (this.alerts.error = res.data.msg);
           }
           this.alerts.success = res.data.msg;

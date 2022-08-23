@@ -156,16 +156,6 @@ export default {
     },
   },
   created() {
-    if (this.$route.params.reschedule) {
-      let btn = document.createElement("button");
-      btn.setAttribute("data-bs-toggle", "modal");
-      btn.setAttribute("data-bs-target", "#RescheduleClassModal");
-
-      document.body.appendChild(btn);
-      setTimeout(() => {
-        btn.click();
-      }, 500);
-    }
     this.getData();
   },
 };

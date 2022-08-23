@@ -52,7 +52,7 @@
           <span class="d-block">Done Hours</span>
 
           <h3 class="numb text-end">
-            {{ usersData.hours ? (usersData.hours / 60).toFixed(2) : 0 }}
+            {{ usersData?.hours ? (usersData.hours / 60).toFixed(2) : 0 }}
           </h3>
         </div>
       </div>
@@ -63,7 +63,7 @@
           <span class="d-block">Active Students</span>
           <h3 class="numb text-end">
             {{
-              usersData.activeStudentsCount ? usersData.activeStudentsCount : 0
+              usersData?.activeStudentsCount ? usersData.activeStudentsCount : 0
             }}
           </h3>
         </div>
@@ -129,21 +129,21 @@
                   <tr class="table-light">
                     <td>
                       {{
-                        usersData.activeStudentsCount
+                        usersData?.activeStudentsCount
                           ? usersData.activeStudentsCount
                           : 0
                       }}
                     </td>
                     <td>
                       {{
-                        usersData.vacationStudentsCount
+                        usersData?.vacationStudentsCount
                           ? usersData.vacationStudentsCount
                           : 0
                       }}
                     </td>
                     <td>
                       {{
-                        usersData.inactiveStudentsCount
+                        usersData?.inactiveStudentsCount
                           ? usersData.inactiveStudentsCount
                           : 0
                       }}
@@ -166,21 +166,21 @@
                   <tr class="table-light">
                     <td>
                       {{
-                        usersData.activeTeachersCount
+                        usersData?.activeTeachersCount
                           ? usersData.activeTeachersCount
                           : 0
                       }}
                     </td>
                     <td>
                       {{
-                        usersData.vacationTeachersCount
+                        usersData?.vacationTeachersCount
                           ? usersData.vacationTeachersCount
                           : 0
                       }}
                     </td>
                     <td>
                       {{
-                        usersData.inactiveTeachersCount
+                        usersData?.inactiveTeachersCount
                           ? usersData.inactiveTeachersCount
                           : 0
                       }}
@@ -392,21 +392,21 @@
                   <tr class="table-light">
                     <td>
                       {{
-                        usersData.attendedClassHours
+                        usersData?.attendedClassHours
                           ? (usersData.attendedClassHours / 60).toFixed(2)
                           : 0
                       }}
                     </td>
                     <td>
                       {{
-                        usersData.scheduledClassHours
+                        usersData?.scheduledClassHours
                           ? (usersData.scheduledClassHours / 60).toFixed(2)
                           : 0
                       }}
                     </td>
                     <td>
                       {{
-                        usersData.paidClassHours
+                        usersData?.paidClassHours
                           ? (usersData.paidClassHours / 60).toFixed(2)
                           : 0
                       }}
@@ -430,11 +430,11 @@
                   <tbody>
                     <tr class="table-light">
                       <td>
-                        {{ usersData.dueInvoice ? usersData.dueInvoice : 0 }}
+                        {{ usersData?.dueInvoice ? usersData.dueInvoice : 0 }}
                       </td>
                       <td>
                         {{
-                          usersData.paidInvoicesHours
+                          usersData?.paidInvoicesHours
                             ? (usersData.paidInvoicesHours / 60).toFixed(2)
                             : 0
                         }}
@@ -455,10 +455,10 @@
                   <tbody>
                     <tr class="table-light">
                       <td>
-                        {{ usersData.AdvancePay ? usersData.AdvancePay : 0 }}
+                        {{ usersData?.AdvancePay ? usersData.AdvancePay : 0 }}
                       </td>
                       <td>
-                        {{ usersData.ArrearsPay ? usersData.ArrearsPay : 0 }}
+                        {{ usersData?.ArrearsPay ? usersData.ArrearsPay : 0 }}
                       </td>
                     </tr>
                   </tbody>
@@ -533,15 +533,16 @@ export default {
         .get("http://localhost:3300/auth/v1/path11")
         .then((res) => {
           if (!res.data.success) {
-            this.$router.push("/manage");
+            this.$router.push("/admin");
           }
           (this.userID = res.data.data[0].id), (this.data = res.data.data[0]);
+
           this.getHoursAndStudentsNum();
           this.getDueInvoices();
           this.displayData = true;
         })
         .catch(() => {
-          this.$router.push("/manage");
+          this.$router.push("/admin");
         });
     },
     getHoursAndStudentsNum() {
@@ -551,6 +552,7 @@ export default {
         .then((res) => {
           if (res.data.success) {
             this.usersData = res.data.rows[0];
+
             // console.log(this.usersData.dueInvoicesHours);
 
             // (this.hours = res.data.rows[0].hours),
@@ -567,7 +569,7 @@ export default {
           }
         })
         .catch(() => {
-          this.$router.push("/");
+          this.$router.push("/admin");
         });
     },
     getDueInvoices() {
@@ -603,7 +605,7 @@ export default {
           }
         })
         .catch(() => {
-          this.$router.push("/");
+          this.$router.push("/admin");
         });
     },
     getEmailsStatus() {
@@ -629,11 +631,11 @@ export default {
   created() {
     this.getUserData();
     this.getEmailsStatus();
-    window.setInterval(() => {
-      // Display local current time of user
-      // this.userTime = moment().tz("Africa/Algiers").format("HH:mm");
-      this.userTime = moment().format("HH:mm");
-    }, 1000);
+    // window.setInterval(() => {
+    // Display local current time of user
+    // this.userTime = moment().tz("Africa/Algiers").format("HH:mm");
+    this.userTime = moment().format("HH:mm");
+    // }, 1000);
   },
 };
 </script>

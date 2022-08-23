@@ -27,7 +27,7 @@
             <!-- Subject & Teacher -->
             <div class="row flex-wrap">
               <!-- Subject -->
-              <div class="col-12 col-md ">
+              <div class="col-12 col-md">
                 <select class="form-select" v-model="subject" required>
                   <option value="">Subject</option>
                   <option v-for="subject in subjectsList" :key="subject.id">
@@ -36,7 +36,7 @@
                 </select>
               </div>
               <!-- Teacher -->
-              <div class="col-12 col-md ">
+              <div class="col-12 col-md">
                 <v-select
                   placeholder="Teacher"
                   :options="teachers"
@@ -112,6 +112,9 @@
                 /> -->
 
                 <Datepicker
+                  minutesIncrement="15"
+                  minutesGridIncrement="15"
+                  autoApply
                   v-model="startingDate"
                   placeholder="Type or choose a date"
                   textInput
@@ -192,38 +195,6 @@
               </div>
             </div>
             <div class="row flex-wrap">
-              <!-- Count for -->
-              <div class="col-12 col-md-6 mt-3">
-                <label class="f-color-3 mb-1">Count for</label>
-                <div>
-                  <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      value=""
-                      id="flexCheckDefault"
-                      v-model="countForTeacher"
-                      :checked="countForTeacher"
-                    />
-                    <label class="form-check-label" for="flexCheckDefault">
-                      Teacher
-                    </label>
-                  </div>
-                  <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      value=""
-                      id="flexCheckChecked"
-                      v-model="countForStudent"
-                      :checked="countForStudent"
-                    />
-                    <label class="form-check-label" for="flexCheckChecked">
-                      Student
-                    </label>
-                  </div>
-                </div>
-              </div>
               <div class="col-12 col-md mt-3">
                 <label class="f-color-3 mb-1">Payment Cycle</label>
                 <input
@@ -234,6 +205,45 @@
                   min="1"
                   v-model="payEvery"
                 />
+              </div>
+              <div class="col-12 col-md mt-5">
+                <v-select
+                  placeholder="TimeZone"
+                  :options="TimeZoneList"
+                  v-model="timeZone"
+                />
+              </div>
+            </div>
+            <!-- Count for -->
+            <div class="col-12 col-md-6 mt-3">
+              <label class="f-color-3 mb-1">Count for</label>
+              <div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value=""
+                    id="flexCheckDefault"
+                    v-model="countForTeacher"
+                    :checked="countForTeacher"
+                  />
+                  <label class="form-check-label" for="flexCheckDefault">
+                    Teacher
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value=""
+                    id="flexCheckChecked"
+                    v-model="countForStudent"
+                    :checked="countForStudent"
+                  />
+                  <label class="form-check-label" for="flexCheckChecked">
+                    Student
+                  </label>
+                </div>
               </div>
             </div>
             <!-- Submit -->
@@ -289,6 +299,7 @@ import "vue-select/dist/vue-select.css";
 import Datepicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import RepeatingDays from "@/components/admin/sections/classes/RepeatingDays";
+import Tz from "@/components/Tz.json";
 
 export default {
   components: {
@@ -338,6 +349,7 @@ export default {
       countForTeacher: true,
       countForStudent: true,
       timeZone: moment.tz.guess(),
+      TimeZoneList: Tz,
 
       daysTime: {
         Sun: "",
@@ -358,7 +370,6 @@ export default {
         Fri: "",
         Sat: "",
       },
-      test: "testing text",
     };
   },
   methods: {
@@ -475,7 +486,9 @@ export default {
 
       //Convert times to array
       let timesOfDays = Object.values(this.daysTime);
-      timesOfDays = timesOfDays.filter((item) => item !== "undefined:undefined");
+      timesOfDays = timesOfDays.filter(
+        (item) => item !== "undefined:undefined"
+      );
 
       //Convert days to array
       let selectedDaysArray = Object.values(this.selectedDays);
@@ -560,7 +573,7 @@ export default {
 <style scoped>
 @media (min-width: 576px) {
   .modal-dialog {
-    max-width: 70%;
+    max-width: 55%;
   }
 }
 .days-list li {

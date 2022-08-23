@@ -240,7 +240,7 @@ export default {
         .get(url)
         .then((res) => {
           if (!res.data.success) {
-            this.$router.push("/manage/bills");
+            this.$router.push("/admin/bills");
             return (this.alerts.error = res.data.msg);
           }
           this.alerts.error = null;

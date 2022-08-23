@@ -336,7 +336,7 @@ export default {
         .get(url)
         .then((res) => {
           if (!res.data.success) {
-            this.$router.push("/manage/bills");
+            this.$router.push("/admin/bills");
             return (this.alerts.error = res.data.msg);
           }
           this.alerts.error = null;
@@ -344,7 +344,9 @@ export default {
           this.data[0].paymentMethod = this.data[0].paymentMethod
             ? this.data[0].paymentMethod
             : 0;
-          if (this.data[0].paymentType == 1) {
+          if (this.data[0].payFor) {
+            this.getPayEveryClasses();
+          } else if (this.data[0].paymentType == 1) {
             this.getPrepaidClasses();
           } else if (this.data[0].paymentType == 2) {
             this.getPostPaidClasses();
@@ -356,13 +358,47 @@ export default {
           console.log("Invoice Info/Error catched");
         });
     },
+    getPayEveryClasses() {
+      let url = `http://localhost:3300/api/v1/admin/bills/guardian/path10/${this.invoiceID}`;
+      axios
+        .get(url)
+        .then((res) => {
+          if (!res.data.success) {
+            // this.$router.push('/admin/bills');
+            return (this.alerts.error = res.data.msg);
+          }
+          this.alerts.error = null;
+          this.classes = res.data.rows;
+
+          this.totalHours = 0; // Re-Inisialization
+          this.classes.forEach((row) => {
+            if (parseInt(row.countOnInvoice) === 1)
+              this.totalHours = this.totalHours + row.duration;
+          });
+
+          ///
+          let ids = [];
+          let arrayOfObject = this.classes;
+
+          for (let i in arrayOfObject) {
+            ids.push(arrayOfObject[i].id);
+          }
+          this.classesIDs = ids.join(",");
+          console.log(this.classesIDs);
+
+          ///
+        })
+        .catch(() => {
+          console.log("Invoice Info/Error catched");
+        });
+    },
     getPrepaidClasses() {
       let url = `http://localhost:3300/api/v1/admin/bills/path3/${this.invoiceID}`;
       axios
         .get(url)
         .then((res) => {
           if (!res.data.success) {
-            // this.$router.push('/manage/bills');
+            // this.$router.push('/admin/bills');
             return (this.alerts.error = res.data.msg);
           }
           this.alerts.error = null;
@@ -400,7 +436,7 @@ export default {
         .get(url, queryReq)
         .then((res) => {
           if (!res.data.success) {
-            // this.$router.push('/manage/bills');
+            // this.$router.push('/admin/bills');
             return (this.alerts.error = res.data.msg);
           }
           this.alerts.error = null;
@@ -441,7 +477,7 @@ export default {
               return (this.alerts.error = res.data.msg);
             }
             this.alerts.success = res.data.msg;
-            this.$router.push("/manage/bills");
+            this.$router.push("/admin/bills");
           });
       }
     },

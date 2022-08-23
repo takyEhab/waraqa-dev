@@ -125,7 +125,7 @@
         </div>
         <div v-for="row in data" :key="row.id" class="table-row py-3">
           <div class="px-2 d-flex f-color-3">
-            <span class="col-2">
+            <span class="col-2" style="font-family: Merienda">
               <span style="margin-left: 35px; font-weight: 900; color: #4c4a4c">
                 {{ moment(row.startingDate).format("hh:mm A") }}
               </span>
@@ -160,7 +160,7 @@
 
             <div class="col-1">
               <!-- Example single danger button -->
-              <div v-if="userType == 'Teacher'" class="btn-group dropstart">
+              <div class="btn-group dropstart">
                 <!-- <i data-bs-toggle="dropdown" class=" fa-2x fa fa-caret-down"></i> -->
                 <div data-bs-toggle="dropdown" class="btn">
                   <i class="fa fa-lg fa-ellipsis-v"></i>
@@ -188,7 +188,7 @@
                     >
                   </li>
 
-                  <li>
+                  <li v-if="userType == 'Teacher'">
                     <button
                       @click="
                         remindUser({
@@ -257,47 +257,6 @@
                   </li>
                 </ul>
               </div>
-
-              <router-link
-                v-if="userType == 'Guardian'"
-                :to="{
-                  name: 'ClientClassInfo',
-                  params: {
-                    id: row.id,
-                    tap: true,
-                    page: pagination.page,
-                    offset: pagination.offset,
-                    filter: Object.keys(filters).find(
-                      (key) => filters[key] == true
-                    ),
-                  },
-                }"
-                class="f-color-1"
-                style="margin-right: 20px"
-                ><i class="fas fa-eye"></i
-              ></router-link>
-
-              <!-- <router-link
-                v-if="
-                  userType == 'Teacher' && !row.status && row.canReport == 1
-                  // Math.abs(moment().diff(row.startingDate, 'hours')) < 72
-                "
-                :to="{
-                  name: 'ClientClassInfo',
-                  params: {
-                    id: row.id,
-                    submitClassReport: true,
-                    tap: true,
-                    page: pagination.page,
-                    offset: pagination.offset,
-                    filter: Object.keys(filters).find(
-                      (key) => filters[key] == true
-                    ),
-                  },
-                }"
-                class="soft-button-style rounded ms-2 px-3 py-2"
-                >Submit</router-link
-              > -->
             </div>
           </div>
         </div>

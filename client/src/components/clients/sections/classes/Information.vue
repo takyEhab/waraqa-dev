@@ -358,6 +358,7 @@
           class="secondery-btn rounded px-3 py-2"
           data-bs-toggle="modal"
           data-bs-target="#RescheduleClassModal"
+          ref="rescheduleRef"
           >Reschedule</span
         >
         <span
@@ -365,6 +366,8 @@
           class="soft-button-style rounded ms-2 px-3 py-2"
           data-bs-toggle="modal"
           data-bs-target="#AddReportModal"
+          ref="submitRef"
+
           >Submit</span
         >
         <RescheduleReq :classID="classID" />
@@ -400,12 +403,13 @@ import axios from "axios";
 import moment from "moment";
 import EndClass from "@/components/admin/sections/classes/EndClass";
 import RescheduleReq from "@/components/clients/sections/classes/RescheduleReq";
+
 export default {
   props: ["userType"],
   components: { EndClass, RescheduleReq },
   data() {
     return {
-      displayData: false,
+      displayData: true,
       loadingBtn: false,
       alerts: {
         success: null,
@@ -426,7 +430,7 @@ export default {
       return moment(date);
     },
     getData() {
-      let url = `http://localhost:3300/api/v1/admin/classes/path2/${this.classID}`;
+      let url = `http://64.227.76.156:3300/api/v1/admin/classes/path2/${this.classID}`;
       axios
         .get(url)
         .then((res) => {
@@ -460,7 +464,44 @@ export default {
             moment().isAfter(this.data[0].startingDate) &&
             this.data[0].canReport;
           this.displayData = true;
+          // let classRep = this.$route.params.submitClassReport;
+          // let reschedule = this.$route.params.reschedule;
+          // if (classRep || reschedule) {
+          //   console.log(classRep);
+          //   console.log(reschedule);
+          //   let btn = document.createElement("button");
+          //   btn.setAttribute("data-bs-toggle", "modal");
+          //   btn.setAttribute(
+          //     "data-bs-target",
+          //     classRep ? "#AddReportModal" : "#RescheduleClassModal"
+          //   );
+
+          //   document.body.appendChild(btn);
+          //   btn.click();
+          // }
+
+          // setTimeout(() => {
+          // }, 1000);
         })
+        // .then(() => {
+        //   let classRep = this.$route.params.submitClassReport;
+        //   let reschedule = this.$route.params.reschedule;
+        //   if (classRep || reschedule) {
+        //     reschedule ? this.$refs.rescheduleRef.click() : this.$refs.submitRef.click()
+        //     // let btn = document.createElement("button");
+        //     // btn.setAttribute("data-bs-toggle", "modal");
+        //     // btn.setAttribute(
+        //     //   "data-bs-target",
+        //     //   reschedule ? "#RescheduleClassModal" : "#AddReportModal"
+        //     // );
+
+        //     // document.body.appendChild(btn);
+
+        //     // setTimeout(() => {
+        //     //   btn.click();
+        //     // }, 4000);
+        //   }
+        // })
         .catch(() => {
           console.log("Class Info/Error catched");
         });
@@ -478,7 +519,7 @@ export default {
           startingDate: this.data[0].startingDate,
         };
 
-        let url = `http://localhost:3300/api/v1/admin/classes/path7`;
+        let url = `http://64.227.76.156:3300/api/v1/admin/classes/path7`;
         axios
           .post(url, data)
           .then((res) => {
@@ -500,18 +541,27 @@ export default {
   created() {
     this.classID = this.$route.params.id;
     this.getData();
-
-    if (this.$route.params.submitClassReport) {
-      let btn = document.createElement("button");
-      btn.setAttribute("data-bs-toggle", "modal");
-      btn.setAttribute("data-bs-target", "#AddReportModal");
-
-      document.body.appendChild(btn);
-      setTimeout(() => {
-        btn.click();
-      }, 500);
-    }
   },
+  mounted() {
+    console.log('mounted')
+    let classRep = this.$route.params.submitClassReport;
+          let reschedule = this.$route.params.reschedule;
+          if (classRep || reschedule) {
+            reschedule ? this.$refs.rescheduleRef.click() : this.$refs.submitRef.click()
+            // let btn = document.createElement("button");
+            // btn.setAttribute("data-bs-toggle", "modal");
+            // btn.setAttribute(
+            //   "data-bs-target",
+            //   reschedule ? "#RescheduleClassModal" : "#AddReportModal"
+            // );
+
+            // document.body.appendChild(btn);
+
+            // setTimeout(() => {
+            //   btn.click();
+            // }, 4000);
+          }
+  }
 };
 </script>
 <style>

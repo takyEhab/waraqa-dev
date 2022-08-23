@@ -472,7 +472,7 @@ export default {
         .get(url)
         .then((res) => {
           if (!res.data.success) {
-            this.$router.push("/manage/teachers");
+            this.$router.push("/admin/teachers");
             return (this.alerts.error = res.data.msg);
           }
           this.alerts.error = null;
@@ -497,7 +497,7 @@ export default {
               return (this.alerts.error = res.data.msg);
             }
             this.alerts.success = res.data.msg;
-            this.$router.push("/manage/teachers");
+            this.$router.push("/admin/teachers");
           });
       }
     },

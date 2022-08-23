@@ -242,7 +242,7 @@ export default {
         .get(url)
         .then((res) => {
           if (!res.data.success) {
-            // this.$router.push('/manage/exp');
+            // this.$router.push('/admin/exp');
             return;
           }
           this.data = res.data.rows[0];

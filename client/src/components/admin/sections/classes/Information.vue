@@ -524,7 +524,7 @@ export default {
         .get(url)
         .then((res) => {
           if (!res.data.success) {
-            this.$router.push("/manage/classes");
+            this.$router.push("/admin/classes");
             return (this.alerts.error = res.data.msg);
           }
           this.alerts.error = null;
@@ -535,6 +535,15 @@ export default {
           this.addReportPermission();
 
           this.displayData = true;
+        })
+        .then(() => {
+          if (this.$route.params.submitClassReport) {
+            let btn = document.createElement("button");
+            btn.setAttribute("data-bs-toggle", "modal");
+            btn.setAttribute("data-bs-target", "#AddReportModal");
+            document.body.appendChild(btn);
+            btn.click();
+          }
         })
         .catch(() => {
           console.log("Class Info/Error catched");
@@ -643,25 +652,14 @@ export default {
               return (this.alerts.error = res.data.msg);
             }
             this.alerts.success = res.data.msg;
-            this.$router.push("/manage");
+            this.$router.push("/admin");
           });
       }
     },
   },
   created() {
-
     this.classID = this.$route.params.id;
     this.getData();
-    if (this.$route.params.submitClassReport) {
-      let btn = document.createElement("button");
-      btn.setAttribute("data-bs-toggle", "modal");
-      btn.setAttribute("data-bs-target", "#AddReportModal");
-
-      document.body.appendChild(btn);
-      setTimeout(() => {
-        btn.click();
-      }, 500);
-    }
   },
 };
 </script>

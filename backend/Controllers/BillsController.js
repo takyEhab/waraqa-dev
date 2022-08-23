@@ -5,6 +5,7 @@ const {
 } = require("./NotificationAndEmailController");
 
 const moment = require("moment-timezone");
+
 let oneGuardianInvoice = (req, res, next) => {
   let id = req.params.id;
   query = `SELECT guardianinvoices.*, guardians.name AS guardianName,
@@ -44,19 +45,6 @@ let prepaidClasses = (req, res, next) => {
                 )
             ORDER BY classes.startingDate
     `;
-
-  // query = `SELECT classes.*, teachers.name AS teacherName, students.name AS studentName
-  //                 FROM classes
-  //                 INNER JOIN teachers
-  //                 ON classes.teacherID = teachers.id
-  //                 INNER JOIN students
-  //                 ON classes.studentID = students.id
-  //                 WHERE classes.invoiceID = ${id}
-  //                 AND classes.countForStudent = 1
-
-  //                 ORDER BY classes.startingDate DESC
-  //                 `;
-  // WHERE classes.startingDate BETWEEN guardianinvoices.createdAt AND DATE_ADD(guardianinvoices.createdAt, INTERVAL 1 MONTH)
   msg = "There are no results available to display.";
   return next();
 };
@@ -208,6 +196,7 @@ let teacherInvoiceClasses = (req, res, next) => {
   let queryReq = req.query;
   let id = queryReq.teacherID; // teacherID
   let fromActivatedAt = queryReq.InvoiceActivatedAt;
+  console.log(fromActivatedAt);
 
   let firstDateOfMonth = moment(fromActivatedAt)
     .subtract(1, "months")
@@ -217,7 +206,8 @@ let teacherInvoiceClasses = (req, res, next) => {
     .subtract(1, "months")
     .endOf("month")
     .format("YYYY-MM-DD HH:mm:ss"); //last date of last month DEPEND of fromActivatedAt
-
+  console.log(firstDateOfMonth);
+  console.log(lastDateOfMonth);
   // let firstDateOfMonth = moment(fromActivatedAt).startOf('month').format('YYYY-MM-DD HH:mm:ss'); // first date of the month DEPEND of fromActivatedAt
   // let lastDateOfMonth = moment(fromActivatedAt).endOf('month').format('YYYY-MM-DD HH:mm:ss'); //last date of the month DEPEND of fromActivatedAt
 
@@ -279,7 +269,7 @@ let teachersPaywages = (req, res, next) => {
             WHERE (classes.status = 1 OR classes.status = 4)
             AND (classes.startingDate BETWEEN '${firstDateOfLastMonth}' AND '${lastDateOfLastMonth}')
             `;
-  dataBase.query(query, (error, data) => {
+  dataBase.query(query, async (error, data) => {
     if (error || !data.length) {
       return res.json({
         success: false,
@@ -309,10 +299,11 @@ let teachersPaywages = (req, res, next) => {
     };
     for (var i in data) {
       configTeacherEmail.to += data[i].email + ",";
+      await openNewTeacherInvoiceFunc(data[i].id);
 
-      // set hours to 0
-      let query2 = `UPDATE teachers SET hours = 0 WHERE id = ${data[i].id}`;
-      dataBase.query(query2);
+      // // // set hours to 0
+      // let query2 = `UPDATE teachers SET hours = 0 WHERE id = ${data[i].id}`;
+      // dataBase.query(query2);
     }
 
     sendEmail(configTeacherEmail);
@@ -336,15 +327,13 @@ let teachersPaywages = (req, res, next) => {
     res.json({ success: true, msg: "Inform teachers process is successfully" });
   });
 };
-// Active & Open new
-let openNewTeacherInvoice = (req, res) => {
+
+let openNewTeacherInvoiceFunc = async (id) => {
   // Notice : First invoice of teacher is must be created on his first counted class, but incactive invoice.
 
   // Step1 : Check if this Teacher has students that they have [ classes(status=1 or status=4) and classes.startingdate between last and first day of last month, AND no invoice After the first of this month
   //Step2: Update the inactive invoice (active = 1)
   //Step3: Open new inactive invoice (active = 0)
-
-  let id = req.params.id;
   let firstDateOfLastMonth = moment()
     .subtract(1, "months")
     .startOf("month")
@@ -358,7 +347,7 @@ let openNewTeacherInvoice = (req, res) => {
   // let lastDateOfMonth = moment().endOf('month').format('YYYY-MM-DD HH:mm:ss'); //last date of Current month
 
   // Step1 : Check if this Teacher has students that they have [ classes(status=1 or status=4) and classes.startingdate between last and first day of last month, AND no invoice After the first of this month
-  query = `SELECT DISTINCT teachers.id, teacherinvoices.createdAt AS invoiceDate, teacherinvoices.id AS invoiceID
+  query = `SELECT DISTINCT teachers.id, teachers.hours AS teachingHours, teacherinvoices.createdAt AS invoiceDate, teacherinvoices.id AS invoiceID
             FROM teachers
             INNER JOIN classes
             ON classes.teacherID = teachers.id
@@ -388,12 +377,15 @@ let openNewTeacherInvoice = (req, res) => {
       let invoiceData = {
         active: 1,
         activatedAt: new Date(),
+        teachingHours: data[0].teachingHours,
       };
       let invoiceID = data[0].invoiceID;
       dataBase.query(
         `UPDATE teacherinvoices SET ? WHERE id = ? `,
         [invoiceData, invoiceID],
         (error, data) => {
+          console.log(error);
+          console.log(data);
           if (error || !data) {
             return console.log("Failed active the invoice of the teacher!");
           }
@@ -414,6 +406,9 @@ let openNewTeacherInvoice = (req, res) => {
           sendNotification(notiConfig);
           //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+          // // set hours to 0
+          let query2 = `UPDATE teachers SET hours = 0 WHERE id = ${id}`;
+          dataBase.query(query2);
           //Open new inactive Invoice
           let invoiceData = {
             teacherID: id,
@@ -424,20 +419,24 @@ let openNewTeacherInvoice = (req, res) => {
             [invoiceData],
             (error, data) => {
               if (error || !data) {
-                return res.json({
-                  success: false,
-                  msg: "Failed create teacher invoice to the teacher!",
-                });
+                return;
               }
             }
           );
         }
       );
     } else {
-      return res.json({ success: false, msg: "No invoice created" });
+      return;
     }
   });
 };
+// Active & Open new
+let openNewTeacherInvoice = async (req, res) => {
+  let id = req.params.id;
+  await openNewTeacherInvoiceFunc(id);
+  res.json({ msg: "done" });
+};
+
 let billsOfTeacher = (req, res, next) => {
   let id = tokenData.id;
 
@@ -470,6 +469,7 @@ let billsOfTeacher = (req, res, next) => {
   msg = "There are no results available to display.";
   return next();
 };
+
 let billsOfGuardian = (req, res, next) => {
   let id = tokenData.id;
 
@@ -499,6 +499,7 @@ let billsOfGuardian = (req, res, next) => {
   msg = "There are no results available to display.";
   return next();
 };
+
 let guardianPaymentReq = (req, res) => {
   console.log("guardianPaymentReq");
   //Get emails of guardian that their payment type is "postpaid", and has students that they have [ classes(status=1 or status=4) and classes.startingDate between first and last of last month
@@ -604,7 +605,25 @@ const changeClassInvoiceCount = (req, res) => {
     }
   );
 };
-
+// query = `SELECT classes.*, teachers.name AS teacherName, students.name AS studentName
+//                     FROM classes
+//                     INNER JOIN teachers
+//                     ON classes.teacherID = teachers.id
+//                     INNER JOIN students
+//                     ON classes.studentID = students.id
+//                     INNER JOIN guardians
+//                     ON guardians.id = students.guardianID
+//                     INNER JOIN guardianinvoices
+//                     ON guardianinvoices.guardianID = guardians.id
+//                     WHERE guardianinvoices.id = ${id}
+//                     AND (classes.status = 1 OR classes.status = 4) AND classes.countForStudent = 1
+//                     AND (
+//                         (guardianinvoices.paid=1 AND classes.invoiceID=${id})
+//                     OR
+//                         (guardianinvoices.paid!=1 AND classes.invoiceID IS NULL AND classes.startingDate BETWEEN '${firstDateOfMonth}' AND '${lastDateOfMonth}')
+//                     )
+//                     ORDER BY classes.startingDate
+//                     `;
 let activatePostPaidGuardianInvoice = (req, res) => {
   console.log("activatePostPaidGuardianInvoice");
 
@@ -614,7 +633,7 @@ let activatePostPaidGuardianInvoice = (req, res) => {
     .startOf("month")
     .format("YYYY-MM-DD HH:mm:ss"); // first date of Current month
 
-  let query = `SELECT guardians.id,guardianinvoices.id AS invoiceID
+  let query = `SELECT guardians.id,guardians.name,guardians.email,guardianinvoices.id AS invoiceID
                 FROM guardians
                 INNER JOIN students
                 ON students.guardianID = guardians.id
@@ -634,6 +653,8 @@ let activatePostPaidGuardianInvoice = (req, res) => {
       return res.json({ success: false, msg: "There are no Invoice inactive" });
     }
     let guardianID = data[0].id;
+    let guardianEmail = data[0].email;
+    let guardianName = data[0].name;
     let invoiceID = data[0].invoiceID;
     let activeData = {
       active: 1,
@@ -649,22 +670,98 @@ let activatePostPaidGuardianInvoice = (req, res) => {
             msg: "There are no Invoice inactive",
           });
         }
-        //Notification ////////////////////////////////////////////////////////////////////////////////////////////
-        // Config Notification
-        notiConfig = {
-          type: 3,
-          admin: null,
-          teacherID: null,
-          guardianID: guardianID,
-          studentID: null,
-          adminMsg: null,
-          teacherMsg: null,
-          guardianMsg:
-            "We'd like to let you know that your invoice is now available on the Waraqa web platform; please for more details check bills section in your account.",
-        };
-        //Send Notification
-        sendNotification(notiConfig);
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////
+        activeData.activatedAt;
+
+        let firstDateOfMonth = moment(activeData.activatedAt)
+          .subtract(1, "months")
+          .startOf("month")
+          .format("YYYY-MM-DD HH:mm:ss"); // first date of last month DEPEND of fromActivatedAt
+        let lastDateOfMonth = moment(activeData.activatedAt)
+          .subtract(1, "months")
+          .endOf("month")
+          .format("YYYY-MM-DD HH:mm:ss"); //last date of last month DEPEND of fromActivatedAt
+
+        let query = `SELECT classes.* FROM classes 
+        INNER JOIN students 
+        ON classes.studentID = students.id
+        INNER JOIN guardians
+        ON guardians.id = students.guardianID
+        INNER JOIN guardianinvoices
+        ON guardianinvoices.guardianID = guardians.id
+        WHERE guardianinvoices.id = ${invoiceID}
+        AND (classes.status = 1 OR classes.status = 4) AND classes.countForStudent = 1
+        AND (guardianinvoices.paid!=1 AND classes.invoiceID IS NULL AND classes.startingDate BETWEEN '${firstDateOfMonth}' AND '${lastDateOfMonth}')
+        ORDER BY classes.startingDate`;
+        dataBase.query(query, (error, data) => {
+          if (error) return;
+
+          let dueHours = null;
+          if (data[0]) {
+            data.forEach((obj) => {
+              if (obj.duration) dueHours += parseInt(obj.duration);
+            });
+          }
+          let expectedUpcomingClasses = data ? [] : null;
+          for (i in data) {
+            expectedUpcomingClasses.push(
+              moment(data[i]?.startingDate).format("dddd, D MMM , hh:mm A")
+            );
+          }
+          expectedUpcomingClasses = expectedUpcomingClasses.join(" <br/> ");
+
+          //Notification ////////////////////////////////////////////////////////////////////////////////////////////
+          // Config Notification
+          notiConfig = {
+            type: 3,
+            admin: null,
+            teacherID: null,
+            guardianID,
+            studentID: null,
+            adminMsg: `Send (${guardianName}) a new invoice. His remaining hours are (${
+              dueHours ? dueHours : "No classes Hours"
+            }) and this is a summary of the last month classes:
+            ${
+              expectedUpcomingClasses
+                ? expectedUpcomingClasses
+                : "No Previous classes "
+            }`,
+            teacherMsg: null,
+            guardianMsg: `Your invoice is due. Here's a summary of this month's classes: ${
+              expectedUpcomingClasses
+                ? expectedUpcomingClasses
+                : "No Previous classes "
+            }`,
+            // guardianMsg:
+            //   "We'd like to let you know that your invoice is now available on the Waraqa web platform; please for more details check bills section in your account.",
+          };
+          //Send Notification
+          sendNotification(notiConfig);
+          //////////////////////////////////////////////////////////////////////////////////////////////////////////
+          configGuardianEmail = {
+            to: guardianEmail,
+            subject: "A new invoice",
+            html: `Your invoice is due. Here's a summary of this month's classes: ${
+              expectedUpcomingClasses
+                ? expectedUpcomingClasses
+                : "No Previous classes "
+            }`,
+          };
+          sendEmail(configGuardianEmail);
+
+          configAdminEmail = {
+            subject: "A new invoice",
+            html: ` <p>Send (${guardianName}) a new invoice. His remaining hours are (${
+              dueHours ? dueHours : "No classes Hours"
+            }) and this is a summary of the last month classes:
+                      ${
+                        expectedUpcomingClasses
+                          ? expectedUpcomingClasses
+                          : "No Previous classes "
+                      }</p>
+                      `,
+          };
+          sendEmail(configAdminEmail);
+        });
       }
     );
   });
@@ -691,6 +788,44 @@ let sentInvoice = (req, res) => {
     }
   );
 };
+
+let addInvoice = (req, res) => {
+  let query = `INSERT INTO guardianinvoices SET ?`;
+  dataBase.query(query, req.body, (error, data) => {
+    if (error) {
+      console.log(error);
+      return res.json({
+        success: false,
+        msg: "Couldn't create the invoice",
+        error,
+      });
+    }
+    console.log(data);
+    return res.json({ success: true, msg: "Invoice created" });
+  });
+};
+let getClassesForInvoice = (req, res, next) => {
+  let id = req.params.id;
+
+  query = `SELECT
+  classes.*,
+  teachers.name AS teacherName,
+  students.name AS studentName
+  FROM
+    classes
+  INNER JOIN teachers ON classes.teacherID = teachers.id
+  INNER JOIN students ON classes.studentID = students.id
+  INNER JOIN guardians ON guardians.id = students.guardianID
+  INNER JOIN guardianinvoices ON guardianinvoices.guardianID = guardians.id
+  WHERE
+  classes.countForStudent = 1 AND(
+      classes.status = 0 OR classes.status = 1 OR classes.status = 4
+  ) AND guardianinvoices.id = ${id} AND classes.invoiceID IS NULL AND classes.startingDate BETWEEN guardianinvoices.establishedAt AND(
+      guardianinvoices.establishedAt + INTERVAL guardianinvoices.payFor MONTH
+  )`;
+  msg = "There are no results available to display.";
+  return next();
+};
 module.exports = {
   oneGuardianInvoice,
   prepaidClasses,
@@ -708,4 +843,6 @@ module.exports = {
   activatePostPaidGuardianInvoice,
   sentInvoice,
   changeClassInvoiceCount,
+  addInvoice,
+  getClassesForInvoice,
 };

@@ -72,7 +72,7 @@
                 <div class="col-12 col-md mt-3">
                   <label class="f-color-3 mb-1">Teaching Hours</label>
                   <input
-                    type="text"
+                    type="number"
                     class="form-control"
                     placeholder="Teaching Hours"
                     v-model="hoursCalculted"
@@ -97,7 +97,7 @@
                 <div class="col-12 col-md mt-3">
                   <label class="f-color-3 mb-1">Payment method</label>
                   <input
-                    type="text"
+                    type="number"
                     class="form-control"
                     v-model="data.paymentMethod"
                     required
@@ -109,7 +109,7 @@
                 <div class="col-12 col-md-6 mt-3">
                   <label class="f-color-3 mb-1">Invoice Number</label>
                   <input
-                    type="text"
+                    type="number"
                     class="form-control"
                     placeholder="Invoice Number"
                     v-model="data.invoiceNumber"
@@ -180,7 +180,7 @@ export default {
         .get(url)
         .then((res) => {
           if (!res.data.success) {
-            this.$router.push("/manage/bills");
+            this.$router.push("/admin/bills");
             return (this.alerts.error = res.data.msg);
           }
           this.alerts.error = null;

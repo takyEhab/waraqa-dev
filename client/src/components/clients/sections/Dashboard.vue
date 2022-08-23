@@ -100,24 +100,24 @@
         <div
           v-if="
             (userType == 'Teacher' && !data.classLink) ||
-            (userType == 'Guardian' && !data.paymentType)
+            (userType == 'Guardian' && !data.paymentMethod)
           "
           class="mb-2 f-color-4 b-color-4_1 py-1 px-3 px-md-4"
         >
           Your information is currently incomplete; please complete all fields.
-          <span
+          <ins
             v-if="userType == 'Guardian'"
             data-bs-toggle="modal"
             data-bs-target="#editGuardianModal"
-            class="h4 f-color-3"
-            >Complete Info</span
+            class="link-primary h5"
+            >From Here</ins
           >
-          <span
+          <ins
             v-if="userType == 'Teacher'"
             data-bs-toggle="modal"
             data-bs-target="#editTeacherModal"
-            class="h4 f-color-3"
-            >Complete Info</span
+            class="link-primary h5"
+            >From Here</ins
           >
         </div>
         <!-- <div class="b-color-0 box-shadow-style px-3 px-md-4 py-4">

@@ -137,109 +137,109 @@ const routes = [
 
   // Dashboard routes
   {
-    path: "/manage",
+    path: "/admin",
     name: "Admin",
     component: Admin,
     children: [
       {
-        path: "/manage",
+        path: "/admin",
         component: Dashboard,
       },
       {
-        path: "/manage/teachers",
+        path: "/admin/teachers",
         component: Teachers,
         children: [
           {
-            path: "/manage/teachers",
+            path: "/admin/teachers",
             component: TeacherMain,
             name: "TeacherMain",
           },
           {
-            path: "/manage/teachers/:id",
+            path: "/admin/teachers/:id",
             name: "TeacherInfo",
             component: TeacherInfo,
           },
         ],
       },
       {
-        path: "/manage/guardians",
+        path: "/admin/guardians",
         component: Guardians,
         children: [
           {
-            path: "/manage/guardians",
+            path: "/admin/guardians",
             component: GuardianMain,
           },
           {
-            path: "/manage/guardians/:id",
+            path: "/admin/guardians/:id",
             name: "GuardianInfo",
             component: GuardianInfo,
           },
         ],
       },
       {
-        path: "/manage/students",
+        path: "/admin/students",
         component: Students,
         children: [
           {
-            path: "/manage/students",
+            path: "/admin/students",
             component: StudentMain,
             name: "StudentMain",
           },
           {
-            path: "/manage/students/:id",
+            path: "/admin/students/:id",
             name: "StudentInfo",
             component: StudentInfo,
           },
           {
-            path: "/manage/wait-list/students/:id",
+            path: "/admin/wait-list/students/:id",
             name: "WaitListStudentInfo",
             component: WaitListEdit,
           },
         ],
       },
       {
-        path: "/manage/classes",
+        path: "/admin/classes",
         component: Classes,
         children: [
           {
-            path: "/manage/classes",
+            path: "/admin/classes",
             name: "AdminClassMain",
             component: ClassMain,
           },
           {
-            path: "/manage/classes/:id",
+            path: "/admin/classes/:id",
             name: "ClassInfo",
             component: ClassInfo,
           },
         ],
       },
       {
-        path: "/manage/library",
+        path: "/admin/library",
         component: Library,
       },
       {
-        path: "/manage/bills",
+        path: "/admin/bills",
         component: Bills,
         children: [
           {
-            path: "/manage/bills",
+            path: "/admin/bills",
             component: BillsMain,
             name: "AdminBillsMain",
           },
           {
-            path: "/manage/bills/guardian/:id",
+            path: "/admin/bills/guardian/:id",
             name: "GuardianInvoiceInfo",
             component: GuardianInvoiceInfo,
           },
           {
-            path: "/manage/bills/teacher/:id",
+            path: "/admin/bills/teacher/:id",
             name: "TeacherInvoiceInfo",
             component: TeacherInvoiceInfo,
           },
         ],
       },
       {
-        path: "/manage/expenses",
+        path: "/admin/expenses",
         component: Expenses,
       },
     ],

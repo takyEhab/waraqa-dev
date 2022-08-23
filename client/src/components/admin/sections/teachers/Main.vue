@@ -175,7 +175,6 @@
     </div>
 
     <!-- Pagination -->
-
     <vue-awesome-paginate
       style="margin-top: 20px"
       :total-items="pageCount"

@@ -38,7 +38,7 @@
         </div>
         <div v-for="row in data" :key="row.id" class="table-row py-3">
           <div class="px-2 d-flex f-color-3">
-            <span class="col-3" >
+            <span class="col-3" style="font-family: Merienda">
               <span style="margin-left: 35px; font-weight: 900; color: #4c4a4c">
                 {{ moment(row.startingDate).format("hh:mm A") }}
               </span>
@@ -228,7 +228,7 @@ export default {
             }
 
             this.alerts.success = res.data.msg;
-            this.$router.push("/manage");
+            this.$router.push("/admin");
           });
       }
     },

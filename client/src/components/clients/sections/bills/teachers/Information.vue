@@ -101,11 +101,15 @@
       </div>
       <!-- Periodic evaluations list -->
       <div class="b-color-0 box-shadow-style mt-5 p-3">
-        <div
-          class="d-flex justify-content-between align-items-center flex-wrap"
-        ></div>
-        <div class="col-12 col-md-2 f-color-1 px-md-3 text-md-end">
-          <span>Total hours: {{ (totalHours / 60).toFixed(2) }}</span>
+        <div class="d-flex justify-content-end align-items-center flex-wrap">
+          <div class="col-12 col-md-4 f-color-1 px-md-3 text-md-end">
+            <span>Total hours: {{ (totalHours / 60).toFixed(2) }}</span
+            ><br />
+            <span
+              >Total teaching hours:
+              {{ (data[0].teachingHours / 60).toFixed(2) }}</span
+            >
+          </div>
         </div>
       </div>
       <!-- Table -->
@@ -197,7 +201,7 @@ export default {
         .get(url)
         .then((res) => {
           if (!res.data.success) {
-            this.$router.push("/manage/bills");
+            this.$router.push("/admin/bills");
             return (this.alerts.error = res.data.msg);
           }
           this.alerts.error = null;
@@ -221,7 +225,7 @@ export default {
         .get(url, queryReq)
         .then((res) => {
           if (!res.data.success) {
-            // this.$router.push('/manage/bills');
+            // this.$router.push('/admin/bills');
             return (this.alerts.error = res.data.msg);
           }
           this.alerts.error = null;
@@ -248,7 +252,7 @@ export default {
               return (this.alerts.error = res.data.msg);
             }
             this.alerts.success = res.data.msg;
-            this.$router.push("/manage/bills");
+            this.$router.push("/admin/bills");
           });
       }
     },

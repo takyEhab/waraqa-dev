@@ -309,7 +309,7 @@ export default {
           console.log();
 
           if (!res.data.success) {
-            this.$router.push("/manage/classes");
+            this.$router.push("/admin/classes");
             return (this.alerts.error = res.data.msg);
           }
           this.alerts.error = null;

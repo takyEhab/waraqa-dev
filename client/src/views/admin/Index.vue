@@ -42,10 +42,10 @@ export default {
           if (res.data.success) {
             return (this.isAuthorized = true);
           }
-          this.$router.push("/manage");
+          this.$router.push("/admin");
         })
         .catch(() => {
-          this.$router.push("/manage");
+          this.$router.push("/admin");
         });
     },
   },

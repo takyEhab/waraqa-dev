@@ -1,8 +1,10 @@
 <template>
   <div>
     <!-- Filters & Search -->
+
     <div class="mt-4 d-flex justify-content-md-between flex-wrap">
       <!-- Filters -->
+
       <div class="section-filters">
         <ul class="list-unstyled m-0 d-flex f-color-1">
           <li
@@ -19,7 +21,7 @@
               getData();
             "
           >
-            <small>Old</small>
+            <small> Old</small>
           </li>
           <li
             :class="[filters.one ? 'opacity-100' : '', 'ms-2 ms-md-3 px-2']"
@@ -123,8 +125,6 @@
       </div>
     </div>
     <!-- Table -->
-    <!-- 32 -->
-    {{ noReportCount }}
     <div
       class="mt-4 b-color-0 box-shadow-style px-md-2 py-3"
       style="overflow: hidden; overflow-x: auto"
@@ -142,7 +142,7 @@
         </div>
         <div v-for="row in data" :key="row.id" class="table-row py-3">
           <div class="px-2 d-flex f-color-3">
-            <span class="col-2">
+            <span class="col-2" style="font-family: Merienda">
               <span style="margin-left: 35px; font-weight: 900; color: #4c4a4c">
                 {{ moment(row.startingDate).format("hh:mm A") }}
               </span>
@@ -335,7 +335,6 @@ export default {
       },
       search: "",
       userDateTime: moment().format("YYYY-MM-DD HH:mm"),
-      noReportCount: 0,
     };
   },
   methods: {
@@ -384,12 +383,13 @@ export default {
             this.data = [];
             return (this.alerts.error = res.data.msg);
           }
-          this.noReportCount = 0;
           this.alerts.error = null;
           this.data = res.data.rows;
-          this.data.forEach((obj) => {
-            obj.status == 0 && this.noReportCount++;
-          });
+          this.$emit("noReportCount", this.data[0].noReportCount);
+
+          // this.data.forEach((obj) => {
+          //   obj.status == 0 && this.noReportCount++;
+          // });
           this.pageCount = this.data[0].fullCount;
         })
         .catch((e) => {
@@ -409,12 +409,11 @@ export default {
             this.data = [];
             return (this.alerts.error = res.data.msg);
           }
-          this.noReportCount = 0;
           this.alerts.error = null;
           this.data = res.data.rows;
-          this.data.forEach((obj) => {
-            obj.status == 0 && this.noReportCount++;
-          });
+          // this.data.forEach((obj) => {
+          //   obj.status == 0 && this.noReportCount++;
+          // });
           this.pageCount = this.data[0].fullCount;
         })
         .catch(() => {
@@ -433,7 +432,7 @@ export default {
             }
 
             this.alerts.success = res.data.msg;
-            this.$router.push("/manage");
+            this.$router.push("/admin");
           });
       }
     },

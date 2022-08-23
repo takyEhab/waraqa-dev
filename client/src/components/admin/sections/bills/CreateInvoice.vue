@@ -28,7 +28,7 @@
               <!-- Status -->
               <div class="col-12 col-md">
                 <label class="f-color-3 mb-1">Status</label>
-                <select class="form-select" required>
+                <select class="form-select" v-model="status" required>
                   <option value="">Select status</option>
                   <option value="1">Paid</option>
                   <option value="2">Unpaid</option>
@@ -38,13 +38,12 @@
                 <label class="f-color-3 mb-1">Guardian</label>
 
                 <v-select
-                  :options="guardians"  
+                  :options="guardians"
                   label="name"
                   :reduce="(guardian) => guardian.id"
                   v-model="guardianID"
                   placeholder="Select Guardian"
                 />
-
               </div>
             </div>
             <!-- Extra amount & paidHours -->
@@ -53,7 +52,8 @@
               <div class="col-12 col-md mt-3">
                 <label class="f-color-3 mb-1">Extra amount</label>
                 <input
-                  type="text"
+                  v-model="extraAmount"
+                  type="number"
                   class="form-control"
                   placeholder="Enter Extra amount"
                 />
@@ -62,10 +62,11 @@
               <div class="col-12 col-md mt-3">
                 <label class="f-color-3 mb-1">Paid Hours</label>
                 <input
-                  type="text"
+                  v-model="paidHours"
+                  type="number"
                   class="form-control"
                   placeholder="Enter Paid Hours"
-                  required
+                  :required="status == 1"
                 />
               </div>
             </div>
@@ -75,17 +76,18 @@
               <div class="col-12 col-md mt-3">
                 <label class="f-color-3 mb-1">Total amount paid</label>
                 <input
-                  type="text"
+                  v-model="totalAmountPaid"
+                  type="number"
                   class="form-control"
                   placeholder="Edit total amount paid"
-                  required
+                  :required="status == 1"
                 />
               </div>
               <!-- Payment method -->
               <div class="col-12 col-md mt-3">
                 <label class="f-color-3 mb-1">Payment method</label>
 
-                <select class="form-select" required>
+                <select class="form-select" v-model="paymentMethod" required>
                   <option value="0">Not selected</option>
                   <option value="1">PayPal</option>
                   <option value="2">Bank account</option>
@@ -100,7 +102,12 @@
               <!-- Payment date -->
               <div class="col-12 col-md-6 mt-3">
                 <label class="f-color-3 mb-1">Starting Date</label>
-                <input type="date" class="form-control" required />
+                <input
+                  type="date"
+                  class="form-control"
+                  v-model="startingDate"
+                  required
+                />
               </div>
 
               <!-- Invoice Number -->
@@ -112,48 +119,58 @@
                   placeholder="Months"
                   required
                   min="1"
-                  v-model="payEvery"
+                  v-model="payFor"
                 />
               </div>
             </div>
-
             <div class="row flex-wrap">
+              <!-- Transfer Fees -->
+              <div class="col-12 col-md mt-3">
+                <label class="f-color-3 mb-1">Transfer Fees</label>
+                <input
+                  v-model="transferFees"
+                  type="number"
+                  class="form-control"
+                  placeholder="Transfer Fess"
+                />
+              </div>
+
               <div class="col-12 col-md-6 mt-3">
                 <label class="f-color-3 mb-1">Invoice Number</label>
                 <input
-                  type="text"
+                  v-model="invoiceNumber"
+                  type="number"
                   class="form-control"
                   placeholder="Enter the Invoice number"
                   required
                 />
               </div>
-              <!-- Transfer Fees -->
-              <div class="col-12 col-md mt-3">
-                <label class="f-color-3 mb-1">Transfer Fees</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Transfer Fess"
-                />
-              </div>
-              <!-- sent -->
             </div>
-
-            <div class="mt-2">
-              <div>
+            <div class="row flex-wrap">
+              <div v-if="status == 1" class="col-12 col-md-6 mt-3">
+                <label class="f-color-3 mb-1">Payment Date</label>
+                <input type="date" class="form-control" v-model="paymentDate" />
+              </div>
+              <div
+                :class="['col-12', 'col-md', `mt-${status == 1 ? '5' : '3'}`]"
+              >
                 <div class="form-check">
                   <input
                     class="form-check-input"
                     type="checkbox"
                     value=""
                     id="flexCheckDefault"
+                    v-model="isSent"
+                    :checked="isSent"
                   />
                   <label class="form-check-label" for="flexCheckDefault">
                     Sent
                   </label>
                 </div>
               </div>
+              <!-- sent -->
             </div>
+
             <!-- Submit -->
             <div class="mt-4 text-end">
               <button
@@ -168,7 +185,7 @@
                     role="status"
                     aria-hidden="true"
                   ></span>
-                  <span v-else>Update</span>
+                  <span v-else>Create</span>
                 </div>
               </button>
             </div>
@@ -210,8 +227,19 @@ export default {
         success: null,
         error: null,
       },
+      status: "",
+      paidHours: null,
+      totalAmountPaid: null,
+      startingDate: null,
+      extraAmount: null,
+      paymentMethod: 0,
+      payFor: null,
+      invoiceNumber: null,
+      transferFees: null,
+      paymentDate: null,
+      isSent: false,
       guardians: [],
-guardianID:null
+      guardianID: null,
     };
   },
   methods: {
@@ -222,12 +250,41 @@ guardianID:null
       this.alerts.error = "";
       this.alerts.success = "";
       this.loadingBtn = true;
-      let url = "http://localhost:3300/api/v1/admin";
+
+      let data = {};
+      if (!this.guardianID) {
+        this.loadingBtn = false;
+        return (this.alerts.error = "Guardian is required");
+      }
+      data["guardianID"] = this.guardianID;
+      data["invoiceNumber"] = this.invoiceNumber;
+      data["transferFess"] = this.transferFees;
+      data["extraAmount"] = this.extraAmount;
+      data["totalAmountPaid"] = this.totalAmountPaid;
+      data["savedPaidHours"] = this.paidHours * 60;
+
+      data["active"] = 1;
+      data["paid"] = parseInt(this.status);
+
+      data["establishedAt"] = moment(
+        this.startingDate,
+        "YYYY/MM/DD HH:mm:ss"
+      ).format("YYYY-MM-DD HH:mm:ss");
+      data["payFor"] = this.payFor;
+
+      this.isSent = this.isSent ? 1 : 0;
+      data["isSent"] = this.isSent;
+      data["paymentMethod"] = parseInt(this.paymentMethod);
+      data["paymentDate"] = this.paymentDate
+        ? moment(this.paymentDate, "YYYY/MM/DD HH:mm:ss").format(
+            "YYYY-MM-DD HH:mm:ss"
+          )
+        : null;
+
+      console.log(data);
+      let url = "http://localhost:3300/api/v1/admin/bills/guardian/path9";
       axios
-        .post(url, {
-          // data: this.startingRescheduled,
-          data: this.startingRescheduled,
-        })
+        .post(url, data)
         .then((res) => {
           if (!res.data.success) {
             this.loadingBtn = false;

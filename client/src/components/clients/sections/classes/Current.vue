@@ -62,7 +62,7 @@
                 'px-4 d-flex',
               ]"
             >
-              <span class="col-3" >
+              <span class="col-3" style="font-family: Merienda">
                 <span
                   style="margin-left: 35px; font-weight: 900; color: #4c4a4c"
                 >

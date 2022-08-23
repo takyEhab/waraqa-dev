@@ -306,7 +306,7 @@ export default {
         .get(url)
         .then((res) => {
           if (!res.data.success) {
-            this.$router.push("/manage/teachers");
+            this.$router.push("/admin/teachers");
             return (this.alerts.error = res.data.msg);
           }
           this.alerts.error = null;

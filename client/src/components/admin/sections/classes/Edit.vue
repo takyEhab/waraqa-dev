@@ -163,38 +163,46 @@
                 ></textarea>
               </div>
               <!-- Count for -->
-              <div class="col-12 col-md-6 mt-3">
-                <label class="f-color-3 mb-1">Count for</label>
-                <div>
-                  <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      value=""
-                      id="flexCheckDefault"
-                      v-model="data.countForTeacher"
-                      :checked="data.countForTeacher"
-                    />
-                    <label class="form-check-label" for="flexCheckDefault">
-                      Teacher
-                    </label>
-                  </div>
-                  <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      value=""
-                      id="flexCheckChecked"
-                      v-model="data.countForStudent"
-                      :checked="data.countForStudent"
-                    />
-                    <label class="form-check-label" for="flexCheckChecked">
-                      Student
-                    </label>
-                  </div>
+              <div class="col-12 col-md-6 mt-5">
+                <v-select
+                  placeholder="TimeZone"
+                  :options="TimeZoneList"
+                  v-model="timeZone"
+                />
+              </div>
+            </div>
+            <div class="col-12 col-md-6 mt-3">
+              <label class="f-color-3 mb-1">Count for</label>
+              <div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value=""
+                    id="flexCheckDefault"
+                    v-model="data.countForTeacher"
+                    :checked="data.countForTeacher"
+                  />
+                  <label class="form-check-label" for="flexCheckDefault">
+                    Teacher
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value=""
+                    id="flexCheckChecked"
+                    v-model="data.countForStudent"
+                    :checked="data.countForStudent"
+                  />
+                  <label class="form-check-label" for="flexCheckChecked">
+                    Student
+                  </label>
                 </div>
               </div>
             </div>
+
             <!-- Submit -->
             <div class="mt-4 text-end">
               <button
@@ -239,6 +247,7 @@ import moment from "moment-timezone";
 import axios from "axios";
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
+import Tz from "@/components/Tz.json";
 
 export default {
   components: {
@@ -274,6 +283,8 @@ export default {
         "Intro to classical books",
       ],
       timeZone: moment.tz.guess(),
+      TimeZoneList: Tz,
+
       currentStatus: 0,
     };
   },
@@ -345,7 +356,7 @@ export default {
         .get(url)
         .then((res) => {
           if (!res.data.success) {
-            this.$router.push("/manage/classes");
+            this.$router.push("/admin/classes");
             return (this.alerts.error = res.data.msg);
           }
           this.alerts.error = null;

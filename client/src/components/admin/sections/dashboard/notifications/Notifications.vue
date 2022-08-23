@@ -201,7 +201,7 @@ export default {
           }
           this.getNotification();
           // this.alerts.success = res.data.msg;
-          // this.$router.push('/manage/classes');
+          // this.$router.push('/admin/classes');
         });
       // if (window.confirm("Are you sure you want to delete this Class?")) {
       // }

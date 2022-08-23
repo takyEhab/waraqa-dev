@@ -71,6 +71,8 @@ const {
   billsOfGuardian,
   sentInvoice,
   changeClassInvoiceCount,
+  addInvoice,
+  getClassesForInvoice
 } = require("../Controllers/BillsController");
 const {
   allGuardians,
@@ -422,7 +424,7 @@ router.get(
   nextDbProccess
 );
 // Path3: Fetch prepaidClasses of an Invoice
-router.get(
+router.post(
   "/v1/admin/bills/path3/:id",
   VerifyToken,
   prepaidClasses,
@@ -441,23 +443,36 @@ router.get(
   postPaidClasses,
   nextDbProccess
 );
-// Path5: Delete Invoice
+// Path6: Delete Invoice
 router.delete(
   "/v1/admin/bills/guardian/path6/:id",
   adminVerifyToken,
   deleteGuardianInvoice
 );
-// Path10: Guardians(postpad) 1er of month (Inform them (email))
+// Path7: Guardians(postpad) 1er of month (Inform them (email))
 router.get(
   "/v1/admin/bills/guardian/path7",
   adminVerifyToken,
   guardianPaymentReq
 );
-// Path10: Guardians(postpad) Active the last inactive Invoice (run on guardian join his account)
+// Path8: Guardians(postpad) Active the last inactive Invoice (run on guardian join his account)
 router.post(
   "/v1/admin/bills/guardian/path8/:id",
   VerifyToken,
   activatePostPaidGuardianInvoice
+);
+// path 9
+router.post(
+  "/v1/admin/bills/guardian/path9",
+  adminVerifyToken,
+  addInvoice
+);
+// path 9
+router.get(
+  "/v1/admin/bills/guardian/path10/:id",
+  VerifyToken,
+  getClassesForInvoice,
+  nextDbProccess
 );
 //path 11: change invoice count
 router.patch(

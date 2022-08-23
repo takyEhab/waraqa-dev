@@ -626,7 +626,7 @@ export default {
 <style scoped>
 @media (min-width: 576px) {
   .modal-dialog {
-    max-width: 70%;
+    max-width: 55%;
   }
 }
 .days-list li {

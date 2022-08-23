@@ -283,22 +283,26 @@ let endClass = (req, res) => {
                           AND guardianinvoices.paid!=1 AND classes.invoiceID IS NULL AND classes.startingDate BETWEEN guardianinvoices.createdAt AND (guardianinvoices.createdAt + INTERVAL (SELECT payEvery FROM scheduledclasses WHERE id = classes.scheduleID LIMIT 1) MONTH)
                           ORDER BY classes.startingDate`;
                           dataBase.query(query, (error, data) => {
-                            if (error || !data.length) return;
+                            if (error) return;
                             // get Previous classes
                             let query = `SELECT classes.* FROM classes WHERE classes.invoiceID=(SELECT id FROM guardianinvoices WHERE guardianID = 78 AND paid = 1 ORDER BY establishedAt DESC LIMIT 1)`;
                             dataBase.query(query, (error2, data2) => {
-                              if (error2 || !data2.length) return;
+                              if (error2) return;
 
-                              let upcomingHours = data[0]?.upcomingHours
-                                ? data[0].upcomingHours / 60
-                                : null;
+                              let upcomingHours = null;
+                              if (data[0]) {
+                                data.forEach((obj) => {
+                                  if (obj.duration)
+                                    upcomingHours += parseInt(obj.duration);
+                                });
+                              }
 
                               configAdminEmail = {
                                 subject: "A new invoice",
                                 html: `<p> Send (${guardianName}) a new invoice. His remaining hours are 0 or less.</p>`,
                               };
                               sendEmail(configAdminEmail);
-                              let expectedUpcomingClasses = [];
+                              let expectedUpcomingClasses = data ? [] : null;
                               for (i in data) {
                                 expectedUpcomingClasses.push(
                                   moment(data[i]?.startingDate).format(
@@ -309,7 +313,7 @@ let endClass = (req, res) => {
                               expectedUpcomingClasses =
                                 expectedUpcomingClasses.join(" <br/> ");
 
-                              let previousClasses = [];
+                              let previousClasses = data2 ? [] : null;
                               for (i in data2) {
                                 previousClasses.push(
                                   moment(data2[i]?.startingDate).format(
@@ -325,16 +329,16 @@ let endClass = (req, res) => {
                                 html: `<p> Your paid hours have been completed. Here's a summary of the last payment period and the new one:
                               Previous classes from last payment report:
                               ${
-                                !data2.length
-                                  ? "No Previous classes classes"
-                                  : previousClasses
+                                previousClasses
+                                  ? previousClasses
+                                  : "No Previous classes classes"
                               }
 
                               Expected upcoming classes within a month:
                               ${
-                                !data.length
-                                  ? "No Expected upcoming classes"
-                                  : expectedUpcomingClasses
+                                expectedUpcomingClasses
+                                  ? expectedUpcomingClasses
+                                  : "No Expected upcoming classes"
                               }
                               The due amount: ${
                                 upcomingHours == null
@@ -1971,8 +1975,9 @@ let deleteClasses = (req, res) => {
         });
       }
       //Step3: Delete scheduleClasses
-      let query = `DELETE FROM scheduledclasses WHERE id IN (
-        ${scheduleIDs.join(",")})`;
+      let query = `DELETE FROM scheduledclasses WHERE id IN (${scheduleIDs.join(
+        ","
+      )}) AND subject IS NULL AND classTitle IS NULL`;
 
       dataBase.query(query, (error, data) => {
         if (error) {

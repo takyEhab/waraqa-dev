@@ -23,9 +23,7 @@
           <i class="fas fa-history"></i> Reschedule
         </div>
 
-
         <div
-      
           class="f-color-4 text-on-hover"
           type="button"
           data-bs-toggle="modal"
@@ -33,9 +31,7 @@
         >
           <i class="fas fa-trash"></i> Delete Classes
         </div>
-
       </div>
-      
 
       <AddClass />
       <Reschedule />
@@ -56,13 +52,29 @@
           :class="[previousTab ? 'f-color-1' : '', 'ms-5 text-on-hover']"
           @click="previousTab = true"
         >
+          <div
+            v-if="previousTab && noReportCount"
+            style="
+              position: absolute;
+              margin-top: -15px;
+              margin-left: -20px;
+              font-size: 14px;
+              padding: 1.9px 5px;
+              background-color: red;
+              border-radius: 100%;
+              color: white;
+            "
+          >
+            {{noReportCount}}
+          </div>
           Old
+
           <hr v-if="previousTab" class="tab-hr mt-1" />
         </li>
-        
       </ul>
     </div>
     <Previous
+      @noReportCount="handleNoReportChange"
       v-if="previousTab"
       :offsetNum="offsetNum"
       :params="$route.params"
@@ -85,7 +97,7 @@ export default {
     Reschedule,
     Previous,
     Current,
-    DeleteClasses
+    DeleteClasses,
   },
   data() {
     return {
@@ -95,7 +107,13 @@ export default {
         error: null,
       },
       previousTab: false,
+      noReportCount: null,
     };
+  },
+  methods: {
+    handleNoReportChange(variable) {
+      this.noReportCount = variable;
+    },
   },
   created() {
     if (this.$route.params.tap) {
@@ -105,5 +123,8 @@ export default {
       this.$route.params = {};
     });
   },
+  // handleNoReportChange() {
+
+  // }
 };
 </script>
