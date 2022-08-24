@@ -113,8 +113,8 @@
       </div>
     </div>
     <!-- Other Sections -->
-    <div class="col-10 me-md-5 p-0 container-fluid">
-      <div class="px-3 py-5 p-lg-2" style="overflow: hidden; overflow-x: auto">
+    <div class="col-10 me-md-5 p-0 container-fluid ">
+      <div class="px-3 py-5 p-lg-2" style="overflow: hidden; overflow-x: auto;">
         <router-view :offsetNum="30"></router-view>
       </div>
     </div>

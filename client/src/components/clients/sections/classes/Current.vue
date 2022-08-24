@@ -365,7 +365,7 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
 .nextClasses {
   background-color: #fff1dc;
   color: #181818;

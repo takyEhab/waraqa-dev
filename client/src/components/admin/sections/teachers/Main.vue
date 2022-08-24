@@ -91,12 +91,27 @@
           <small class="col-3">Full Name</small>
           <small class="col-1">Students</small>
           <small class="col-1">Hours</small>
-          <small class="col-2">Zoom Link</small>
+          <small class="col-3">Zoom Link</small>
           <small class="col-2">Status</small>
-          <small class="col-1">More</small>
+          <!-- <small class="col-1">More</small> -->
         </div>
         <div v-for="row in data" :key="row.id" class="table-row py-3">
-          <div class="px-2 d-flex f-color-3">
+          <div
+            @click="
+              $router.push({
+                  name: 'TeacherInfo',
+                  params: {
+                    id: row.id,
+                    page: pagination.page,
+                    offset: pagination.offset,
+                    filter: Object.keys(filters).find(
+                      (key) => filters[key] == true
+                    ),
+                  },
+                })
+            "
+            class="rowTable px-2 d-flex f-color-3"
+          >
             <span class="col-2">
               <img
                 v-if="row.picture"
@@ -115,13 +130,12 @@
             <span :class="[row.hours < 1 ? 'f-color-4' : '', 'col-1']">{{
               row.hours ? (row.hours / 60).toFixed(2) : 0
             }}</span>
-            <span class="col-2"
+            <span class="col-3"
               ><a :href="row.classLink" target="_blank"
-                ><i class="fas fa-play f-color-1"></i
+                ><i class="fas fa-play f-color-1 me-4"></i
               ></a>
               <i
                 @click="copyClassLink(row.classLink)"
-                style="margin-left: 20px"
                 class="fas f-color-1 fa-copy"
               ></i>
             </span>
@@ -137,7 +151,7 @@
                   : "Vacation"
               }}
             </span>
-            <div class="col-1">
+            <!-- <div class="col-1">
               <router-link
                 :to="{
                   name: 'TeacherInfo',
@@ -153,7 +167,7 @@
                 class="f-color-1"
                 ><i class="fas fa-eye"></i
               ></router-link>
-            </div>
+            </div> -->
           </div>
         </div>
         <!-- Alerts -->

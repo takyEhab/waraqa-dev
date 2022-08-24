@@ -45,12 +45,17 @@
           <small class="col-3">Name</small>
           <small class="col-2">Registered</small>
           <small class="col-3">Email</small>
-          <small class="col-1">Hours</small>
+          <small class="col-2">Hours</small>
           <small class="col-1">Students</small>
-          <small class="col-1">Info</small>
+          <!-- <small class="col-1">Info</small> -->
         </div>
-        <div v-for="row in data" :key="row.id" class="table-row py-3">
-          <div class="px-2 d-flex f-color-3">
+        <div v-for="row in data" :key="row.id" class="table-row py-2">
+          <div
+            @click="
+              $router.push({ name: 'GuardianInfo', params: { id: row.id } })
+            "
+            class="rowTable p-2 d-flex f-color-3"
+          >
             <span class="col-1">
               <img
                 v-if="row.picture"
@@ -72,7 +77,7 @@
                 (row.savedPaidHours || 0) / 60 - (row.hours || 0) / 60 < 1
                   ? 'f-color-4'
                   : '',
-                'col-1',
+                'col-2',
               ]"
               >{{
                 (
@@ -83,13 +88,13 @@
             >
             <!-- <span :class="[(row.savedPaidHours/60)-(row.hours/60)<1 || !row.hours ? 'f-color-4':'','col-1']">{{row.hours? ((row.savedPaidHours/60)-(row.hours/60)).toFixed(2):0}}</span> -->
             <span class="col-1">{{ row.studentsCount }}</span>
-            <div class="col-1">
+            <!-- <div class="col-1">
               <router-link
                 :to="{ name: 'GuardianInfo', params: { id: row.id } }"
                 class="f-color-1"
                 ><i class="fas fa-eye"></i
               ></router-link>
-            </div>
+            </div> -->
           </div>
         </div>
         <!-- Alerts -->
@@ -221,3 +226,4 @@ export default {
   },
 };
 </script>
+<style scoped></style>

@@ -216,7 +216,7 @@
                   <li
                     v-if="
                       !row.status &&
-                      Math.abs(moment().diff(row.startingDate, 'hours')) < 48
+                      Math.abs(moment().diff(row.startingDate, 'hours')) < 72
                     "
                   >
                     <router-link

@@ -153,7 +153,7 @@
               </div>
               <!-- Repeat days -->
               <!-- Days List -->
-              <ul class="list-unstyled m-0 days-list d-flex">
+              <!-- <ul class="list-unstyled m-0 days-list d-flex">
                 <li
                   v-for="day in days"
                   :key="day.id"
@@ -163,7 +163,7 @@
                 >
                   {{ day }}
                 </li>
-              </ul>
+              </ul> -->
               <!-- <input
                   type="time"
                   class="form-control"
@@ -195,7 +195,13 @@
               </div>
             </div>
             <div class="row flex-wrap">
-              <div class="col-12 col-md mt-3">
+              <div
+                v-if="
+                  Object.values(selectedDays).filter((item) => item != '')
+                    .length >= 1
+                "
+                class="col-12 col-md mt-3"
+              >
                 <label class="f-color-3 mb-1">Payment Cycle</label>
                 <input
                   type="number"
@@ -206,6 +212,8 @@
                   v-model="payEvery"
                 />
               </div>
+              <!-- <div :class="[`col-${Object.values(selectedDays).filter((item) => item != '').length >= 1?'12':'6'}`, 'col-md', 'mt-5']"> -->
+
               <div class="col-12 col-md mt-5">
                 <v-select
                   placeholder="TimeZone"
@@ -376,9 +384,9 @@ export default {
     moment(date) {
       return moment(date);
     },
-    updateDayTime(event) {
-      console.log(event);
-    },
+    // updateDayTime(event) {
+    //   console.log(event);
+    // },
     updateSelectDay(data) {
       this.daysTime = data.daysTime;
       const { event } = data;
@@ -393,19 +401,19 @@ export default {
       }
       event.target.classList.toggle("selected-day");
     },
-    selectDays(event) {
-      let day = event.target.getAttribute("data-day");
-      if (!this.selectedDays[day]) {
-        // Fill Day
-        this.selectedDays[day] = day;
-      } else {
-        //Empty Day & time
-        this.selectedDays[day] = "";
-        this.daysTime[day] = "";
-      }
-      event.target.classList.toggle("selected-day");
-      console.log(this.selectDays);
-    },
+    // selectDays(event) {
+    //   let day = event.target.getAttribute("data-day");
+    //   if (!this.selectedDays[day]) {
+    //     // Fill Day
+    //     this.selectedDays[day] = day;
+    //   } else {
+    //     //Empty Day & time
+    //     this.selectedDays[day] = "";
+    //     this.daysTime[day] = "";
+    //   }
+    //   event.target.classList.toggle("selected-day");
+    //   console.log(this.selectDays);
+    // },
     // getGuardian() {
     //   let guardianID = this.students.find(
     //     (elm) => elm.id == this.studentID
@@ -573,7 +581,7 @@ export default {
 <style scoped>
 @media (min-width: 576px) {
   .modal-dialog {
-    max-width: 55%;
+    max-width: 40%;
   }
 }
 .days-list li {

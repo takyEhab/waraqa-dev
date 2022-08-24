@@ -402,7 +402,6 @@ export default {
           }
           this.alerts.error = null;
           this.data = res.data.rows;
-          this.$emit("noReportCount", this.data[0].noReportCount);
 
           // this.data.forEach((obj) => {
           //   obj.status == 0 && this.noReportCount++;

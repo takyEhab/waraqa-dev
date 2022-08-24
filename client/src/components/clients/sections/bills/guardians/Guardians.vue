@@ -47,12 +47,21 @@
           <small class="col-2">Type</small>
           <small class="col-2">Payment method</small>
           <small class="col-3">Date</small>
-          <small class="col-1">status</small>
+          <small class="col-2">status</small>
 
-          <small class="col-1">More</small>
+          <!-- <small class="col-1">More</small> -->
         </div>
         <div v-for="row in data" :key="row.id" class="table-row py-3">
-          <div class="px-2 d-flex f-color-3">
+          <div
+            @click="
+              this.userType != 'Teacher' &&
+                $router.push({
+                  name: 'ClientGuardianInvoiceInfo',
+                  params: { id: row.id },
+                })
+            "
+            class="rowTable px-2 d-flex f-color-3"
+          >
             <span class="col-2">{{ row.guardianName }}</span>
             <span class="col-2">{{
               row.paymentType == 1
@@ -69,11 +78,11 @@
                 row.paymentType == 1 ? row.createdAt : row.activatedAt
               ).format("ddd, D MMM YYYY")
             }}</span>
-            <span :class="[row.paid == 1 ? 'f-color-1' : 'f-color-4', 'col-1']">
+            <span :class="[row.paid == 1 ? 'f-color-1' : 'f-color-4', 'col-2']">
               {{ row.paid == 1 ? "Paid" : "Unpaid" }}
             </span>
 
-            <div class="col-1">
+            <!-- <div class="col-1">
               <router-link
                 :to="{
                   name: 'ClientGuardianInvoiceInfo',
@@ -82,7 +91,7 @@
                 class="f-color-1"
                 ><i class="fas fa-eye"></i
               ></router-link>
-            </div>
+            </div> -->
           </div>
         </div>
         <!-- Alerts -->

@@ -62,7 +62,7 @@
             </div>
         </div>
         <!-- Other Sections -->
-        <div class="col-lg-11 me-md-5 p-0 container">
+        <div class="col-lg-11 me-md-5 p-0 container-fluid">
             <div class="px-3 py-5 p-lg-2" style=" overflow: hidden; overflow-x: auto; ">
                 <router-view :userType="userType" :offsetNum=30></router-view>
             </div>

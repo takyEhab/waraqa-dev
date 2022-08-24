@@ -215,6 +215,8 @@ export default {
           }
           this.alerts.error = null;
           this.data = res.data.rows;
+          this.$emit("noReportCount", this.data[0].noReportCount);
+
           this.pageCount = this.data[0].fullCount;
         })
         .catch(() => {

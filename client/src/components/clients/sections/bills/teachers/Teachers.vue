@@ -55,10 +55,18 @@
           <small class="col-2">Payment method</small>
           <small class="col-3">Date</small>
           <small class="col-2">status</small>
-          <small class="col-1">More</small>
+          <!-- <small class="col-1">More</small> -->
         </div>
         <div v-for="row in data" :key="row.id" class="table-row py-3">
-          <div class="px-2 d-flex f-color-3">
+          <div
+            @click="
+              $router.push({
+                  name: 'ClientTeacherInvoiceInfo',
+                  params: { id: row.id },
+                })
+            "
+            class="rowTable px-2 d-flex f-color-3"
+          >
             <span class="col-2">{{ row.teacherName }}</span>
             <span class="col-2">{{
               row.paidHours ? (row.paidHours / 60).toFixed(2) : 0
@@ -72,7 +80,7 @@
             <span :class="[row.paid == 1 ? 'f-color-1' : 'f-color-4', 'col-2']">
               {{ row.paid == 1 ? "Paid" : "Unpaid" }}
             </span>
-            <div class="col-1">
+            <!-- <div class="col-1">
               <router-link
                 :to="{
                   name: 'ClientTeacherInvoiceInfo',
@@ -81,7 +89,7 @@
                 class="f-color-1"
                 ><i class="fas fa-eye"></i
               ></router-link>
-            </div>
+            </div> -->
           </div>
         </div>
         <!-- Alerts -->

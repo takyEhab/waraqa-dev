@@ -1260,7 +1260,7 @@ let cancelClassReq = (req, res) => {
                 requesterName == teacherName
                   ? `the student "${studentName}"`
                   : `the teacher "${teacherName}" `
-              } <a href="manage/classes/${id}">Go to class</a>`,
+              } <a href="admin/classes/${id}">Go to class</a>`,
               teacherMsg: `"${requesterName}" requested to cancel ${startingDate}'s class's number : "${id}" with ${
                 requesterName == teacherName
                   ? `the student "${studentName}"`
@@ -1419,7 +1419,7 @@ let RescheduleClassReq = (req, res) => {
                 requesterName == teacherName
                   ? `the student "${studentName}"`
                   : `the teacher "${teacherName}"`
-              } to be ${startingRescheduled} <a href="manage/classes/${id}">Go to class</a>`,
+              } to be ${startingRescheduled} <a href="admin/classes/${id}">Go to class</a>`,
               teacherMsg: `"${requesterName}" requested to change ${startingDate}'s class's number : "${id}" with ${
                 requesterName == teacherName
                   ? `the student "${studentName}"`

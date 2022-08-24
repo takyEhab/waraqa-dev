@@ -103,10 +103,19 @@
           <small class="col-1" v-if="this.userType != 'Teacher'">Hours</small>
           <small class="col-4" v-else>Time Zone</small>
           <small class="col-2">Status</small>
-          <small class="col-1" v-if="this.userType != 'Teacher'">Info</small>
+          <!-- <small class="col-1" v-if="this.userType != 'Teacher'">Info</small> -->
         </div>
         <div v-for="row in data" :key="row.id" class="table-row py-3">
-          <div class="px-2 d-flex f-color-3">
+          <div
+            @click="
+              this.userType != 'Teacher' &&
+                $router.push({
+                  name: 'ClientStudentInfo',
+                  params: { id: row.id },
+                })
+            "
+            class="rowTable px-2 d-flex f-color-3"
+          >
             <span class="col-1">
               <img
                 v-if="row.picture"
@@ -158,13 +167,13 @@
               }}
             </span>
 
-            <div class="col-1" v-if="this.userType != 'Teacher'">
+            <!-- <div class="col-1" v-if="this.userType != 'Teacher'">
               <router-link
                 :to="{ name: 'ClientStudentInfo', params: { id: row.id } }"
                 class="f-color-1"
                 ><i class="fas fa-eye"></i
               ></router-link>
-            </div>
+            </div> -->
           </div>
         </div>
         <!-- Alerts -->

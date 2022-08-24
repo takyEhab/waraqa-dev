@@ -124,12 +124,27 @@
           <small class="col-2">Full Name</small>
           <small class="col-3">Email</small>
           <small class="col-2">Guardian</small>
-          <small class="col-1">Hours</small>
+          <small class="col-2">Hours</small>
           <small class="col-2">Status</small>
-          <small class="col-1">More</small>
+          <!-- <small class="col-1">More</small> -->
         </div>
         <div v-for="row in data" :key="row.id" class="table-row py-3">
-          <div class="px-2 d-flex f-color-3">
+          <div
+            @click="
+              $router.push({
+                name: 'StudentInfo',
+                params: {
+                  id: row.id,
+                  page: pagination.page,
+                  offset: pagination.offset,
+                  filter: Object.keys(filters).find(
+                    (key) => filters[key] == true
+                  ),
+                },
+              })
+            "
+            class="rowTable px-2 d-flex f-color-3"
+          >
             <span class="col-1">
               <img
                 v-if="row.picture"
@@ -158,7 +173,7 @@
                 1
                   ? 'f-color-4'
                   : '',
-                'col-1',
+                'col-2',
               ]"
               >{{
                 // ((row.savedPaidHours || 0) - (row.hoursOfOthers || 0)) / 60 -
@@ -183,7 +198,7 @@
                   : "Vacation"
               }}
             </span>
-            <div class="col-1">
+            <!-- <div class="col-1">
               <router-link
                 :to="{
                   name: 'StudentInfo',
@@ -199,7 +214,7 @@
                 class="f-color-1"
                 ><i class="fas fa-eye"></i
               ></router-link>
-            </div>
+            </div> -->
           </div>
         </div>
         <!-- Alerts -->

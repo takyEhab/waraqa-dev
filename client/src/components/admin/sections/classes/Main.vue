@@ -53,7 +53,7 @@
           @click="previousTab = true"
         >
           <div
-            v-if="previousTab && noReportCount"
+            v-if="noReportCount"
             style="
               position: absolute;
               margin-top: -15px;
@@ -65,7 +65,7 @@
               color: white;
             "
           >
-            {{noReportCount}}
+            {{ noReportCount }}
           </div>
           Old
 
@@ -74,12 +74,12 @@
       </ul>
     </div>
     <Previous
-      @noReportCount="handleNoReportChange"
+      
       v-if="previousTab"
       :offsetNum="offsetNum"
       :params="$route.query"
     />
-    <Current v-else :offsetNum="offsetNum" :params="$route.query" />
+    <Current v-else :offsetNum="offsetNum" @noReportCount="handleNoReportChange" :params="$route.query" />
   </div>
 </template>
 

@@ -67,10 +67,26 @@
           <small class="col-2">status</small>
           <small class="col-1">Sent</small>
 
-          <small class="col-1">More</small>
+          <!-- <small class="col-1">More</small> -->
         </div>
         <div v-for="row in data" :key="row.id" class="table-row py-3">
-          <div class="px-2 d-flex f-color-3">
+          <div
+            @click="
+              $router.push({
+                name: 'GuardianInvoiceInfo',
+                params: {
+                  id: row.id,
+                  tap: true,
+                  page: pagination.page,
+                  offset: pagination.offset,
+                  filter: Object.keys(filters).find(
+                    (key) => filters[key] == true
+                  ),
+                },
+              })
+            "
+            class="rowTable py-3 px-2 d-flex f-color-3"
+          >
             <span class="col-2">{{ row.guardianName }}</span>
             <span class="col-2">{{
               row.invoiceNumber != null ? row.invoiceNumber : "null"
@@ -110,9 +126,9 @@
                 'col-1',
                 row.isSent == 1 ? 'sentButtonChecked' : 'sentButtonNotChecked',
               ]"
-              @click="sentInvoice(row.id, row.isSent == 1 ? true : false)"
+              @click.stop="sentInvoice(row.id, row.isSent == 1 ? true : false)"
             ></div>
-            <div class="col-1">
+            <!-- <div class="col-1">
               <router-link
                 :to="{
                   name: 'GuardianInvoiceInfo',
@@ -129,7 +145,7 @@
                 class="f-color-1"
                 ><i class="fas fa-eye"></i
               ></router-link>
-            </div>
+            </div> -->
           </div>
         </div>
         <!-- Alerts -->
