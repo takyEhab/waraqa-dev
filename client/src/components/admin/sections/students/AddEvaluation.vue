@@ -39,16 +39,14 @@
               <!-- Teacher -->
               <div class="col-12 col-md mt-3">
                 <label class="f-color-3 mb-1">Select Teacher</label>
-                <select class="form-select" v-model="teacherID" required>
-                  <option value="">Select Teacher</option>
-                  <option
-                    v-for="teacher in teachers"
-                    :key="teacher.id"
-                    :value="teacher.id"
-                  >
-                    {{ teacher.name }}
-                  </option>
-                </select>
+
+                <v-select
+                  placeholder="Teacher"
+                  :options="teachers"
+                  label="name"
+                  :reduce="(teacher) => teacher.id"
+                  v-model="teacherID"
+                />
               </div>
             </div>
             <!-- & Description -->
@@ -93,19 +91,17 @@
               </button>
             </div>
             <!-- Alerts -->
-            <div class="mt-4">
-              <div
-                v-if="alerts.success"
-                class="text-center alert text-center alert-success"
-              >
-                {{ alerts.success }}
-              </div>
-              <div
-                v-else-if="alerts.error"
-                class="text-center alert text-center alert-warning"
-              >
-                {{ alerts.error }}
-              </div>
+            <div
+              v-if="alerts.success"
+              class="text-center alert text-center alert-success mt-4"
+            >
+              {{ alerts.success }}
+            </div>
+            <div
+              v-else-if="alerts.error"
+              class="text-center alert text-center alert-warning mt-4"
+            >
+              {{ alerts.error }}
             </div>
           </form>
         </div>
@@ -116,7 +112,13 @@
 <script>
 import moment from "moment-timezone";
 import axios from "axios";
+import vSelect from "vue-select";
+import "vue-select/dist/vue-select.css";
+
 export default {
+  components: {
+    vSelect,
+  },
   data() {
     return {
       loadingBtn: false,
@@ -129,7 +131,8 @@ export default {
       studentID: "", //Comes from params
 
       meetingDate: "",
-      teacherID: "",
+      teacherID: null,
+
       teacherPerformance: "",
       studentPerformance: "",
     };
@@ -180,10 +183,17 @@ export default {
         });
     },
   },
-
   created() {
     this.studentID = this.$route.params.id;
     this.fetchTeachers();
   },
 };
 </script>
+
+<style scoped>
+@media (min-width: 576px) {
+  .modal-dialog {
+    max-width: 40%;
+  }
+}
+</style>

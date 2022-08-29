@@ -192,6 +192,8 @@
 <script>
 import axios from "axios";
 export default {
+  props: ["userType"],
+
   data() {
     return {
       alerts: {
@@ -213,7 +215,10 @@ export default {
       this.alerts.success = "";
       let url = "http://localhost:3300/auth/v1/path3";
       axios
-        .post(url, { email: this.email })
+        .post(url, {
+          email: this.email,
+          isAdmin: this.userType == "admin",
+        })
         .then((res) => {
           if (!res.data.success) {
             this.loadingBtn = false;
@@ -233,7 +238,11 @@ export default {
       this.alerts.success = "";
       let url = "http://localhost:3300/auth/v1/path4";
       axios
-        .post(url, { email: this.email, code: this.code })
+        .post(url, {
+          email: this.email,
+          code: this.code,
+          isAdmin: this.userType == "admin",
+        })
         .then((res) => {
           if (!res.data.success) {
             this.loadingBtn = false;
@@ -258,7 +267,11 @@ export default {
       }
       let url = "http://localhost:3300/auth/v1/path5";
       axios
-        .post(url, { email: this.email, password: this.newPass })
+        .post(url, {
+          email: this.email,
+          password: this.newPass,
+          isAdmin: this.userType == "admin",
+        })
         .then((res) => {
           if (!res.data.success) {
             this.loadingBtn = false;

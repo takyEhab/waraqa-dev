@@ -39,9 +39,9 @@
               </div>
               <div
                 class="mt-3 position-relative"
-                style="width: 90px; height: 80px"
+                style="width: 90px; height: 100px"
+                
               >
-                <!-- <div class="avatar-btn" @click="openUpload"> -->
                 <div
                   class="avatar-btn"
                   data-bs-toggle="modal"
@@ -55,9 +55,11 @@
                   class="avatar-img rounded-circle"
                   alt="Student picture"
                 />
-                <span v-else class="avatar">{{
-                  data[0].name.charAt(0).toUpperCase()
-                }}</span>
+                <span v-else class="avatar">
+                  <div style="font-size: 3rem">
+                    {{ data[0].name.charAt(0).toUpperCase() }}
+                  </div>
+                </span>
 
                 <!-- <input type="file" ref="avatar" @change="selectFile" hidden /> -->
               </div>
@@ -89,9 +91,7 @@
                     required
                   />
                 </div>
-              </div>
-              <!-- Birthday & Address -->
-              <div class="row flex-wrap">
+
                 <!-- Birthday -->
                 <div class="col-12 col-md mt-3">
                   <label class="f-color-3 mb-1">Birthday</label>
@@ -101,6 +101,8 @@
                     v-model="data[0].birthday"
                   />
                 </div>
+              </div>
+              <div class="row flex-wrap">
                 <!-- Address -->
                 <div class="col-12 col-md mt-3">
                   <label class="f-color-3 mb-1">Address</label>
@@ -111,9 +113,6 @@
                     v-model="data[0].address"
                   />
                 </div>
-              </div>
-              <!-- Language & Email -->
-              <div class="row flex-wrap">
                 <!-- Language -->
                 <div class="col-12 col-md mt-3">
                   <label class="f-color-3 mb-1">Language</label>
@@ -138,23 +137,6 @@
               </div>
               <!-- TimeZone & Phone -->
               <div class="row flex-wrap">
-                <!-- TimeZone -->
-                <div class="col-12 col-md mt-3">
-                  <label class="f-color-3 mb-1">TimeZone</label>
-
-                  <v-select
-                    placeholder="Select TimeZone"
-                    :options="TimeZoneList"
-                    v-model="data[0].timeZone"
-                  />
-
-                  <!-- <select class="form-select" v-model="data[0].timeZone">
-                    <option value="">Select TimeZone</option>
-                    <option v-for="timeZone in TimeZoneList" :key="timeZone.id">
-                      {{ timeZone }}
-                    </option>
-                  </select> -->
-                </div>
                 <!-- Phone -->
                 <div class="col-12 col-md mt-3">
                   <label class="f-color-3 mb-1">Phone</label>
@@ -165,6 +147,17 @@
                     v-model="data[0].phone"
                   />
                 </div>
+                <!-- TimeZone -->
+                <div class="col-12 col-md mt-3">
+                  <label class="f-color-3 mb-1">TimeZone</label>
+
+                  <v-select
+                    placeholder="Select TimeZone"
+                    :options="TimeZoneList"
+                    v-model="data[0].timeZone"
+                  />
+                </div>
+                <div class="col-12 col-md mt-3"></div>
               </div>
             </div>
 

@@ -1,26 +1,41 @@
 <template>
-  <div>
+  <div class="position-relative">
     <!-- Section Header -->
-    <div class="d-flex justify-content-between">
-      <div>
-        <h3 class="section-title">Students</h3>
+    <div class="d-flex justify-content-between flex-wrap">
+      <h3 class="section-title">Students</h3>
+      <!-- Search -->
+      <div class="mt-4 mt-md-0 col-12 col-md-3">
+        <div class="d-flex position-relative align-items-center">
+          <input
+            v-if="!filters.four"
+            type="text"
+            class="form-control"
+            v-model="search"
+            @keyup="getData()"
+            placeholder="Search"
+          />
+          <input
+            v-else
+            type="text"
+            class="form-control"
+            v-model="search"
+            @keyup="getWiatListStudents()"
+            placeholder="Search"
+          />
+          <div
+            class="f-color-1 rounded px-3 position-absolute py-1"
+            style="right: 7px"
+          >
+            <small><i class="fas fa-search"></i></small>
+          </div>
+        </div>
       </div>
-      <div
-        class="f-color-1 text-on-hover"
-        type="button"
-        data-bs-toggle="modal"
-        data-bs-target="#addStudentModal"
-      >
-        <i class="fas fa-plus"></i> Add
-        <span class="d-none d-md-inline">Leads</span>
-      </div>
-      <AddStudent />
     </div>
     <!-- Filters & Search -->
     <div class="mt-4 d-flex justify-content-md-between flex-wrap">
       <!-- Filters -->
       <div class="section-filters">
-        <ul class="list-unstyled m-0 d-flex f-color-1">
+        <ul class="list-unstyled m-0 d-flex f-color-1 flex-wrap">
           <li
             :class="[filters.one ? 'opacity-100' : '', 'px-2']"
             @click="
@@ -83,33 +98,17 @@
           </li>
         </ul>
       </div>
-      <!-- Search -->
-      <div class="mt-4 mt-md-0 col-12 col-md-4">
-        <div class="d-flex position-relative align-items-center">
-          <input
-            v-if="!filters.four"
-            type="text"
-            class="form-control"
-            v-model="search"
-            @keyup="getData()"
-            placeholder="Search"
-          />
-          <input
-            v-else
-            type="text"
-            class="form-control"
-            v-model="search"
-            @keyup="getWiatListStudents()"
-            placeholder="Search"
-          />
-          <div
-            class="f-color-1 rounded px-3 position-absolute py-1"
-            style="right: 7px"
-          >
-            <small><i class="fas fa-search"></i></small>
-          </div>
-        </div>
+
+      <div
+        class="f-color-1 text-on-hover"
+        type="button"
+        data-bs-toggle="modal"
+        data-bs-target="#addStudentModal"
+      >
+        <i class="fas fa-plus"></i> Add
+        <span class="d-none d-md-inline">Leads</span>
       </div>
+      <AddStudent />
     </div>
 
     <!-- Main Table -->
@@ -120,30 +119,28 @@
     >
       <div style="min-width: 62em">
         <div class="px-2 table-colums f-color-3_3 d-flex mb-4">
-          <small class="col-1"> </small>
+          <small class="col-1 ms-1"> </small>
           <small class="col-2">Full Name</small>
           <small class="col-3">Email</small>
           <small class="col-2">Guardian</small>
-          <small class="col-2">Hours</small>
+          <small class="col-1">Hours</small>
           <small class="col-2">Status</small>
           <!-- <small class="col-1">More</small> -->
         </div>
-        <div v-for="row in data" :key="row.id" class="table-row py-3">
+        <div v-for="(row, i) in data" :key="row.id" class="table-row py-1">
+          <span class="position-absolute " style="margin-top: 22.5px; left: -10px">{{
+            i + 1 + pagination.offset
+          }}</span>
           <div
             @click="
               $router.push({
                 name: 'StudentInfo',
                 params: {
                   id: row.id,
-                  page: pagination.page,
-                  offset: pagination.offset,
-                  filter: Object.keys(filters).find(
-                    (key) => filters[key] == true
-                  ),
                 },
               })
             "
-            class="rowTable px-2 d-flex f-color-3"
+            class="rowTable p-2 d-flex f-color-3"
           >
             <span class="col-1">
               <img
@@ -168,24 +165,19 @@
             <span class="col-2">{{ row.guardianName }}</span>
             <span
               :class="[
-                // - (row.hoursOfOthers || 0)
                 (row.savedPaidHours || 0) / 60 - (row.attendedHours || 0) / 60 <
                 1
                   ? 'f-color-4'
                   : '',
-                'col-2',
+                'col-1',
               ]"
               >{{
-                // ((row.savedPaidHours || 0) - (row.hoursOfOthers || 0)) / 60 -
-                // (row.hours || 0) / 60
-
                 (
                   (row.savedPaidHours || 0) / 60 -
                   (row.attendedHours || 0) / 60
                 ).toFixed(2)
               }}</span
             >
-            <!-- <span :class="[((row.savedPaidHours - row.hoursOfOthers)/60)-(row.hours/60)<1 || !row.hours ? 'f-color-4':'','col-1']">{{row.hours? (((row.savedPaidHours - row.hoursOfOthers)/60)-(row.hours/60)).toFixed(2):0}}</span> -->
 
             <span
               :class="[row.status == 1 ? 'f-color-1' : 'f-color-4', 'col-2']"
@@ -198,23 +190,6 @@
                   : "Vacation"
               }}
             </span>
-            <!-- <div class="col-1">
-              <router-link
-                :to="{
-                  name: 'StudentInfo',
-                  params: {
-                    id: row.id,
-                    page: pagination.page,
-                    offset: pagination.offset,
-                    filter: Object.keys(filters).find(
-                      (key) => filters[key] == true
-                    ),
-                  },
-                }"
-                class="f-color-1"
-                ><i class="fas fa-eye"></i
-              ></router-link>
-            </div> -->
           </div>
         </div>
         <!-- Alerts -->
@@ -411,15 +386,13 @@ export default {
     },
   },
   created() {
-    const { params } = this.$route;
-    if (params) {
-      this.pagination.page = params.page;
-      this.pagination.offset = params.offset;
+    if (this.$route.query.filter == "four") {
+      this.filters.one = false;
+      this.filters.four = true;
+      this.getWiatListStudents();
+    } else {
+      this.getData();
     }
-    if (params.filter) {
-      this.filters[params.filter] = true;
-    }
-    this.getData();
   },
 };
 </script>

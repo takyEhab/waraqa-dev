@@ -174,220 +174,7 @@ let allTeachers = (req, res, next) => {
 };
 
 /* ********* Classes controller Start*********** */
-// let OLDaddClass = (req, res)=>{
-//     // return res.json({BB:req.body})
-//     let insertInScheduledClasses = ()=>{
-//         let scheduledClasses = weeklyDaysTimes
-//         scheduledClasses.studentID=studentID
-//         scheduledClasses.teacherID=teacherID
-//         let query = `INSERT INTO scheduledclasses SET ?`;
-//         dataBase.query(query,scheduledClasses, (error, data)=>{
-//         if(error || !data){
-//             return console.log("Failed Scheduled Classes!", error)
-//         }
-//         console.log("The Classes scheduled successfully")
-//     })
-//     }
-//     // return res.json({BB:req.body})
-//     let insertClass = (sqlValues)=>{
-//         let query = `INSERT INTO classes (teacherID, studentID, subject, classTitle, startingDate, duration, guests, description, timeZone,countForTeacher, countForStudent, invoiceID) VALUES ? `
-//         dataBase.query(query,[sqlValues],(error, data)=>{
-//             if(error || !data){
-//                 return res.json({success:false, msg:"Failed store classes", error:error});
-//             }
-//             if(bodyData.length > 1){ //Save in ScheduledClasses, don't consider the first (of the Starting Date field)
-//                 insertInScheduledClasses()
-//             }
-//             //Send Emails and notifications
-//             let usersNames = `SELECT (SELECT name FROM teachers WHERE id = ${teacherID}) AS teacherName,
-//                         (SELECT name FROM students WHERE id = ${studentID}) AS studentName,
-//                         (SELECT email FROM teachers WHERE id = ${teacherID}) AS teacherEmail,
-//                         (SELECT classLink FROM teachers WHERE id = ${teacherID}) AS classLink,
-//                         (SELECT email FROM guardians WHERE id = ${guardianID}) AS guardianEmail
-//             `
-//             dataBase.query(usersNames, (error, data)=>{
-//                 if(error || !data.length){
-//                     console.log("We can't get names")
-//                 }
-//                 let teacherName = data[0].teacherName;
-//                 let studentName = data[0].studentName;
-//                 let teacherEmail = data[0].teacherEmail;
-//                 let guardianEmail = data[0].guardianEmail;
-//                 let classLink = data[0].classLink;
-//                 ////////////////////////////////////////////////////////////////////////////////////////////
-//                 //Config Admin Email
-//                 configAdminEmail = {
-//                     subject : 'A new lesson is added',
-//                     html:`
-//                         <p>Admin "${tokenData.name}" has added a new class for the student "${studentName}".</p>
-//                         <p>${subject} start on ${emailClassesDetails[0]} with the teacher "${teacherName}" according to the following schedule:</p>
-//                         `
-//                 }
-//                 for (var i in emailClassesDetails){
-//                     configAdminEmail.html += `<p>${emailClassesDetails[i]}</p>`
-//                 }
-//                 sendEmail(configAdminEmail);
-//                 ////////////////////////////////////////////////////////////////////////////////////////////
-//                 //Config Teacher Email
-//                 configTeacherEmail = {
-//                     to:teacherEmail,
-//                     subject : 'A new lesson is added',
-//                     html:`
-//                         <p>Assalamu alaykum,</p>
-//                         <p>We hope you are doing well,</p>
-//                         <p>Admin "${tokenData.name}" has added a new class for you.</p>
-//                         <p>${subject} start on ${emailClassesDetails[0]} with the student "${studentName}" according to the following schedule:</p>
-//                         `
-//                 }
-//                 for (var i in emailClassesDetails){
-//                     configTeacherEmail.html += `<p>${emailClassesDetails[i]}</p>`
-//                 }
-//                 configTeacherEmail.html += `<p>Please bookmark the following link to easily join the lesson. Join from PC, Mac, Linux, iOS or Android by clicking on the link: <a href="${classLink}" target="_blank">class zoom link</a>
-//                                             Kindly, set the password to: 1234</p>
-//                                             <p>Best regards</p>
-//                                             `
-//                 sendEmail(configTeacherEmail);
-//                 ////////////////////////////////////////////////////////////////////////////////////////////
-//                 //Config Guardian Email
-//                 configGuardianEmail = {
-//                     to:guardianEmail,
-//                     subject : 'A new lesson is added',
-//                     html:`
-//                         <p>Assalamu alaykum,</p>
-//                         <p>We hope you are doing well,</p>
-//                         <p>Admin "${tokenData.name}" has added a new class for you.</p>
-//                         <p>${subject} start on ${emailClassesDetails[0]} with the teacher "${teacherName}" according to the following schedule:</p>
-//                         `
-//                 }
-//                 for (var i in emailClassesDetails){
-//                     configGuardianEmail.html += `<p>${emailClassesDetails[i]}</p>`
-//                 }
-//                 configGuardianEmail.html += `<p>Please bookmark the following link to easily join the lesson. Join from PC, Mac, Linux, iOS or Android by clicking on the link: <a href="${classLink}" target="_blank">class zoom link</a>
-//                                             Kindly, set the password to: 1234</p>
-//                                             <p>Best regards</p>
-//                                             `
-//                 sendEmail(configGuardianEmail);
-//                 ////////////////////////////////////////////////////////////////////////////////////////////
-//                 //Config Guest Email
-//                 configGuestEmail = {
-//                     to:guests,
-//                     subject : 'A new lesson is added',
-//                     html:`
-//                         <p>Assalamu alaykum,</p>
-//                         <p>We hope you are doing well,</p>
-//                         <p>The administrator, "${tokenData.name}", cordially invites you to these classes.</p>
-//                         <p>${subject} start on ${emailClassesDetails[0]} with the teacher "${teacherName}" according to the following schedule:</p>
-//                         `
-//                 }
-//                 for (var i in emailClassesDetails){
-//                     configGuestEmail.html += `<p>${emailClassesDetails[i]}</p>`
-//                 }
-//                 configGuestEmail.html += `<p>Please bookmark the following link to easily join the lesson. Join from PC, Mac, Linux, iOS or Android by clicking on the link: <a href="${classLink}" target="_blank">class zoom link</a>
-//                                             Kindly, set the password to: 1234</p>
-//                                             <p>Best regards</p>
-//                                             `
-//                 sendEmail(configGuestEmail);
-//                 ///////////////////////////////////////////////////////////////////////////////////////////////////
-//                 //Config Notification
-//                 notiConfig = {
-//                     type:2,
-//                     admin:1,
-//                     teacherID:teacherID,
-//                     guardianID:guardianID,
-//                     studentID:studentID,
-//                     adminMsg:`Admin "${tokenData.name}" has added a new class for the student "${studentName}". <br> ${subject} start on ${emailClassesDetails[0]} with the teacher "${teacherName}" according to the following schedule: <br>`,
-//                     teacherMsg:`Admin "${tokenData.name}" has added a new class for you. <br> ${subject} start on ${emailClassesDetails[0]} with the student "${studentName}" according to the following schedule: <br>`,
-//                     guardianMsg:`Admin "${tokenData.name}" has added a new class for "${studentName}". <br> ${subject} start on ${emailClassesDetails[0]} with the teacher "${teacherName}" according to the following schedule: <br>`
-//                 }
-//                 for (var i in emailClassesDetails){
-//                     notiConfig.adminMsg += `${emailClassesDetails[i]}<br>`
-//                     notiConfig.teacherMsg += `${emailClassesDetails[i]}<br>`
-//                     notiConfig.guardianMsg += `${emailClassesDetails[i]}<br>`
-//                 }
-//                 //Send Notification
-//                 sendNotification(notiConfig);
-//                 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-//             })
 
-//             res.json({success:true, msg:"Great, the classes have been successfully added."});
-//         })
-//     }
-
-//     // Step1 : Get guardianID by the studentID
-//     // Step2: Check guardian has unpaid Inovice
-//         //Step3: IF exists unpaid inovice : Get invoiceID
-//             // Step3.1 Save classes (Contain invoiceID)
-//         //Step4: IF not exists unpaid : Create Inovice and store guardianID in it
-//             // Step5: Save classes (Contain invoiceID)
-
-//     // Step1 : Get guardianID
-//     let guardianID = req.body[0].guardianID;
-//     const weeklyDaysTimes = req.body[0].weeklyDaysTimes;
-//     let studentID = req.body[0].studentID;
-//     let teacherID = req.body[0].teacherID;
-//     let subject = req.body[0].subject;
-//     let guests = req.body[0].guests;
-//     let bodyData = req.body;
-//     // Delete guardian from bodyData
-//     delete bodyData[0].guardianID;
-//     delete bodyData[0].weeklyDaysTimes;
-//     if(bodyData.length > 1){ //On repated Class, don't consider the first (of the Starting Date field)
-//         bodyData.shift()
-//     }
-//     // format('ddd, D MMM YYYY, HH:mm') )})
-//     let emailClassesDetails = [];
-//     bodyData.forEach(obj => {emailClassesDetails.push(moment(obj.startingDate).format('dddd, D MMM , hh:mm A') )})
-
-//     // Add free classes
-//     if(!req.body[0].countForStudent || !req.body[0].countForTeacher){
-//         // Add invoiceID to each Object
-//         bodyData.forEach(obj => {obj.invoiceID=null})
-
-//         // Convert the array of objects to array of arrays
-//         sqlValues = bodyData.map(object => Object.values(object))
-
-//         insertClass(sqlValues);
-//         return
-//     }
-//     console.log('It still here')
-
-//     // Step2: Check guardian has unpaid Inovice
-//     dataBase.query(`SELECT guardianinvoices.id FROM guardianinvoices WHERE guardianID = ${guardianID} AND paid=2`, (error, data)=>{
-//         //Step4: IF not exist unpaid : Create Inovice and store guardianID in it
-//         if(error || !data.length){
-//             // Create Inovice and store guardianID in it
-//             dataBase.query(`INSERT INTO guardianinvoices SET ?`, {guardianID:guardianID} ,(error, data)=>{
-//                 if(error || !data){
-//                     return res.json({success:false, msg:"Failed Open new invoice[1]"});
-//                 }
-//                 // Get ID of invoice that inserted
-//                 let invoiceID = data.insertId;
-//                 // Add invoiceID to each Object
-//                 bodyData.forEach(obj => {obj.invoiceID=invoiceID})
-
-//                 //Convert the array of objects to array of arrays
-//                 sqlValues = bodyData.map(object => Object.values(object))
-
-//                 // Step5: Save classes (Contain invoiceID)
-//                 insertClass(sqlValues);
-//             })
-//         }else{
-//             //Step3: IF exist unpaid inovice : Get invoiceID
-//             let invoiceID = data[0].id
-//             // Step3.1 Save classes (Contain invoiceID)
-
-//             // Add invoiceID to each Object
-//             bodyData.forEach(obj => {obj.invoiceID=invoiceID})
-
-//             //Convert the array of objects to array of arrays
-//             sqlValues = bodyData.map(object => Object.values(object))
-
-//             // Step3.1 Save classes (Contain invoiceID)
-//             insertClass(sqlValues);
-//         }
-//     })
-
-// }
 let addClass = (req, res) => {
   //Insert in Scheuled
   //Get inserted id
@@ -721,14 +508,35 @@ let addClass = (req, res) => {
     "YYYY-MM-DD hh:mm:ss"
   );
 
+  dataBase.query(`UPDATE students SET status = 1 WHERE id = ${studentID}`);
+  dataBase.query(`UPDATE teachers SET status = 1 WHERE id = ${teacherID}`);
   // ddd, D MMM YYYY, HH:mm
   //dddd, hh:mm A
   let emailClassesDetails = [];
-  bodyData.forEach((obj) => {
+  if (bodyData.length == 1) {
     emailClassesDetails.push(
-      moment(obj.startingDate).format("dddd, D MMM , hh:mm A")
+      moment(bodyData[0].startingDate).format("dddd, hh:mm A")
     );
-  });
+  } else {
+    bodyData.slice(1).forEach((obj) => {
+      emailClassesDetails.push(
+        moment(obj.startingDate).format("dddd, hh:mm A")
+      );
+    });
+    let classDet = [];
+    let indexs = [];
+    for (i in emailClassesDetails) {
+      if (!classDet.includes(emailClassesDetails[i].split(/[,]+/)[0])) {
+        indexs.push(i);
+        classDet.push(emailClassesDetails[i].split(/[,]+/)[0]);
+      }
+    }
+    classDet = [];
+    for (i in indexs) {
+      classDet.push(emailClassesDetails[indexs[i]]);
+    }
+    emailClassesDetails = classDet;
+  }
 
   //Should the student have no scheduledclasses with this teacher before.
   let query = `SELECT * FROM scheduledclasses WHERE studentID = ${studentID} AND teacherID = ${teacherID}`;

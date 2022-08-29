@@ -123,8 +123,9 @@
             <div class="px-2 table-colums f-color-1 d-flex mb-4">
               <small class="col-2">Student</small>
               <small class="col-2">Teacher</small>
-              <small class="col-3">Class title</small>
+              <small class="col-2">Class title</small>
               <small class="col-2">Class subject</small>
+              <small class="col-1">Status</small>
               <small class="col-1">Duration</small>
               <small class="col-2">Date</small>
             </div>
@@ -136,8 +137,18 @@
               <div class="px-2 d-flex f-color-3">
                 <small class="col-2">{{ anClass.studentName }}</small>
                 <small class="col-2">{{ anClass.teacherName }}</small>
-                <small class="col-3">{{ anClass.classTitle }}</small>
+                <small class="col-2">{{ anClass.classTitle }}</small>
                 <small class="col-2">{{ anClass.subject }}</small>
+                <small class="col-1">{{
+                  anClass.status == 1
+                    ? "Attended"
+                    : anClass.status == 4
+                    ? "Missed by student"
+                    : anClass.status == 0
+                    ? "Active"
+                    : anClass.status
+                }}</small>
+
                 <small class="col-1">{{ anClass.duration }}</small>
                 <small class="col-2">{{
                   moment(anClass.startingDate).format("ddd, D MMM YYYY HH:mm")
@@ -250,27 +261,17 @@ export default {
         .get(url)
         .then((res) => {
           if (!res.data.success) {
-            // this.$router.push('/admin/bills');
             return (this.alerts.error = res.data.msg);
           }
           this.alerts.error = null;
-          this.classes = res.data.rows;
-
+          this.classes = res.data.rows.filter(
+            (item) => item.countOnInvoice == 1
+          );
           this.totalHours = 0; // Re-Inisialization
           this.classes.forEach((row) => {
             if (parseInt(row.countOnInvoice) === 1)
               this.totalHours = this.totalHours + row.duration;
           });
-
-          ///
-          let ids = [];
-          let arrayOfObject = this.classes;
-
-          for (let i in arrayOfObject) {
-            ids.push(arrayOfObject[i].id);
-          }
-          this.classesIDs = ids.join(",");
-          console.log(this.classesIDs);
 
           ///
         })
@@ -284,13 +285,11 @@ export default {
         .get(url)
         .then((res) => {
           if (!res.data.success) {
-            // this.$router.push('/admin/bills');
             return (this.alerts.error = res.data.msg);
           }
           this.alerts.error = null;
-          console.log(res.data.rows);
           this.classes = res.data.rows.filter(
-            (item) => item.countOnInvoice === 1
+            (item) => item.countOnInvoice == 1
           );
           this.totalHours = 0; // Re-Inisialization
           this.classes.forEach((row) => {
@@ -311,7 +310,6 @@ export default {
         .get(url, queryReq)
         .then((res) => {
           if (!res.data.success) {
-            // this.$router.push('/admin/bills');
             return (this.alerts.error = res.data.msg);
           }
           this.alerts.error = null;

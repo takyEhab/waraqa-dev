@@ -3,7 +3,7 @@
     <div class="f-color-1">
       <small
         class="text-on-hover"
-        @click="$router.push({ name: 'TeacherMain', params: $route.params })"
+        @click="$router.go(-1)"
         ><i class="fas fa-long-arrow-alt-left"></i> Back</small
       >
     </div>
@@ -260,13 +260,13 @@
               <small class="col-2">Subject</small>
               <small class="col-2">Student</small>
               <small class="col-1">Duration</small>
-              <small class="col-1">Sun</small>
               <small class="col-1">Mon</small>
               <small class="col-1">Tue</small>
               <small class="col-1">Wed</small>
               <small class="col-1">Thu</small>
               <small class="col-1">Fri</small>
               <small class="col-1">Sat</small>
+              <small class="col-1">Sun</small>
             </div>
             <div
               v-for="schClass in schudeledClasses"
@@ -277,11 +277,7 @@
                 <small class="col-2">{{ schClass.subject }}</small>
                 <small class="col-2">{{ schClass.studentName }}</small>
                 <small class="col-1">{{ schClass.duration }}</small>
-                <small class="col-1">{{
-                  schClass.Sun
-                    ? moment(schClass.Sun).format("HH:mm")
-                    : "--:--:--"
-                }}</small>
+                
                 <small class="col-1">{{
                   schClass.Mon
                     ? moment(schClass.Mon).format("HH:mm")
@@ -310,6 +306,11 @@
                 <small class="col-1">{{
                   schClass.Sat
                     ? moment(schClass.Sat).format("HH:mm")
+                    : "--:--:--"
+                }}</small>
+                <small class="col-1">{{
+                  schClass.Sun
+                    ? moment(schClass.Sun).format("HH:mm")
                     : "--:--:--"
                 }}</small>
               </div>

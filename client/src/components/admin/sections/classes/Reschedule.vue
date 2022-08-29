@@ -7,7 +7,7 @@
     aria-hidden="true"
   >
     <div class="modal-dialog">
-      <div class="modal-content text-start">
+      <div class="modal-content borderRadius text-start">
         <header
           class="b-color-2 f-color-0 py-3 px-4 d-flex justify-content-between"
         >
@@ -37,22 +37,6 @@
                   :reduce="(teacher) => teacher.id"
                   v-model="teacherID"
                 />
-
-                <!-- <select
-                  class="form-select"
-                  v-model="teacherID"
-                  @change="getscheduleData"
-                  required
-                >
-                  <option value="">Teacher</option>
-                  <option
-                    v-for="teacher in teachers"
-                    :key="teacher.id"
-                    :value="teacher.id"
-                  >
-                    {{ teacher.name }}
-                  </option>
-                </select> -->
               </div>
               <!-- Student -->
               <div class="col-12 col-md mt-3">
@@ -65,25 +49,6 @@
                   :reduce="(student) => student.id"
                   v-model="studentID"
                 />
-
-                <!-- <select
-                  class="form-select"
-                  v-model="studentID"
-                  @change="
-                    getGuardian();
-                    getscheduleData();
-                  "
-                  required
-                >
-                  <option value="">Student</option>
-                  <option
-                    v-for="student in students"
-                    :key="student.id"
-                    :value="student.id"
-                  >
-                    {{ student.name }}
-                  </option>
-                </select> -->
               </div>
             </div>
             <div v-if="displayData">
@@ -103,6 +68,21 @@
                     </option>
                   </select>
                 </div>
+
+                <!-- Class link -->
+                <div class="col-12 col-md-6 mt-3">
+                  <label class="f-color-3 mb-1">Class Title</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Enter Class title"
+                    v-model="data[0].classTitle"
+                    required
+                  />
+                </div>
+              </div>
+              <!-- Link & Duration -->
+              <div class="row flex-wrap align-items-center">
                 <!-- Class Duration -->
                 <div class="col-12 col-md mt-3">
                   <label class="f-color-3 mb-1">Duration</label>
@@ -122,26 +102,49 @@
                     <option value="120">120Mins (two hours)</option>
                   </select>
                 </div>
-              </div>
-              <!-- Link & Duration -->
-              <div class="row flex-wrap align-items-center">
-                <!-- Class link -->
-                <div class="col-12 col-md-6 mt-3">
-                  <label class="f-color-3 mb-1">Class Title</label>
+                <div class="col-12 col-md mt-3">
+                  <label class="f-color-3 mb-1">Payment Cycle</label>
                   <input
-                    type="text"
+                    type="number"
                     class="form-control"
-                    placeholder="Enter Class title"
-                    v-model="data[0].classTitle"
+                    placeholder="Months"
                     required
+                    min="1"
+                    v-model="data[0].payEvery"
                   />
                 </div>
+
                 <!-- Starting date -->
                 <!-- <div class="col-12 col-md mt-3">
                                         <label class="f-color-3 mb-1">Start Date</label>
                                         <input type="datetime-local" class="form-control" v-model="startingDate" required>
                                     </div> -->
                 <!-- Days List -->
+              </div>
+              <!-- Invite guests & Description -->
+              <div class="row flex-wrap">
+                <!-- Invite guests -->
+                <div class="col-12 col-md mt-3">
+                  <label class="f-color-3 mb-1">Invite Guests</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Enter Guests' Email"
+                    v-model="data[0].guests"
+                  />
+                </div>
+                <!-- Class Description -->
+                <div class="col-12 col-md mt-3">
+                  <label class="f-color-3 mb-1">Class Information</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Class Information"
+                    v-model="data[0].description"
+                  />
+                </div>
+              </div>
+              <div class="row flex-wrap">
                 <div class="col-12 col-md-6 mt-3">
                   <label class="f-color-3 mb-1">Days</label>
                   <ul class="list-unstyled m-0 days-list d-flex">
@@ -162,6 +165,7 @@
                   </ul>
                 </div>
               </div>
+
               <!-- Repeat days -->
               <div class="row flex-wrap">
                 <!-- Sunday input -->
@@ -234,41 +238,6 @@
                     required
                   />
                 </div>
-              </div>
-              <!-- Invite guests & Description -->
-              <div class="row flex-wrap">
-                <!-- Invite guests -->
-                <div class="col-12 col-md mt-3">
-                  <label class="f-color-3 mb-1">Invite Guests</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    placeholder="Enter Guests' Email"
-                    v-model="data[0].guests"
-                  />
-                </div>
-                <!-- Class Description -->
-                <div class="col-12 col-md mt-3">
-                  <label class="f-color-3 mb-1">Class Information</label>
-                  <textarea
-                    type="text"
-                    class="form-control"
-                    placeholder="Class Information"
-                    v-model="data[0].description"
-                  ></textarea>
-                </div>
-              </div>
-              <!-- Class link -->
-              <div class="col-4 col-md mt-3">
-                <label class="f-color-3 mb-1">Payment Cycle</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  placeholder="Months"
-                  required
-                  min="1"
-                  v-model="data[0].payEvery"
-                />
               </div>
               <!-- Count for -->
               <!-- <div class="row flex-wrap">
@@ -518,14 +487,6 @@ export default {
       this.alerts.success = "";
       this.loadingBtn = true;
 
-      // this.data[0].Sun=moment(this.daysTime.Sun, 'HH:mm'),
-      // this.data[0].Mon=moment(this.daysTime.Mon, 'HH:mm'),
-      // this.data[0].Tue=moment(this.daysTime.Tue, 'HH:mm'),
-      // this.data[0].Wed=moment(this.daysTime.Wed, 'HH:mm'),
-      // this.data[0].Thu=moment(this.daysTime.Thu, 'HH:mm'),
-      // this.data[0].Fri=moment(this.daysTime.Fri, 'HH:mm'),
-      // this.data[0].Sat=moment(this.daysTime.Sat, 'HH:mm')
-
       this.data[0].Sun = this.daysTime.Sun
         ? moment(this.daysTime.Sun, "HH:mm")
         : null;
@@ -547,7 +508,6 @@ export default {
       this.data[0].Sat = this.daysTime.Sat
         ? moment(this.daysTime.Sat, "HH:mm")
         : null;
-
       let url = `http://localhost:3300/api/v1/admin/classes/path12/${this.data[0].id}`;
       axios
         .post(url, this.data[0])
@@ -626,7 +586,7 @@ export default {
 <style scoped>
 @media (min-width: 576px) {
   .modal-dialog {
-    max-width: 55%;
+    max-width: 40%;
   }
 }
 .days-list li {

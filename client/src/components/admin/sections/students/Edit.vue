@@ -12,7 +12,7 @@
         <header
           class="b-color-2 f-color-0 py-3 px-4 d-flex justify-content-between"
         >
-          <h5 class="m-0">Edit</h5>
+          <h5 class="m-0">Edit Student's information</h5>
           <button
             type="button"
             class="f-color-0 border-0 background-none"
@@ -36,7 +36,7 @@
               </div>
               <div
                 class="mt-3 position-relative"
-                style="width: 90px; height: 80px"
+                style="width: 90px; height: 100px"
               >
                 <!-- <div class="avatar-btn" @click="openUpload"> -->
                 <div
@@ -52,17 +52,17 @@
                   class="avatar-img rounded-circle"
                   alt="Student picture"
                 />
-                <span v-else class="avatar">{{
-                  data[0].name.charAt(0).toUpperCase()
-                }}</span>
-
+                <span v-else class="avatar">
+                  <div style="font-size: 3rem">
+                    {{ data[0].name.charAt(0).toUpperCase() }}
+                  </div>
+                </span>
                 <!-- <input type="file" ref="avatar" @change="selectFile" hidden /> -->
               </div>
             </div>
             <!-- Personal Information -->
             <div class="mt-5">
               <span class="d-block f-color-2">Personal Information:</span>
-              <!-- First Name & Last Name -->
               <div class="row flex-wrap">
                 <!-- First Name -->
                 <div class="col-12 col-md mt-3">
@@ -86,9 +86,7 @@
                     required
                   />
                 </div>
-              </div>
-              <!-- Birthday & Address -->
-              <div class="row flex-wrap">
+
                 <!-- Birthday -->
                 <div class="col-12 col-md mt-3">
                   <label class="f-color-3 mb-1">Birthday</label>
@@ -98,6 +96,8 @@
                     v-model="data[0].birthday"
                   />
                 </div>
+              </div>
+              <div class="row flex-wrap">
                 <!-- Address -->
                 <div class="col-12 col-md mt-3">
                   <label class="f-color-3 mb-1">Address</label>
@@ -108,9 +108,6 @@
                     v-model="data[0].address"
                   />
                 </div>
-              </div>
-              <!-- Language & Email -->
-              <div class="row flex-wrap">
                 <!-- Language -->
                 <div class="col-12 col-md mt-3">
                   <label class="f-color-3 mb-1">Languages</label>
@@ -135,22 +132,6 @@
               </div>
               <!-- TimeZone & Phone -->
               <div class="row flex-wrap">
-                <!-- TimeZone -->
-                <div class="col-12 col-md mt-3">
-                  <label class="f-color-3 mb-1">Time Zone</label>
-
-                  <v-select
-                    placeholder="Time Zone"
-                    :options="TimeZoneList"
-                    v-model="data[0].timeZone"
-                  />
-                  <!-- <select class="form-select" v-model="data[0].timeZone">
-                    <option value="">Select TimeZone</option>
-                    <option v-for="timeZone in TimeZoneList" :key="timeZone.id">
-                      {{ timeZone }}
-                    </option>
-                  </select> -->
-                </div>
                 <!-- Phone -->
                 <div class="col-12 col-md mt-3">
                   <label class="f-color-3 mb-1">Phone</label>
@@ -161,6 +142,18 @@
                     v-model="data[0].phone"
                   />
                 </div>
+
+                <!-- TimeZone -->
+                <div class="col-12 col-md mt-3">
+                  <label class="f-color-3 mb-1">Time Zone</label>
+
+                  <v-select
+                    placeholder="Time Zone"
+                    :options="TimeZoneList"
+                    v-model="data[0].timeZone"
+                  />
+                </div>
+                <div class="col-12 col-md mt-3"></div>
               </div>
             </div>
             <!-- General Information  -->
@@ -219,19 +212,17 @@
               </button>
             </div>
             <!-- Alerts -->
-            <div class="mt-4">
-              <div
-                v-if="alerts.success"
-                class="text-center alert text-center alert-success"
-              >
-                {{ alerts.success }}
-              </div>
-              <div
-                v-else-if="alerts.error"
-                class="text-center alert text-center alert-warning"
-              >
-                {{ alerts.error }}
-              </div>
+            <div
+              v-if="alerts.success"
+              class="text-center alert text-center alert-success mt-4"
+            >
+              {{ alerts.success }}
+            </div>
+            <div
+              v-else-if="alerts.error"
+              class="text-center alert text-center alert-warning mt-4"
+            >
+              {{ alerts.error }}
             </div>
           </form>
         </div>

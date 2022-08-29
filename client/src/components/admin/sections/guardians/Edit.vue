@@ -36,7 +36,7 @@
               </div>
               <div
                 class="mt-3 position-relative"
-                style="width: 90px; height: 80px"
+                style="width: 90px; height: 100px"
               >
                 <!-- <div class="avatar-btn" @click="openUpload"> -->
                 <div
@@ -49,12 +49,14 @@
                 <img
                   v-if="temporalPic"
                   :src="temporalPic"
-                  class="avatar-img rounded-circle"
+                  class="rounded-circle"
                   alt="teacher picture"
                 />
-                <span v-else class="avatar">{{
-                  data[0].name.charAt(0).toUpperCase()
-                }}</span>
+                <span v-else class="avatar">
+                  <div style="font-size: 3rem">
+                    {{ data[0].name.charAt(0).toUpperCase() }}
+                  </div>
+                </span>
 
                 <!-- <input type="file" ref="avatar" @change="selectFile" hidden /> -->
               </div>
@@ -62,7 +64,6 @@
             <!-- Personal Information -->
             <div class="mt-5">
               <span class="d-block f-color-2">Personal Information:</span>
-              <!-- First Name & Last Name -->
               <div class="row flex-wrap">
                 <!-- First Name -->
                 <div class="col-12 col-md mt-3">
@@ -86,9 +87,7 @@
                     required
                   />
                 </div>
-              </div>
-              <!-- Birthday & Address -->
-              <div class="row flex-wrap">
+
                 <!-- Birthday -->
                 <div class="col-12 col-md mt-3">
                   <label class="f-color-3 mb-1">Birthday</label>
@@ -99,6 +98,8 @@
                     required
                   />
                 </div>
+              </div>
+              <div class="row flex-wrap">
                 <!-- Address -->
                 <div class="col-12 col-md mt-3">
                   <label class="f-color-3 mb-1">Address</label>
@@ -109,9 +110,6 @@
                     v-model="data[0].address"
                   />
                 </div>
-              </div>
-              <!-- Language & Email -->
-              <div class="row flex-wrap">
                 <!-- Language -->
                 <div class="col-12 col-md mt-3">
                   <label class="f-color-3 mb-1">Languages</label>
@@ -134,24 +132,7 @@
                   />
                 </div>
               </div>
-              <!-- TimeZone & Phone -->
               <div class="row flex-wrap">
-                <!-- TimeZone -->
-                <div class="col-12 col-md mt-3">
-                  <label class="f-color-3 mb-1">TimeZone</label>
-
-                  <v-select
-                    placeholder="Time Zone"
-                    :options="TimeZoneList"
-                    v-model="data[0].timeZone"
-                  />
-                  <!-- <select class="form-select" v-model="data[0].timeZone">
-                    <option value="">Select TimeZone</option>
-                    <option v-for="timeZone in TimeZoneList" :key="timeZone.id">
-                      {{ timeZone }}
-                    </option>
-                  </select> -->
-                </div>
                 <!-- Phone -->
                 <div class="col-12 col-md mt-3">
                   <label class="f-color-3 mb-1">Phone</label>
@@ -163,6 +144,18 @@
                     required
                   />
                 </div>
+
+                <!-- TimeZone -->
+                <div class="col-12 col-md mt-3">
+                  <label class="f-color-3 mb-1">TimeZone</label>
+
+                  <v-select
+                    placeholder="Time Zone"
+                    :options="TimeZoneList"
+                    v-model="data[0].timeZone"
+                  />
+                </div>
+                <div class="col-12 col-md mt-3"></div>
               </div>
             </div>
             <!-- General Information  -->
@@ -191,11 +184,9 @@
                     v-model="data[0].hoursPrice"
                   />
                 </div>
-              </div>
-              <!-- Payment type && Payment method -->
-              <div class="row flex-wrap">
+
                 <!-- Payment type -->
-                <div class="col-12 col-md-6 mt-3">
+                <div class="col-12 col-md mt-3">
                   <label class="f-color-3 mb-1">Payment Type</label>
                   <select
                     class="form-select"
@@ -207,8 +198,11 @@
                     <option value="2">Postpaid</option>
                   </select>
                 </div>
+              </div>
+              <!-- Payment type && Payment method -->
+              <div class="row flex-wrap">
                 <!-- Payment method -->
-                <div class="col-12 col-md-6 mt-3">
+                <div class="col-12 col-md mt-3">
                   <label class="f-color-3 mb-1">Payment Method</label>
                   <input
                     type="text"
@@ -218,15 +212,17 @@
                   />
                 </div>
 
-                <div class="col-12 col-md-6 mt-3">
+                <div class="col-12 col-md mt-3">
                   <label class="f-color-3 mb-1">Transfer Fees</label>
                   <input
                     type="number"
                     class="form-control"
                     placeholder="Transfer Fees"
                     v-model="data[0].transferPrice"
+                    required
                   />
                 </div>
+                <div class="col-12 col-md mt-3"></div>
               </div>
             </div>
             <!-- Submit -->
@@ -510,6 +506,8 @@ export default {
   position: absolute;
   right: 0em;
   top: 3.4em;
+  left: 120px;
+  top: 100px;
   cursor: pointer;
   color: var(--color-4);
   background-color: var(--color-4_1);
@@ -528,7 +526,7 @@ export default {
 }
 .modal-content .avatar-img,
 .modal-content .avatar {
-  width: 5em !important;
-  height: 5em !important;
+  width: 8.5em !important;
+  height: 8.5em !important;
 }
 </style>

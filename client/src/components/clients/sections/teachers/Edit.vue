@@ -39,7 +39,7 @@
               </div>
               <div
                 class="mt-3 position-relative"
-                style="width: 90px; height: 80px"
+                style="width: 90px; height: 100px"
               >
                 <!-- <div class="avatar-btn" @click="openUpload"> -->
                 <div
@@ -55,11 +55,11 @@
                   class="avatar-img rounded-circle"
                   alt="teacher picture"
                 />
-                <span v-else class="avatar">{{
-                  data[0].name.charAt(0).toUpperCase()
-                }}</span>
-
-                <!-- <input type="file" ref="avatar" @change="selectFile" hidden /> -->
+                <span v-else class="avatar">
+                  <div style="font-size: 3rem">
+                    {{ data[0].name.charAt(0).toUpperCase() }}
+                  </div>
+                </span>
               </div>
             </div>
             <!-- Personal Information -->
@@ -89,9 +89,7 @@
                     required
                   />
                 </div>
-              </div>
-              <!-- Birthday & Address -->
-              <div class="row flex-wrap">
+
                 <!-- Birthday -->
                 <div class="col-12 col-md mt-3">
                   <label class="f-color-3 mb-1">Birthday</label>
@@ -102,6 +100,8 @@
                     required
                   />
                 </div>
+              </div>
+              <div class="row flex-wrap">
                 <!-- Address -->
                 <div class="col-12 col-md mt-3">
                   <label class="f-color-3 mb-1">Address</label>
@@ -113,9 +113,6 @@
                     required
                   />
                 </div>
-              </div>
-              <!-- Language & Email -->
-              <div class="row flex-wrap">
                 <!-- Language -->
                 <div class="col-12 col-md mt-3">
                   <label class="f-color-3 mb-1">Language</label>
@@ -140,29 +137,9 @@
                 </div>
               </div>
               <!-- TimeZone & Phone -->
+              <div class="row flex-wrap"></div>
+              <!-- Description -->
               <div class="row flex-wrap">
-                <!-- TimeZone -->
-                <div class="col-12 col-md mt-3">
-                  <label class="f-color-3 mb-1">TimeZone</label>
-
-                  <v-select
-                    placeholder="Select TimeZone"
-                    :options="TimeZoneList"
-                    v-model="data[0].timeZone"
-                  />
-
-                  <!--               
-                  label="name"
-                  :reduce="(teacher) => teacher.id"
-         -->
-
-                  <!-- <select class="form-select" v-model="data[0].timeZone">
-                    <option value="">Select TimeZone</option>
-                    <option v-for="timeZone in TimeZoneList" :key="timeZone.id">
-                      {{ timeZone }}
-                    </option>
-                  </select> -->
-                </div>
                 <!-- Phone -->
                 <div class="col-12 col-md mt-3">
                   <label class="f-color-3 mb-1">Phone</label>
@@ -174,11 +151,19 @@
                     required
                   />
                 </div>
-              </div>
-              <!-- Description -->
-              <div class="row flex-wrap">
+
+                <!-- TimeZone -->
+                <div class="col-12 col-md mt-3">
+                  <label class="f-color-3 mb-1">TimeZone</label>
+
+                  <v-select
+                    placeholder="Select TimeZone"
+                    :options="TimeZoneList"
+                    v-model="data[0].timeZone"
+                  />
+                </div>
                 <!-- Contact Note -->
-                <div class="col-12 col-md-6 mt-3">
+                <div class="col-12 col-md mt-3">
                   <label class="f-color-3 mb-1">Description</label>
                   <textarea
                     type="text"
@@ -253,31 +238,7 @@
                     <option>CAD</option>
                   </select>
                 </div>
-              </div>
-              <!-- SWIFT Code & Beneficiary Branch Name -->
-              <div class="row flex-wrap">
-                <!-- SWIFT Code -->
-                <div class="col-12 col-md mt-3">
-                  <label class="f-color-3 mb-1"
-                    >SWIFT Code
-                    <small>
-                      (You can find your swift code in this link
-                      <a
-                        href="https://www.theswiftcodes.com/egypt"
-                        class="f-color-1"
-                        target="_blank"
-                        >Here</a
-                      >
-                      )</small
-                    >
-                  </label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    placeholder="Enter SWIFT Code"
-                    v-model="data[0].swiftCode"
-                  />
-                </div>
+
                 <!-- Beneficiary Branch Name -->
                 <div class="col-12 col-md mt-3">
                   <label class="f-color-3 mb-1">Beneficiary Branch Name</label>
@@ -289,7 +250,6 @@
                   />
                 </div>
               </div>
-              <!-- Beneficiary Bank Name & Beneficiary IBAN -->
               <div class="row flex-wrap">
                 <!-- Beneficiary Bank Name -->
                 <div class="col-12 col-md mt-3">
@@ -311,11 +271,9 @@
                     v-model="data[0].iban"
                   />
                 </div>
-              </div>
-              <!-- Beneficiary's Account Number -->
-              <div class="row flex-wrap">
+
                 <!-- Beneficiary's Account Number -->
-                <div class="col-12 col-md-6 mt-3">
+                <div class="col-12 col-md mt-3">
                   <label class="f-color-3 mb-1"
                     >Beneficiary's Account Number</label
                   >
@@ -329,6 +287,34 @@
               </div>
             </div>
 
+            <!-- SWIFT Code & Beneficiary Branch Name -->
+            <div class="row flex-wrap">
+              <!-- SWIFT Code -->
+              <div class="col-12 col-md mt-3">
+                <label class="f-color-3 mb-1"
+                  >SWIFT Code
+                  <small>
+                    (You can find your swift code in this link
+                    <a
+                      href="https://www.theswiftcodes.com/egypt"
+                      class="f-color-1"
+                      target="_blank"
+                      >Here</a
+                    >
+                    )</small
+                  >
+                </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter SWIFT Code"
+                  v-model="data[0].swiftCode"
+                />
+              </div>
+              <div class="col-12 col-md mt-3"></div>
+
+              <div class="col-12 col-md mt-3"></div>
+            </div>
             <!-- Submit -->
             <div class="mt-4 d-flex justify-content-end align-items-center">
               <small class="f-color-3_3 me-3"
@@ -375,7 +361,6 @@
               <div class="row flex-wrap">
                 <!-- Current Password -->
                 <div class="col-12 col-md mt-3">
-                  <label class="f-color-3 mb-1">Current Password</label>
                   <input
                     type="password"
                     class="form-control"
@@ -386,7 +371,6 @@
                 </div>
                 <!--  New Password -->
                 <div class="col-12 col-md mt-3">
-                  <label class="f-color-3 mb-1">New Password</label>
                   <input
                     type="password"
                     class="form-control"

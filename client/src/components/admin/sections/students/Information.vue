@@ -3,7 +3,11 @@
     <div class="f-color-1">
       <small
         class="text-on-hover"
-        @click="$router.push({ name: 'StudentMain', params: $route.params })"
+        @click="
+          $router.push({
+            name: 'StudentMain',
+          })
+        "
         ><i class="fas fa-long-arrow-alt-left"></i> Back</small
       >
     </div>

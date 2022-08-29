@@ -10,6 +10,8 @@ html,
 body {
   margin: 0;
   padding: 0;
+  border-radius: 35px 0px 35px 0px;
+  font-family: Helvetica;
 }
 :root {
   --color-0: #fff;
@@ -101,9 +103,10 @@ a:hover {
   border: none;
 }
 .alert-warning {
-  color: #f58d5f;
+  color: #000000;
   background-color: #ffd7c5;
   border: none;
+  
 }
 input:focus,
 textarea:focus,
@@ -128,11 +131,15 @@ select:focus {
   padding: 0.6299rem 0.75rem;
 }
 .main-button-style {
+  border-radius: 35px 0px 35px 0px;
+
   background-color: var(--color-1);
   color: var(--color-2);
   border: initial;
 }
 .soft-button-style {
+  border-radius: 35px 0px 35px 0px;
+
   background-color: #80dcb3;
   color: var(--color-0);
   border: initial;
@@ -150,7 +157,7 @@ select:focus {
 .delete-btn,
 .secondery-btn {
   opacity: 0.8;
-  border-radius: 2px;
+
   cursor: pointer;
 }
 .delete-btn {
@@ -211,21 +218,91 @@ select:focus {
   background-color: #d8d8d8;
 }
 .active-page {
-  background-color: #3498db;
-  border: 1px solid #3498db;
+  background-color: #f58d5f;
+  border: 1px solid #f58d5f;
   color: white;
 }
 .active-page:hover {
-  background-color: #2988c8;
+  background-color: #d17751;
 }
 
 .rowTable {
   background-color: #ededed;
   color: #181818;
   border-radius: 15px;
-  cursor: grab;
+  cursor: pointer;
 }
 .rowTable:hover {
   background-color: #dfdfdf;
+  box-shadow: 0px 5px 5px 0px rgb(189, 187, 187);
+}
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: #2196f3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196f3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+.borderRadius {
+  border-radius: 35px 0px 35px 0px;
+}
+.modal-content {
+  border-radius: 35px 0px 35px 0px;
 }
 </style>

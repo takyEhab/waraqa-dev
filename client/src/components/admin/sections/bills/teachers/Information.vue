@@ -125,7 +125,7 @@
         This invoice has not yet been paid.
       </div>
       <!-- Periodic evaluations list -->
-      <div class="b-color-0 box-shadow-style mt-5 p-3">
+      <div class="b-color-0 box-shadow-style">
         <div class="d-flex justify-content-end align-items-center flex-wrap">
           <div class="col-12 col-md-4 f-color-1 px-md-3 text-md-end">
             <span>Total classes hours: {{ (totalHours / 60).toFixed(2) }}</span>

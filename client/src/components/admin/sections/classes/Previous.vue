@@ -6,7 +6,9 @@
       <!-- Filters -->
 
       <div class="section-filters">
-        <ul class="list-unstyled m-0 d-flex f-color-1">
+        <ul
+          class="list-unstyled m-0 d-flex flex-wrap f-color-1 mt-lg-0 mt-sm-5 mt-5"
+        >
           <li
             :class="[filters.five ? 'opacity-100' : '', 'px-2']"
             @click="
@@ -21,7 +23,7 @@
               getData();
             "
           >
-            <small> Old</small>
+            <small>Class reports</small>
           </li>
           <li
             :class="[filters.one ? 'opacity-100' : '', 'ms-2 ms-md-3 px-2']"
@@ -89,41 +91,8 @@
           </li>
         </ul>
       </div>
-      <!-- Search -->
-      <div class="mt-4 mt-md-0 col-12 col-md-4">
-        <div class="d-flex position-relative align-items-center">
-          <input
-            type="text"
-            class="form-control"
-            v-model="search"
-            @keyup="getData()"
-            placeholder="Search"
-          />
-          <div
-            class="f-color-1 rounded px-3 position-absolute py-1"
-            style="right: 7px"
-          >
-            <small><i class="fas fa-search"></i></small>
-          </div>
-        </div>
-      </div>
     </div>
 
-    <!-- Alerts -->
-    <div class="mt-4">
-      <div
-        v-if="alerts.success"
-        class="text-start text-md-center alert text-center alert-success"
-      >
-        {{ alerts.success }}
-      </div>
-      <div
-        v-else-if="alerts.error"
-        class="text-start text-md-center alert text-center alert-warning"
-      >
-        {{ alerts.error }}
-      </div>
-    </div>
     <!-- Table -->
     <div
       class="mt-4 b-color-0 box-shadow-style px-md-2 py-3"
@@ -141,9 +110,27 @@
           <small class="col-1">More</small>
         </div>
         <div v-for="row in data" :key="row.id" class="table-row py-3">
-          <div class="px-2 d-flex f-color-3">
+          <div
+            @click="
+              $router.push({
+                name: 'ClassInfo',
+                params: {
+                  id: row.id,
+                },
+                query: {
+                  tap: true,
+                  page: pagination.page,
+                  offset: pagination.offset,
+                  filter: Object.keys(filters).find(
+                    (key) => filters[key] == true
+                  ),
+                },
+              })
+            "
+            class="rowTable p-2 d-flex f-color-3"
+          >
             <span class="col-2" style="font-family: Merienda">
-              <span style="margin-left: 35px; font-weight: 900; color: #4c4a4c">
+              <span style="margin-left: 35px; font-weight: 900; color: #4c4a4c;font-family: Merienda">
                 {{ moment(row.startingDate).format("hh:mm A") }}
               </span>
               <br />
@@ -178,13 +165,18 @@
 
             <div class="col-1">
               <div class="btn-group dropstart">
-                <div data-bs-toggle="dropdown" class="btn">
+                <div
+                  data-bs-toggle="dropdown"
+                  @click.stop=""
+                  style="border-radius: 2px"
+                  class="btn"
+                >
                   <i class="fa fa-lg fa-ellipsis-v"></i>
                 </div>
 
                 <!-- Action -->
-                <ul class="dropdown-menu">
-                  <li>
+                <ul @click.stop="" class="dropdown-menu">
+                  <!-- <li>
                     <router-link
                       :to="{
                         name: 'ClassInfo',
@@ -210,7 +202,7 @@
                       ><i data-bs-toggle="dropdown" class="fas fa-eye px-2"></i>
                       More</router-link
                     >
-                  </li>
+                  </li> -->
 
                   <li>
                     <button @click="deleteData(row.id)" class="dropdown-item">
@@ -311,6 +303,22 @@
           </div>
         </div>
       </div>
+
+      <!-- Alerts -->
+      <div class="mt-4">
+        <div
+          v-if="alerts.success"
+          class="text-start text-md-center alert text-center alert-success"
+        >
+          {{ alerts.success }}
+        </div>
+        <div
+          v-else-if="alerts.error"
+          class="text-start text-md-center alert text-center alert-warning"
+        >
+          {{ alerts.error }}
+        </div>
+      </div>
     </div>
 
     <!-- Pagination -->
@@ -370,7 +378,10 @@ export default {
       }
       this.getData();
     },
-    getData() {
+    getData(search) {
+      if (search != null) {
+        this.search = search;
+      }
       let status;
       if (this.filters.one) {
         status = 1;

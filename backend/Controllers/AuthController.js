@@ -13,6 +13,7 @@ const {
   sendEmail,
   sendNotification,
 } = require("./NotificationAndEmailController");
+const { config } = require("dotenv");
 
 let clientVerifyToken = (req, res, next) => {
   const token = req.header("Authorization");
@@ -329,7 +330,7 @@ let recheckauth = (req, res) => {
       userTable = "teachers";
       userType = "Teacher";
       //Add notification and email if teacher late to add class Report
-      let query = `SELECT id, startingDate,(SELECT name FROM students WHERE id=classes.studentID) AS studentName FROM classes WHERE teacherID = ${id} AND status = 0 AND startingDate < NOW() AND reportReminded = 0`;
+      let query = `SELECT id, startingDate,(SELECT name FROM students WHERE id=classes.studentID) AS studentName FROM classes WHERE teacherID = ${id} AND status = 0 AND startingDate < NOW() - INTERVAL 2 DAY AND reportReminded = 0`;
       dataBase.query(query, (error, data) => {
         if (error || !data.length) {
           // return res.json({success:false, msg:"Failed send a notification to remind the teacher to add class's report."});
@@ -380,7 +381,7 @@ let recheckauth = (req, res) => {
       });
 
       // // Add notification and email if classes missed for teacher
-      let query2 = `SELECT id, startingDate,(SELECT name FROM students WHERE id=classes.studentID) AS studentName, (SELECT name FROM teachers WHERE id=classes.teacherID) AS teacherName FROM classes WHERE teacherID = ${id} AND status = 0 AND startingDate < now() - INTERVAL 2 DAY AND canReport = 1`;
+      let query2 = `SELECT id, startingDate,(SELECT name FROM students WHERE id=classes.studentID) AS studentName, (SELECT name FROM teachers WHERE id=classes.teacherID) AS teacherName FROM classes WHERE teacherID = ${id} AND status = 0 AND startingDate < now() - INTERVAL 3 DAY `;
       dataBase.query(query2, (error, data) => {
         if (error || !data.length) {
           // return res.json({success:false, msg:"Failed send a notification to remind the teacher to add class's report."});
@@ -426,7 +427,7 @@ let recheckauth = (req, res) => {
 
           //Update Each class => canReport to = 0
           let query = `UPDATE classes SET ? WHERE id = ${classID}`;
-          dataBase.query(query, { canReport: 0 });
+          dataBase.query(query, { status: 5 });
         }
       });
 
@@ -457,9 +458,7 @@ let sendResetPasswordRequest = (req, res) => {
   //Step 1.2 (if yes)
   // Step 1.2.A Store the Code in user
   // Step 1.2.B Send Email with the code number
-
-  let email = req.body.email;
-
+  let { isAdmin, email } = req.body;
   //Step Generate token
   let code = Math.floor(Math.random() * 10000) * 1001;
 
@@ -478,12 +477,14 @@ let sendResetPasswordRequest = (req, res) => {
             <h2>${code}</h2>
         `,
   };
-
   //Step 1 Check email exists in guardians || teachers
   let userTable;
   let query = `SELECT
-    EXISTS (SELECT * FROM guardians WHERE email = ?) AS foundGuardian,
-    EXISTS (SELECT * FROM teachers WHERE email = ?) AS foundTeacher`;
+    ${
+      isAdmin
+        ? "EXISTS (SELECT * FROM admins WHERE email = ?) AS foundAdmin"
+        : "EXISTS(SELECT * FROM guardians WHERE email = ?) AS foundGuardian, EXISTS (SELECT * FROM teachers WHERE email = ?) AS foundTeacher"
+    }`;
   dataBase.query(query, [email, email], (error, results, fields) => {
     if (error) throw error;
     //If Exist as Guardian
@@ -491,7 +492,10 @@ let sendResetPasswordRequest = (req, res) => {
       userTable = "guardians";
       //If Exist as Teacher
     } else if (results[0].foundTeacher) {
+      //If Exist as Admin
       userTable = "teachers";
+    } else if (results[0].foundAdmin) {
+      userTable = "admins";
       //step 1.1 (if not exist in both) send msg : account doesn't exists.
     } else {
       return res.json({
@@ -502,8 +506,8 @@ let sendResetPasswordRequest = (req, res) => {
 
     // Step 1.2.A Store the Code in user
     dataBase.query(
-      `UPDATE ${userTable} SET ? WHERE email = '${email}'`,
-      [storeToken],
+      `UPDATE ${userTable} SET ? WHERE email = ?`,
+      [storeToken, email],
       (error, data) => {
         if (error || !data) {
           return res.json({
@@ -513,6 +517,7 @@ let sendResetPasswordRequest = (req, res) => {
           });
         }
         // Step 1.2.B Send Email with the code number
+        res.json({ success: true });
         return sendEmail(configEmail);
       }
     );
@@ -520,8 +525,8 @@ let sendResetPasswordRequest = (req, res) => {
 };
 //Path4: Confirm Reset Password Request
 let confimrRestPassword = (req, res) => {
-  let email = req.body.email;
-  let code = req.body.code;
+  let { isAdmin, email, code } = req.body;
+
   //Empty token from user
   emptyToken = {
     token: null,
@@ -529,8 +534,11 @@ let confimrRestPassword = (req, res) => {
 
   let userTable;
   let query = `SELECT
-    EXISTS (SELECT * FROM guardians WHERE email = ?) AS foundGuardian,
-    EXISTS (SELECT * FROM teachers WHERE email = ?) AS foundTeacher`;
+  ${
+    isAdmin
+      ? "EXISTS (SELECT * FROM admins WHERE email = ?) AS foundAdmin"
+      : "EXISTS(SELECT * FROM guardians WHERE email = ?) AS foundGuardian, EXISTS (SELECT * FROM teachers WHERE email = ?) AS foundTeacher"
+  }`;
   dataBase.query(query, [email, email], (error, results, fields) => {
     if (error) throw error;
     //If Exist as Guardian
@@ -539,6 +547,9 @@ let confimrRestPassword = (req, res) => {
       //If Exist as Teacher
     } else if (results[0].foundTeacher) {
       userTable = "teachers";
+      //If Exist as Admin
+    } else if (results[0].foundAdmin) {
+      userTable = "admins";
       //step 1.1 (if not exist in both) send msg : account doesn't exists.
     } else {
       return res.json({
@@ -546,33 +557,31 @@ let confimrRestPassword = (req, res) => {
         msg: "This account dosen't exists, please register first",
       });
     }
+
     // Find user
-    dataBase.query(
-      `SELECT * FROM ${userTable} WHERE email = ${email} AND token = ${code}`,
-      (error, data) => {
+    let query = `SELECT * FROM ${userTable} WHERE email = ? AND token = ?`;
+    dataBase.query(query, [email, code], (error, data) => {
+      if (error || !data) {
+        return res.json({
+          success: false,
+          msg: "Code not match, Please try again.",
+        });
+      }
+      //Empty Token
+      let query = `UPDATE ${userTable} SET ? WHERE email = ? AND token = ?`;
+      dataBase.query(query, [emptyToken, email, code], (error, data) => {
+        console.log(error);
+        console.log(data);
         if (error || !data) {
           return res.json({
             success: false,
-            msg: "Code not match, Please try again.",
+            msg: "Failed complete rest password process! [Error:2]",
           });
         }
-        //Empty Token
-        dataBase.query(
-          `UPDATE ${userTable} SET ? WHERE email=${email} AND toekn = ${code}`,
-          [emptyToken],
-          (error, data) => {
-            if (error || !data) {
-              return res.json({
-                success: false,
-                msg: "Failed complete rest password process! [Error:2]",
-              });
-            }
-            //Send true as permission to change password
-            return res.json({ success: true });
-          }
-        );
-      }
-    );
+        //Send true as permission to change password
+        return res.json({ success: true });
+      });
+    });
   });
 };
 //Path4: Reset Password (change password)
@@ -584,13 +593,14 @@ let resetPassword = (req, res) => {
     return res.json({ success: false, msg: setError });
   }
 
-  let email = req.body.email;
-  let password = req.body.password;
-
+  let { email, password, isAdmin } = req.body;
   let userTable;
   let query = `SELECT
-    EXISTS (SELECT * FROM guardians WHERE email = ?) AS foundGuardian,
-    EXISTS (SELECT * FROM teachers WHERE email = ?) AS foundTeacher`;
+  ${
+    isAdmin
+      ? "EXISTS (SELECT * FROM admins WHERE email = ?) AS foundAdmin"
+      : "EXISTS(SELECT * FROM guardians WHERE email = ?) AS foundGuardian, EXISTS (SELECT * FROM teachers WHERE email = ?) AS foundTeacher"
+  }`;
   dataBase.query(query, [email, email], (error, results, fields) => {
     if (error) throw error;
     //If Exist as Guardian
@@ -599,6 +609,8 @@ let resetPassword = (req, res) => {
       //If Exist as Teacher
     } else if (results[0].foundTeacher) {
       userTable = "teachers";
+    } else if (results[0].foundAdmin) {
+      userTable = "admins";
       //step 1.1 (if not exist in both) send msg : account doesn't exists.
     } else {
       return res.json({
@@ -615,21 +627,21 @@ let resetPassword = (req, res) => {
           let password = hash;
 
           // Update password
-          dataBase.query(
-            `UPDATE ${userTable} SET password=${password} WHERE email=${email} `,
-            (error, data) => {
-              if (error || !data) {
-                return res.json({
-                  success: false,
-                  msg: "Failed change password!",
-                });
-              }
-              res.json({
-                success: true,
-                msg: "Password was successfully changed.",
+          let query = `UPDATE ${userTable} SET password = ? WHERE email = ?`;
+          dataBase.query(query, [password, email], (error, data) => {
+            if (error || !data) {
+              console.log(error);
+              console.log(data);
+              return res.json({
+                success: false,
+                msg: "Failed change password!",
               });
             }
-          );
+            res.json({
+              success: true,
+              msg: "Password was successfully changed.",
+            });
+          });
         }
       });
     });

@@ -13,6 +13,7 @@
     "axios": "^0.24.0",
     "bootstrap": "^5.0.0-beta3",
     "core-js": "^3.6.5",
+    "javascript-time-ago": "^2.5.7",
     "moment-timezone": "^0.5.34",
     "vue": "^3.0.0",
     "vue-advanced-cropper": "^2.8.3",

@@ -48,9 +48,7 @@
                   required
                 />
               </div>
-            </div>
-            <!-- Contact method & Contact information -->
-            <div class="row flex-wrap">
+
               <!-- Contact method -->
               <div class="col-12 col-md mt-3">
                 <label class="f-color-3 mb-1">Channel</label>
@@ -61,6 +59,8 @@
                   v-model="contactMethod"
                 />
               </div>
+            </div>
+            <div class="row flex-wrap">
               <!-- Contact information -->
               <div class="col-12 col-md mt-3">
                 <label class="f-color-3 mb-1">Contact</label>
@@ -71,14 +71,11 @@
                   v-model="contactInfo"
                 />
               </div>
-            </div>
-            <!-- Contact Date & Contact Note -->
-            <div class="row flex-wrap">
               <!-- Contact Date -->
               <div class="col-12 col-md mt-3">
                 <label class="f-color-3 mb-1">Contact Date</label>
                 <input
-                  type="datetime-local"
+                  type="date"
                   class="form-control"
                   v-model="contactDate"
                   required

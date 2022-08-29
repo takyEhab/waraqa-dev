@@ -1,30 +1,8 @@
 <template>
   <div>
-    <!--Search -->
-    <div class="mt-4 d-flex justify-content-md-end flex-wrap">
-      <!-- Search -->
-      <div class="col-12 col-md-4">
-        <div class="d-flex position-relative align-items-center">
-          <input
-            type="text"
-            class="form-control"
-            v-model="search"
-            @keyup="getData()"
-            placeholder="Search"
-          />
-          <div
-            class="f-color-1 rounded px-3 position-absolute py-1"
-            style="right: 7px"
-          >
-            <small><i class="fas fa-search"></i></small>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- Table -->
     <div
-      class="mt-4 b-color-0 box-shadow-style px-md-2 py-3"
+      class="mt-5 b-color-0 box-shadow-style px-md-2 py-3"
       style="overflow: hidden; overflow-x: auto"
     >
       <div style="min-width: 62em">
@@ -36,10 +14,32 @@
           <small class="col-2">Duration</small>
           <small class="col-1">More</small>
         </div>
-        <div v-for="row in data" :key="row.id" class="table-row py-3">
-          <div class="px-2 d-flex f-color-3">
+        <div v-for="row in data" :key="row.id" class="table-row py-1">
+          <div
+            @click="
+              $router.push({
+                name: 'ClassInfo',
+                params: {
+                  id: row.id,
+                },
+                query: {
+                  tap: false,
+                  page: pagination.page,
+                  offset: pagination.offset,
+                },
+              })
+            "
+            class="rowTable p-2 d-flex f-color-3"
+          >
             <span class="col-3" style="font-family: Merienda">
-              <span style="margin-left: 35px; font-weight: 900; color: #4c4a4c">
+              <span
+                style="
+                  margin-left: 35px;
+                  font-weight: 900;
+                  color: #4c4a4c;
+                  font-family: Merienda;
+                "
+              >
                 {{ moment(row.startingDate).format("hh:mm A") }}
               </span>
               <br />
@@ -56,13 +56,18 @@
               <!-- Example single danger button -->
               <div class="btn-group dropstart">
                 <!-- <i data-bs-toggle="dropdown" class=" fa-2x fa fa-caret-down"></i> -->
-                <div data-bs-toggle="dropdown" class="btn">
+                <div
+                  @click.stop=""
+                  data-bs-toggle="dropdown"
+                  class="btn"
+                  style="border-radius: 2px"
+                >
                   <i class="fa fa-lg fa-ellipsis-v"></i>
                 </div>
 
                 <!-- Action -->
-                <ul class="dropdown-menu">
-                  <li>
+                <ul @click.stop="" class="dropdown-menu">
+                  <!-- <li>
                     <router-link
                       :to="{
                         name: 'ClassInfo',
@@ -82,7 +87,7 @@
                       ><i data-bs-toggle="dropdown" class="fas fa-eye px-2"></i>
                       More</router-link
                     >
-                  </li>
+                  </li> -->
 
                   <li>
                     <button @click="deleteData(row.id)" class="dropdown-item">
@@ -161,6 +166,7 @@
 <script>
 import axios from "axios";
 import moment from "moment-timezone";
+
 export default {
   props: ["offsetNum", "params"],
   data() {
@@ -195,7 +201,10 @@ export default {
       }
       this.getData();
     },
-    getData() {
+    getData(search) {
+      if (search != null) {
+        this.search = search;
+      }
       let queryReq = {
         params: {
           date: this.userDateTime,

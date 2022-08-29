@@ -1,13 +1,10 @@
 <template>
-  <div>
+  <div class="position-relative">
     <!-- Section Header -->
-    <div>
+    <div class="d-flex justify-content-between flex-wrap">
       <h3 class="section-title">Guardians</h3>
-    </div>
-    <!--Search -->
-    <div class="mt-4 d-flex justify-content-md-end flex-wrap">
       <!-- Search -->
-      <div class="col-12 col-md-4">
+      <div class="col-12 col-md-3">
         <div class="d-flex position-relative align-items-center">
           <input
             type="text"
@@ -41,15 +38,21 @@
     >
       <div style="min-width: 62em">
         <div class="px-2 table-colums f-color-3_3 d-flex mb-4">
-          <small class="col-1">Picture</small>
+          <small class="col-1 ms-1"> </small>
           <small class="col-3">Name</small>
           <small class="col-2">Registered</small>
           <small class="col-3">Email</small>
-          <small class="col-2">Hours</small>
+          <small class="col-1">Hours</small>
           <small class="col-1">Students</small>
           <!-- <small class="col-1">Info</small> -->
         </div>
-        <div v-for="row in data" :key="row.id" class="table-row py-2">
+        <div v-for="(row, i) in data" :key="row.id" class="table-row py-1">
+          <span
+            class="position-absolute"
+            style="margin-top: 22.5px; left: -10px"
+            >{{ i + 1 + pagination.offset }}</span
+          >
+
           <div
             @click="
               $router.push({ name: 'GuardianInfo', params: { id: row.id } })
@@ -77,7 +80,7 @@
                 (row.savedPaidHours || 0) / 60 - (row.hours || 0) / 60 < 1
                   ? 'f-color-4'
                   : '',
-                'col-2',
+                'col-1',
               ]"
               >{{
                 (

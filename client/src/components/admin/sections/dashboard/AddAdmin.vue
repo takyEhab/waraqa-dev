@@ -145,3 +145,10 @@ export default {
   },
 };
 </script>
+<style scoped>
+@media (min-width: 576px) {
+  .modal-dialog {
+    max-width: 40%;
+  }
+}
+</style>

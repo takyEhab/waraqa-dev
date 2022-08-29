@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <div class="position-relative">
     <!-- Filters & Search -->
-    <div class="mt-4 d-flex justify-content-md-between flex-wrap">
+    <div class="mt-4 d-flex justify-content-between flex-wrap">
       <!-- Filters -->
       <div class="section-filters">
-        <ul class="list-unstyled m-0 d-flex f-color-1">
+        <ul class="list-unstyled m-0 d-flex flex-wrap f-color-1 mt-sm-0 mt-5">
           <li
             :class="[filters.one ? 'opacity-100' : '', 'px-2']"
             @click="
@@ -33,26 +33,18 @@
           </li>
         </ul>
       </div>
-      <!-- Search -->
-      <div class="mt-4 mt-md-0 col-12 col-md-4">
-        <div class="d-flex position-relative align-items-center">
-          <input
-            type="text"
-            class="form-control"
-            v-model="search"
-            @keyup="getData()"
-            placeholder="Search"
-          />
-          <div
-            class="f-color-1 rounded px-3 position-absolute py-1"
-            style="right: 7px"
-          >
-            <small><i class="fas fa-search"></i></small>
-          </div>
-        </div>
+
+      <div
+        class="f-color-1 text-on-hover position-relative"
+        type="button"
+        data-bs-toggle="modal"
+        data-bs-target="#CreateInvoiceModal"
+      >
+        <i class="fas fa-plus"></i> Create Invoice
       </div>
     </div>
 
+    <CreateInvoice />
     <!-- Table -->
     <div
       class="mt-4 b-color-0 box-shadow-style px-md-2 py-3"
@@ -69,7 +61,10 @@
 
           <!-- <small class="col-1">More</small> -->
         </div>
-        <div v-for="row in data" :key="row.id" class="table-row py-3">
+        <div v-for="(row, i) in data" :key="row.id" class="table-row py-3">
+          <span class="position-absolute mt-3" style="left: -10px">{{
+            i + 1 + pagination.offset
+          }}</span>
           <div
             @click="
               $router.push({
@@ -113,10 +108,6 @@
               ).format("ddd, D MMM YYYY")
             }}</span>
 
-            <!-- <span :class="[row.id % 2 == 0 ? 'text-success':'text-danger', 'col-1']">
-            {{row.id % 2 == 0?"Yes":"No"}}
-            </span> -->
-
             <span :class="[row.paid == 1 ? 'f-color-1' : 'f-color-4', 'col-2']">
               {{ row.paid == 1 ? "Paid" : "Unpaid" }}
             </span>
@@ -128,24 +119,6 @@
               ]"
               @click.stop="sentInvoice(row.id, row.isSent == 1 ? true : false)"
             ></div>
-            <!-- <div class="col-1">
-              <router-link
-                :to="{
-                  name: 'GuardianInvoiceInfo',
-                  params: {
-                    id: row.id,
-                    tap: true,
-                    page: pagination.page,
-                    offset: pagination.offset,
-                    filter: Object.keys(filters).find(
-                      (key) => filters[key] == true
-                    ),
-                  },
-                }"
-                class="f-color-1"
-                ><i class="fas fa-eye"></i
-              ></router-link>
-            </div> -->
           </div>
         </div>
         <!-- Alerts -->
@@ -179,7 +152,12 @@
 <script>
 import axios from "axios";
 import moment from "moment-timezone";
+import CreateInvoice from "@/components/admin/sections/bills/CreateInvoice";
+
 export default {
+  components: {
+    CreateInvoice,
+  },
   props: ["offsetNum", "params"],
   data() {
     return {
@@ -231,7 +209,10 @@ export default {
       }
       this.getData();
     },
-    getData() {
+    getData(search) {
+      if (search) {
+        this.search = search;
+      }
       let status;
       if (this.filters.one) {
         status = 1;

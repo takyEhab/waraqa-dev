@@ -3,12 +3,12 @@ const nodemailer = require("nodemailer");
 
 let EMAILS_ENABLED = false;
 
-let appEmail = "tkyehab@gmail.com";
+let appEmail = "waraqaweb@gmail.com";
 let transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: appEmail,
-    pass: "cfbidenamgbnjrwi",
+    pass: process.env.EMAIL_PASS,
   },
 });
 
@@ -17,7 +17,7 @@ const sendEmail = (config) => {
     console.log("emails are disabled");
     return false;
   }
-  config.from = "tkyehab@gmail.com";
+  config.from = appEmail
   if ("to" in config == false) {
     config.to = appEmail; //Send to admin email
   }

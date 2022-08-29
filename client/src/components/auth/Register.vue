@@ -1,37 +1,12 @@
 <template>
   <div>
     <div class="text-center">
-      <h3 class="f-color-3">Register</h3>
+      <h3 class="f-color-3">Sign up</h3>
     </div>
     <form class="mt-5" @submit.prevent="register">
       <!-- User Type -->
       <div class="mt-3">
         <label class="f-color-3 mb-1">I am a</label>
-
-        <!-- <div>
-                  <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      value=""
-                      id="flexCheckDefault"
-                    />
-                    <label class="form-check-label" for="flexCheckDefault">
-                      Teacher
-                    </label>
-                  </div>
-                  <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      value=""
-                      id="flexCheckChecked"
-                    />
-                    <label class="form-check-label" for="flexCheckChecked">
-                      Guardian
-                    </label>
-                  </div>
-       </div> -->
         <div
           style="
             display: flex;
@@ -42,17 +17,16 @@
         >
           <button
             type="button"
-            style="margin-right: 30px"
             :class="[
-              userType == 'Teacher' ? 'btn-primary' : 'btn-secondary',
+              userType == 'Teacher' ? 'clicked' : 'btn-secondary',
               'form-control',
               'btn',
-              'with-100p',
               'f-color-0',
               'border-0',
               'py-2',
               'px-3',
-              'rounded',
+              'typeBut',
+              'me-5',
             ]"
             v-on:click="changeUserType('Teacher')"
           >
@@ -62,7 +36,7 @@
             type="button"
             v-on:click="changeUserType('Guardian')"
             :class="[
-              userType == 'Guardian' ? 'btn-primary' : 'btn-secondary',
+              userType == 'Guardian' ? 'clicked' : 'btn-secondary',
               'form-control',
               'btn',
               'with-100p',
@@ -70,46 +44,12 @@
               'border-0',
               'py-2',
               'px-3',
-              'rounded',
+              'typeBut',
             ]"
           >
             Guardian
           </button>
         </div>
-        <!-- <div style="font-size: 25px; text-align: center">
-        
-          <div class="form-check form-check-inline">
-            <input
-              class="form-check-input"
-              type="radio"
-              name="inlineRadioOptions"
-              id="inlineRadio1"
-              v-model="userType"
-              value="Teacher"
-            />
-             
-
-
-            <label class="form-check-label" for="inlineRadio1">Teacher</label>
-          </div>
-          <div class="form-check form-check-inline">
-            <input
-              class="form-check-input"
-              type="radio"
-              name="inlineRadioOptions"
-              id="inlineRadio2"
-              v-model="userType"
-              value="Guardian"
-            />
-            <label class="form-check-label" for="inlineRadio2">Guardian</label>
-          </div>
-        </div> -->
-
-        <!-- <select class="form-select" v-model="userType" required>
-          <option value="">Select User Type</option>
-          <option>Guardian</option>
-          <option>Teacher</option>
-        </select> -->
       </div>
       <div v-if="userType" class="row flex-wrap">
         <!-- firstName -->
@@ -120,11 +60,13 @@
             v-model="firstName"
             placeholder="First Name"
             required
+            style="border-radius: 35px"
           />
         </div>
         <!-- lastName -->
         <div class="col-12 col-md-6 mt-3">
           <input
+            style="border-radius: 35px"
             type="text"
             class="form-control"
             v-model="lastName"
@@ -134,47 +76,58 @@
         </div>
       </div>
       <!-- Email -->
-      <div v-if="userType" class="mt-3">
-        <input
-          type="email"
-          class="form-control"
-          v-model="email"
-          placeholder="Email"
-          required
-        />
-      </div>
-      <!-- Password -->
-      <div v-if="userType" class="mt-3">
-        <input
-          type="password"
-          class="form-control"
-          v-model="password"
-          placeholder="Passowrd"
-          required
-          pattern=".{8,}"
-          title="Password can't be less then 8 characters"
-        />
+      <div v-if="userType" class="mt-3 row flex-wrap">
+        <div class="col-12 col-md-6">
+          <input
+            type="email"
+            class="form-control"
+            v-model="email"
+            placeholder="Email"
+            required
+            style="border-radius: 35px"
+          />
+        </div>
+        <!-- Password -->
+
+        <div class="col-12 col-md-6">
+          <input
+            type="password"
+            class="form-control"
+            v-model="password"
+            style="border-radius: 35px"
+            placeholder="Passowrd"
+            required
+            pattern=".{8,}"
+            title="Password can't be less then 8 characters"
+          />
+        </div>
       </div>
       <!-- Phone Number -->
-      <div v-if="userType" class="mt-3">
-        <input
-          type="tel"
-          class="form-control"
-          v-model="phone"
-          placeholder="Phone Number"
-          required
-        />
+      <div v-if="userType" class="mt-3 row flex-wrap">
+        <div class="col-12 col-md-6">
+          <input
+            type="tel"
+            style="border-radius: 35px"
+            class="form-control"
+            v-model="phone"
+            placeholder="Phone Number"
+            required
+          />
+        </div>
+
+        <div class="col-12 col-md-6">
+          <input
+            type="text"
+            style="border-radius: 35px"
+            class="form-control"
+            v-model="address"
+            placeholder="City, State and Country"
+            required
+          />
+        </div>
       </div>
       <!-- Address -->
-      <div v-if="userType" class="mt-3">
-        <input
-          type="text"
-          class="form-control"
-          v-model="address"
-          placeholder="City, State and Country"
-          required
-        />
-      </div>
+      <div v-if="userType" class="mt-3"></div>
       <!-- TimeZone -->
       <!-- <div class="mt-3">
                 <label class="f-color-3 mb-1">TimeZone</label>
@@ -222,7 +175,7 @@
         <button
           :disabled="loadingBtn"
           type="submit"
-          class="main-button-style f-color-0 border-0 py-2 px-3 rounded"
+          class="main-button-style f-color-0 border-0 py-2 px-3"
         >
           <div>
             <span
@@ -231,7 +184,7 @@
               role="status"
               aria-hidden="true"
             ></span>
-            <span v-else>Register</span>
+            <span v-else>Sign up</span>
           </div>
         </button>
         <!-- <input type="submit" class="main-button-style f-color-0 border-0 py-2 px-3 rounded" value="Register"> -->
@@ -332,3 +285,14 @@ export default {
   },
 };
 </script>
+<style scoped>
+.typeBut {
+  border-bottom-right-radius: 50px;
+  border-top-left-radius: 50px;
+  height: 75px;
+  width: 150px;
+}
+.clicked {
+  background-color: #2c736c;
+}
+</style>

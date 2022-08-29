@@ -2,67 +2,33 @@
   <!-- <div>Home Admin <span class="f-color-1" @click="logout()">Log Out</span></div> -->
   <div class="d-flex">
     <!-- Admin Side-Bar -->
+
+    <i
+      v-if="!displaySidebarOnMobile"
+      :class="['fa', 'fa-bars', 'fixed-top', 'fa-2x', 'p-2', 'showMenu']"
+      @click="toggleDisplay"
+    ></i>
+
     <div
       :class="[
-        displaySidebarOnMobile ? 'aside-hide' : 'hideSidebar aside-show',
-        'aside-admin-bar col-1 b-color-1 f-color-0 text-center',
+        displaySidebarOnMobile ? '' : 'hideSidebar ',
+        'aside-admin-bar col-md-1 b-color-1 f-color-0 text-center',
       ]"
       @click="toggleDisplay"
     >
       <div class="py-5 overflow-scroll h-100">
-        <div class="logo">
-          <img
-            src="@/assets/logo.jpg"
-            class="img-fluid mb-5"
-            style="width: 2.5em"
-          />
-        </div>
         <div>
           <ul class="list-unstyled routes d-inline">
             <li>
               <router-link to="/admin" class="d-block py-3 px-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="27"
-                  height="27"
-                  viewBox="0 0 27 27"
-                >
-                  <g
-                    id="Group_894"
-                    data-name="Group 894"
-                    transform="translate(-116 -576)"
-                  >
-                    <path
-                      id="Path_351"
-                      data-name="Path 351"
-                      d="M0,0H12.667V12.667H0Z"
-                      transform="translate(116 576)"
-                      fill="#fff"
-                    />
-                    <path
-                      id="Path_351-2"
-                      data-name="Path 351"
-                      d="M0,0H12.667V12.667H0Z"
-                      transform="translate(130.333 576)"
-                      fill="#fff"
-                    />
-                    <path
-                      id="Path_351-3"
-                      data-name="Path 351"
-                      d="M0,0H12.667V12.667H0Z"
-                      transform="translate(116 590.333)"
-                      fill="#fff"
-                    />
-                    <path
-                      id="Path_351-4"
-                      data-name="Path 351"
-                      d="M0,0H12.667V12.667H0Z"
-                      transform="translate(130.333 590.333)"
-                      fill="#fff"
-                    />
-                  </g>
-                </svg>
-                <span class="d-block">Dashboard</span></router-link
+                <div class="logo">
+                  <img
+                    src="@/assets/logo.jpg"
+                    class="img-fluid mb-2"
+                    style="width: 2.5em"
+                  />
+                </div>
+                <span class="d-block">Home</span></router-link
               >
             </li>
             <li>
@@ -113,15 +79,14 @@
       </div>
     </div>
     <!-- Other Sections -->
-    <div class="col-10 me-md-5 p-0 container-fluid ">
-      <div class="px-3 py-5 p-lg-2" style="overflow: hidden; overflow-x: auto;">
+    <div class="col-10 me-md-5 p-0 container-fluid">
+      <div class="px-3 py-5 p-lg-2" style="overflow: hidden; overflow-x: auto">
         <router-view :offsetNum="30"></router-view>
       </div>
     </div>
   </div>
 </template>
 <script>
-// import axios from 'axios'
 export default {
   data() {
     return {
@@ -175,8 +140,13 @@ export default {
 .aside-admin-bar .routes li a i {
   font-size: 23px;
 }
-
+.showMenu {
+  display: none;
+}
 @media (max-width: 768px) {
+  .showMenu {
+    display: block;
+  }
   .aside-admin-bar {
     /* transition: .3s ease-in-out; */
     -webkit-transition: all 0.5s ease;

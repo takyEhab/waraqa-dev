@@ -29,12 +29,9 @@
         />
       </div>
       <!-- Main Information :  -->
-      <div class="mt-5">
-        <div class="col-12 col-md-3 mb-1">
+      <div>
+        <div class="col-12 col-md-3 mb-2">
           <span class="d-block f-color-2">Main Information :</span>
-          <small class="f-color-3_3"
-            >The Invoice's main information can be found below.</small
-          >
         </div>
         <div class="row flex-wrap">
           <div
@@ -129,17 +126,8 @@
         This invoice has not yet been paid.
       </div>
       <!-- Classes that must be paid -->
-      <div class="b-color-0 box-shadow-style mt-5 p-3">
-        <div
-          class="d-flex justify-content-between align-items-center flex-wrap"
-        >
-          <div class="col-12 col-md-3 mb-1">
-            <span class="d-block f-color-2">Classes that must be paid :</span>
-            <small class="f-color-3_3"
-              >Classes that must be paid are listed below, along with the number
-              of hours that should be paid.</small
-            >
-          </div>
+      <div class="b-color-0 box-shadow-style">
+        <div class="d-flex justify-content-end align-items-center flex-wrap">
           <div class="col-12 col-md-2 f-color-1 px-md-3 text-md-end">
             <span>Total hours: {{ (totalHours / 60).toFixed(2) }}</span>
             <br />
@@ -166,8 +154,10 @@
             <div class="px-2 table-colums f-color-1 d-flex mb-4">
               <small class="col-2">Student</small>
               <small class="col-2">Teacher</small>
-              <small class="col-2">Class title</small>
+              <small class="col-1">Class title</small>
+
               <small class="col-2">Class subject</small>
+              <small class="col-1">Status</small>
               <small class="col-1">Duration</small>
               <small class="col-1">Info</small>
               <small class="col-1">count</small>
@@ -181,8 +171,19 @@
               <div class="px-2 d-flex f-color-3">
                 <small class="col-2">{{ anClass.studentName }}</small>
                 <small class="col-2">{{ anClass.teacherName }}</small>
-                <small class="col-2">{{ anClass.classTitle }}</small>
+                <small class="col-1">{{ anClass.classTitle }}</small>
+
                 <small class="col-2">{{ anClass.subject }}</small>
+
+                <small class="col-1">{{
+                  anClass.status == 1
+                    ? "Attended"
+                    : anClass.status == 4
+                    ? "Missed by student"
+                    : anClass.status == 0
+                    ? "Active"
+                    : anClass.status
+                }}</small>
                 <small class="col-1">{{ anClass.duration }}</small>
                 <small class="col-1">
                   <router-link

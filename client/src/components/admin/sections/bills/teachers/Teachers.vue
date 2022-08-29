@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <div class="position-relative">
     <!-- Filters & Search -->
     <div class="mt-4 d-flex justify-content-md-between flex-wrap">
       <!-- Filters -->
       <div class="section-filters">
-        <ul class="list-unstyled m-0 d-flex f-color-1">
+        <ul class="list-unstyled m-0 d-flex flex-wrap f-color-1 mt-sm-0 mt-5">
           <li
             :class="[filters.one ? 'opacity-100' : '', 'px-2']"
             @click="
@@ -33,24 +33,6 @@
           </li>
         </ul>
       </div>
-      <!-- Search -->
-      <div class="mt-4 mt-md-0 col-12 col-md-4">
-        <div class="d-flex position-relative align-items-center">
-          <input
-            type="text"
-            class="form-control"
-            v-model="search"
-            @keyup="getData()"
-            placeholder="Search"
-          />
-          <div
-            class="f-color-1 rounded px-3 position-absolute py-1"
-            style="right: 7px"
-          >
-            <small><i class="fas fa-search"></i></small>
-          </div>
-        </div>
-      </div>
     </div>
 
     <!-- Table -->
@@ -67,22 +49,27 @@
           <small class="col-2">status</small>
           <!-- <small class="col-1">More</small> -->
         </div>
-        <div v-for="row in data" :key="row.id" class="table-row py-3">
-          <div @click="
+        <div v-for="(row, i) in data" :key="row.id" class="table-row py-1">
+          <span class="position-absolute mt-3" style="left: -10px">{{
+            i + 1 + pagination.offset
+          }}</span>
+          <div
+            @click="
               $router.push({
-                  name: 'TeacherInvoiceInfo',
-                  params: {
-                    id: row.id,
-                    tap: false,
-                    page: pagination.page,
-                    offset: pagination.offset,
-                    filter: Object.keys(filters).find(
-                      (key) => filters[key] == true
-                    ),
-                  },
-                })
+                name: 'TeacherInvoiceInfo',
+                params: {
+                  id: row.id,
+                  tap: false,
+                  page: pagination.page,
+                  offset: pagination.offset,
+                  filter: Object.keys(filters).find(
+                    (key) => filters[key] == true
+                  ),
+                },
+              })
             "
-            class="rowTable px-2 d-flex f-color-3">
+            class="rowTable p-3 d-flex f-color-3"
+          >
             <span class="col-2">{{ row.teacherName }}</span>
             <span class="col-2">{{
               row.paidHours ? (row.paidHours / 60).toFixed(2) : 0
@@ -186,7 +173,10 @@ export default {
       }
       this.getData();
     },
-    getData() {
+    getData(search) {
+      if (search) {
+        this.search = search;
+      }
       let status;
       if (this.filters.one) {
         status = 1;

@@ -236,15 +236,15 @@ let endClass = (req, res) => {
                   if (allHoursIsZero && invoiceStatus == 1) {
                     //Step5.1: Get startingDate of first not paid class (invoiceID IS NULL) of this guardian
                     let query = `SELECT classes.startingDate
-                                            FROM classes
-                                            INNER JOIN students
-                                            ON classes.studentID = students.id
-                                            INNER JOIN guardians
-                                            ON guardians.id = students.guardianID
-                                            WHERE guardians.id = ${guardianID}
-                                            AND (classes.invoiceID IS NULL)
-                                            AND (classes.status=0 OR classes.status=1 OR classes.status = 4) AND countForStudent = 1
-                                            ORDER BY classes.startingDate LIMIT 1`;
+                                    FROM classes
+                                    INNER JOIN students
+                                    ON classes.studentID = students.id
+                                    INNER JOIN guardians
+                                    ON guardians.id = students.guardianID
+                                    WHERE guardians.id = ${guardianID}
+                                    AND (classes.invoiceID IS NULL)
+                                    AND (classes.status=0 OR classes.status=1 OR classes.status = 4) AND countForStudent = 1
+                                    ORDER BY classes.startingDate LIMIT 1`;
                     dataBase.query(query, (error, data) => {
                       if (error || !data.length) {
                         return console.log(
@@ -271,16 +271,16 @@ let endClass = (req, res) => {
                           // data.insertId
                           // Expected upcoming
                           let query = `SELECT classes.*
-                          FROM classes 
-                          INNER JOIN students 
-                          ON classes.studentID = students.id
-                          INNER JOIN guardians
-                          ON guardians.id = students.guardianID
-                          INNER JOIN guardianinvoices
-                          ON guardianinvoices.guardianID = guardians.id
-                          WHERE classes.countForStudent = 1
-                          AND guardianinvoices.id = ${data.insertId}
-                          AND guardianinvoices.paid!=1 AND classes.invoiceID IS NULL AND classes.startingDate BETWEEN guardianinvoices.createdAt AND (guardianinvoices.createdAt + INTERVAL (SELECT payEvery FROM scheduledclasses WHERE id = classes.scheduleID LIMIT 1) MONTH)
+              FROM classes 
+              INNER JOIN students 
+              ON classes.studentID = students.id
+              INNER JOIN guardians
+              ON guardians.id = students.guardianID
+              INNER JOIN guardianinvoices
+              ON guardianinvoices.guardianID = guardians.id
+              WHERE classes.countForStudent = 1
+              AND guardianinvoices.id = ${data.insertId}
+              AND guardianinvoices.paid!=1 AND classes.invoiceID IS NULL AND classes.startingDate BETWEEN guardianinvoices.createdAt AND (guardianinvoices.createdAt + INTERVAL (SELECT payEvery FROM scheduledclasses WHERE id = classes.scheduleID LIMIT 1) MONTH)
                           ORDER BY classes.startingDate`;
                           dataBase.query(query, (error, data) => {
                             if (error) return;
@@ -575,7 +575,7 @@ let updateClass = (req, res) => {
     let requesterName = req.body.requesterName;
     let data = {};
     data.startingDate = moment(req.body.startingDate).format(
-      "YYYY-MM-DD hh:mm:ss"
+      "YYYY-MM-DD HH:mm:ss"
     );
 
     if ("teacherReschedule" in req.body)
@@ -1038,7 +1038,7 @@ let classesOfTeacher = (req, res, next) => {
   let search = queryReq.search || "";
   let offset = queryReq.offset;
 
-  query = `SELECT classes.*,count(*) OVER() AS fullCount, teachers.name AS teacherName, students.name AS studentName 
+  query = `SELECT classes.*,count(*) OVER() AS fullCount, teachers.name AS teacherName, students.name AS studentName ,(SELECT COUNT(*) FROM classes WHERE classes.startingDate BETWEEN (CURRENT_DATE() - INTERVAL 3 day) AND CURRENT_DATE() AND classes.status = 0 and classes.teacherID=${id}) AS noReportCount
                 FROM classes 
                 INNER JOIN teachers 
                 ON classes.teacherID = teachers.id 
@@ -1592,7 +1592,7 @@ let RescheduleClasses = (req, res) => {
         configAdminEmail = {
           subject: "A new lesson is added",
           html: `
-                        <p>Admin "${tokenData.name}" has added a new class for the student "${studentName}".</p>
+                        <p>Admin "${tokenData.name}" has reschedule a class for the student "${studentName}".</p>
                         <p>${subject} start on ${emailClassesDetails[0]} with the teacher "${teacherName}" according to the following schedule:</p>
                         `,
         };
@@ -1608,7 +1608,7 @@ let RescheduleClasses = (req, res) => {
           html: `
                         <p>Assalamu alaykum,</p>
                         <p>We hope you are doing well,</p>
-                        <p>Admin "${tokenData.name}" has added a new class for you.</p>
+                        <p>Admin "${tokenData.name}" has reschedule a class.</p>
                         <p>${subject} start on ${emailClassesDetails[0]} with the student "${studentName}" according to the following schedule:</p>
                         `,
         };
@@ -1628,7 +1628,7 @@ let RescheduleClasses = (req, res) => {
           html: `
                         <p>Assalamu alaykum,</p>
                         <p>We hope you are doing well,</p>
-                        <p>Admin "${tokenData.name}" has added a new class for you.</p>
+                        <p>Admin "${tokenData.name}" has reschedule a class.</p>
                         <p>${subject} start on ${emailClassesDetails[0]} with the teacher "${teacherName}" according to the following schedule:</p>
                         `,
         };
@@ -1668,9 +1668,9 @@ let RescheduleClasses = (req, res) => {
           teacherID: teacherID,
           guardianID: guardianID,
           studentID: studentID,
-          adminMsg: `Admin "${tokenData.name}" has added a new class for the student "${studentName}". <br> ${subject} start on ${emailClassesDetails[0]} with the teacher "${teacherName}" according to the following schedule: <br>`,
-          teacherMsg: `Admin "${tokenData.name}" has added a new class for you. <br> ${subject} start on ${emailClassesDetails[0]} with the student "${studentName}" according to the following schedule: <br>`,
-          guardianMsg: `Admin "${tokenData.name}" has added a new class for "${studentName}". <br> ${subject} start on ${emailClassesDetails[0]} with the teacher "${teacherName}" according to the following schedule: <br>`,
+          adminMsg: `Admin "${tokenData.name}" has reschedule a class for the student "${studentName}". <br> ${subject} start on ${emailClassesDetails[0]} with the teacher "${teacherName}" according to the following schedule: <br>`,
+          teacherMsg: `Admin "${tokenData.name}" has reschedule a class for you. <br> ${subject} start on ${emailClassesDetails[0]} with the student "${studentName}" according to the following schedule: <br>`,
+          guardianMsg: `Admin "${tokenData.name}" has reschedule a class for "${studentName}". <br> ${subject} start on ${emailClassesDetails[0]} with the teacher "${teacherName}" according to the following schedule: <br>`,
         };
         for (var i in emailClassesDetails) {
           notiConfig.adminMsg += `${emailClassesDetails[i]}<br>`;
@@ -1719,36 +1719,6 @@ let RescheduleClasses = (req, res) => {
         return console.log("Failed Rescheduled Classes!", error);
       }
 
-      /*
-        let scheduleID = data.insertId;
-        // Add free classes
-        if(!bodyData[0].countForStudent || !bodyData[0].countForTeacher){
-            // Add invoiceID to each Object
-            bodyData.forEach(obj => {obj.invoiceID=null; obj.scheduleID=scheduleID})
-
-            // Convert the array of objects to array of arrays
-            sqlValues = bodyData.map(object => Object.values(object))
-
-            insertClass(sqlValues);
-            return
-        }
-        // Create Inovice and store guardianID in it 
-        dataBase.query(`INSERT INTO guardianinvoices SET ?`, {guardianID:guardianID} ,(error, data)=>{
-            if(error || !data){
-                return res.json({success:false, msg:"Failed Open new invoice[2]"});
-            }
-            // Get ID of invoice that inserted
-            let invoiceID = data.insertId;
-            // Add invoiceID to each Object
-            bodyData.forEach(obj => {obj.invoiceID=invoiceID; obj.scheduleID=scheduleID})
-        
-            //Convert the array of objects to array of arrays
-            sqlValues = bodyData.map(object => Object.values(object))
-
-            // Step5: Save classes (Contain invoiceID)
-            insertClass(sqlValues);
-        })
-        */
       return res.json({
         success: true,
         msg: "The Classes rescheduled successfully",
@@ -1807,12 +1777,10 @@ let RescheduleClasses = (req, res) => {
     let end = moment().add(bodyData.payEvery, "M");
     //Convert times to array
     let timesOfDays = Object.values(times);
-    console.log({ timesOfDays });
     // timesOfDays = timesOfDays.filter(item => item !== "");
 
     //Convert days to array
     let selectedDaysArray = Object.values(selectedDays);
-    console.log({ selectedDays });
     // selectedDaysArray = selectedDaysArray.filter(item => item !== "");
     for (let i = 0; i < selectedDaysArray.length; i++) {
       let day = moment(start + " " + timesOfDays[i]).day(selectedDaysArray[i]);
@@ -1836,19 +1804,30 @@ let RescheduleClasses = (req, res) => {
         day.add(7, "d");
       }
     }
+    let classDet = [];
+    let indexs = [];
     classes.forEach((obj) => {
       emailClassesDetails.push(
-        moment(obj.startingDate).format("dddd, D MMM , hh:mm A")
+        moment(obj.startingDate).format("dddd, hh:mm A")
       );
     });
-
+    for (i in emailClassesDetails) {
+      if (!classDet.includes(emailClassesDetails[i].split(/[,]+/)[0])) {
+        indexs.push(i);
+        classDet.push(emailClassesDetails[i].split(/[,]+/)[0]);
+      }
+    }
+    classDet = [];
+    for (i in indexs) {
+      classDet.push(emailClassesDetails[indexs[i]]);
+    }
+    emailClassesDetails = classDet;
     //Step : Insert Classes
     // Add scheduleID to each Object
     classes.forEach((obj) => {
       obj.scheduleID = scheduleID;
     });
 
-    console.log(classes);
 
     //Convert the array of objects to array of arrays
     sqlValues = classes.map((object) => Object.values(object));
@@ -1938,7 +1917,8 @@ let deleteClasses = (req, res) => {
     "YYYY-MM-DD HH:mm:ss"
   );
   // let query = `SELECT * FROM scheduledclasses WHERE createdAt <= ?`;
-  let query = `SELECT * FROM classes WHERE scheduleID in (SELECT id FROM scheduledclasses WHERE createdAt <= ?)`;
+  // let query = `SELECT * FROM classes WHERE scheduleID in (SELECT id FROM scheduledclasses WHERE createdAt <= ?) OR scheduleID IS NULL`;
+  let query = `SELECT * FROM classes WHERE startingDate <= ? `;
   // let query = `DELETE FROM classes WHERE id=1792`;
   // let query = `DELETE FROM scheduledclasses WHERE id=2`;
   dataBase.query(query, date, (error, data) => {
@@ -1979,18 +1959,10 @@ let deleteClasses = (req, res) => {
         ","
       )}) AND subject IS NULL AND classTitle IS NULL`;
 
-      dataBase.query(query, (error, data) => {
-        if (error) {
-          return res.json({
-            success: false,
-            msg: "Sorry, this class could not be deleted, please try again.",
-            error: error,
-          });
-        }
-        res.json({
-          success: true,
-          msg: "All classes before this date deleted.",
-        });
+      dataBase.query(query);
+      res.json({
+        success: true,
+        msg: "All classes before this date deleted.",
       });
     });
   });
@@ -2013,19 +1985,20 @@ let getHoursAndStudentsNum = (req, res, next) => {
             ON students.id = classes.studentID
             WHERE classes.teacherID = ${id}
             AND students.status = 1
-        ) AS activeStudentsCount`;
+        ) AS activeStudentsCount,
+        (SELECT classes.startingDate FROM classes INNER JOIN teachers
+          ON classes.teacherID = teachers.id
+          INNER JOIN students
+          ON classes.studentID = students.id 
+          WHERE classes.teacherID = ${id} AND (classes.startingDate >= NOW() AND classes.status = 0)
+            AND students.status = 1 AND teachers.status = 1 ORDER BY classes.startingDate LIMIT 1) as nextClass,
+            (SELECT students.name FROM classes INNER JOIN teachers
+              ON classes.teacherID = teachers.id
+              INNER JOIN students
+              ON classes.studentID = students.id 
+              WHERE classes.teacherID = ${id} AND (classes.startingDate >= NOW() AND classes.status = 0)
+                AND students.status = 1 AND teachers.status = 1 ORDER BY classes.startingDate LIMIT 1) as studentName`;
   } else if (userType == "Guardian") {
-    let invoiceCreatedDate = `(SELECT establishedAt FROM guardianinvoices WHERE guardianID=${id} ORDER BY establishedAt DESC LIMIT 1)`;
-    //     (SELECT SUM(classes.duration)
-    //     FROM classes
-    //     INNER JOIN students
-    //     ON classes.studentID = students.id
-    //     INNER JOIN guardians
-    //     ON guardians.id = students.guardianID
-    //     WHERE guardians.id = ${id}
-    //     AND (classes.status=1 OR classes.status = 4) AND classes.countForStudent = 1
-    //     AND classes.startingDate BETWEEN ${invoiceCreatedDate} AND (${invoiceCreatedDate} + INTERVAL 1 MONTH)
-    // ) AS hours,
     query = `SELECT 
         (SELECT SUM(attendedHours) 
         FROM students
@@ -2035,7 +2008,6 @@ let getHoursAndStudentsNum = (req, res, next) => {
         (SELECT savedPaidHours
             FROM guardianinvoices
             WHERE guardianinvoices.guardianID =${id}) AS savedPaidHours,
-        
         (SELECT COUNT(students.guardianID)
             FROM students
             INNER JOIN guardians
@@ -2057,7 +2029,7 @@ let getHoursAndStudentsNum = (req, res, next) => {
                 (SELECT COUNT(teachers.id) FROM teachers WHERE status=1) AS activeTeachersCount,
                 (SELECT COUNT(teachers.id) FROM teachers WHERE status=2) AS inactiveTeachersCount,
                 (SELECT COUNT(teachers.id) FROM teachers WHERE status=3) AS vacationTeachersCount,
-                (SELECT SUM(classes.duration) FROM classes WHERE status=1) AS attendedClassHours,
+                (SELECT SUM(classes.duration) FROM classes WHERE status=1 OR status=4) AS attendedClassHours,
                 (SELECT SUM(classes.duration) FROM classes WHERE startingDate BETWEEN now() and date_sub( last_day( date_add(now(), interval 1 month) ), interval day( last_day( date_add(now(), interval 1 month) ) )-1 DAY)) AS scheduledClassHours,
                 (SELECT SUM(savedPaidHours) - (SELECT sum(attendedHours) from students) FROM guardianinvoices) AS paidClassHours,
                 (SELECT SUM(savedPaidHours) FROM guardianinvoices) AS paidInvoicesHours,

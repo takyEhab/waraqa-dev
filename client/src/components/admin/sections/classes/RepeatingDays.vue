@@ -24,42 +24,23 @@
         <div class="mt-3 px-3 px-md-5 py-5">
           <!-- Form -->
           <form @submit.prevent="submitForm">
-            <div class="col-12 col-md-9 mt-3">
-              <ul class="list-unstyled m-0 days-list d-flex">
-                <li
-                  v-for="day in days"
-                  :key="day.id"
-                  class="me-2"
-                  :data-day="day"
-                  @click="selectDays"
-                >
-                  {{ day }}
-                </li>
-              </ul>
-            </div>
+            <ul class="list-unstyled m-0 days-list d-flex">
+              <li
+                v-for="day in days"
+                :key="day.id"
+                class="me-2"
+                :data-day="day"
+                @click="selectDays"
+              >
+                {{ day }}
+              </li>
+            </ul>
             <div class="row flex-wrap align-items-center">
-              <!-- Sunday input -->
-              <div class="col-12 col-md-6 mt-3">
-                <label class="f-color-3 mb-1">Sunday</label>
-
-                <Datepicker
-                autoApply
-                  minutesGridIncrement="15"
-                  minutesIncrement="15"
-                  placeholder="Choose time"
-                  v-model="daysTime.Sun"
-                  :disabled="selectedDays.Sun ? disabled : ''"
-                  timePicker
-                  required
-                  textInput
-                  utc
-                />
-              </div>
               <!-- monday input -->
               <div class="col-12 col-md-6 mt-3">
                 <label class="f-color-3 mb-1">Monday</label>
-                <Datepicker
-                autoApply
+                <!-- <Datepicker
+                  autoApply
                   minutesGridIncrement="15"
                   minutesIncrement="15"
                   placeholder="Choose time"
@@ -69,13 +50,29 @@
                   required
                   textInput
                   utc
+                /> -->
+
+                <input
+                  type="time"
+                  class="form-control"
+                  required
+                  v-model="daysTime.Mon"
+                  :disabled="selectedDays.Mon ? disabled : ''"
                 />
               </div>
               <!-- tuesday input -->
               <div class="col-12 col-md-6 mt-3">
                 <label class="f-color-3 mb-1">Tuesday</label>
-                <Datepicker
-                autoApply
+
+                <input
+                  type="time"
+                  class="form-control"
+                  required
+                  v-model="daysTime.Tue"
+                  :disabled="selectedDays.Tue ? disabled : ''"
+                />
+                <!-- <Datepicker
+                  autoApply
                   minutesGridIncrement="15"
                   minutesIncrement="15"
                   placeholder="Choose time"
@@ -85,13 +82,13 @@
                   required
                   textInput
                   utc
-                />
+                /> -->
               </div>
               <!-- wednesday input -->
               <div class="col-12 col-md-6 mt-3">
                 <label class="f-color-3 mb-1">Wednesday</label>
-                <Datepicker
-                autoApply
+                <!-- <Datepicker
+                  autoApply
                   minutesGridIncrement="15"
                   minutesIncrement="15"
                   placeholder="Choose time"
@@ -101,15 +98,22 @@
                   required
                   textInput
                   utc
+                /> -->
+
+                <input
+                  type="time"
+                  class="form-control"
+                  required
+                  v-model="daysTime.Wed"
+                  :disabled="selectedDays.Wed ? disabled : ''"
                 />
               </div>
               <!-- thursday input -->
               <div class="col-12 col-md-6 mt-3">
                 <label class="f-color-3 mb-1">Thursday</label>
 
-
-                <Datepicker
-                autoApply
+                <!-- <Datepicker
+                  autoApply
                   minutesGridIncrement="15"
                   minutesIncrement="15"
                   placeholder="Choose time"
@@ -119,39 +123,59 @@
                   required
                   textInput
                   utc
+                /> -->
+
+                <input
+                  type="time"
+                  class="form-control"
+                  required
+                  v-model="daysTime.Thu"
+                  :disabled="selectedDays.Thu ? disabled : ''"
                 />
               </div>
               <!-- friday input -->
               <div class="col-12 col-md-6 mt-3">
                 <label class="f-color-3 mb-1">Friday</label>
-                <Datepicker
-                autoApply
+                <!-- <Datepicker
+                  autoApply
                   minutesGridIncrement="15"
                   minutesIncrement="15"
                   placeholder="Choose time"
-                  v-model="daysTime.Fri"
-                  :disabled="selectedDays.Fri ? disabled : ''"
                   timePicker
                   required
                   textInput
                   utc
+                /> -->
+                <input
+                  type="time"
+                  class="form-control"
+                  required
+                  v-model="daysTime.Fri"
+                  :disabled="selectedDays.Fri ? disabled : ''"
                 />
               </div>
               <!-- saturday input -->
               <div class="col-12 col-md-6 mt-3">
                 <label class="f-color-3 mb-1">Saturday</label>
-
-                <Datepicker
-                autoApply
-                  minutesGridIncrement="15"
-                  minutesIncrement="15"
-                  placeholder="Choose time"
+                <input
+                  type="time"
+                  class="form-control"
+                  required
                   v-model="daysTime.Sat"
                   :disabled="selectedDays.Sat ? disabled : ''"
-                  timePicker
+                />
+              </div>
+
+              <!-- Sunday input -->
+              <div class="col-12 col-md-6 mt-3">
+                <label class="f-color-3 mb-1">Sunday</label>
+
+                <input
+                  type="time"
+                  class="form-control"
                   required
-                  textInput
-                  utc
+                  v-model="daysTime.Sun"
+                  :disabled="selectedDays.Sun ? disabled : ''"
                 />
               </div>
             </div>
@@ -159,7 +183,7 @@
             <div class="mt-4 text-end">
               <button
                 type="submit"
-                class="main-button-style with-100px f-color-0 border-0 py-2 px-3 rounded"
+                class="main-button-style with-100px f-color-0 border-0 py-2 px-3"
               >
                 Done
               </button>
@@ -172,14 +196,14 @@
 </template>
 <script>
 import moment from "moment-timezone";
-import "@vuepic/vue-datepicker/dist/main.css";
-import Datepicker from "@vuepic/vue-datepicker";
+// import "@vuepic/vue-datepicker/dist/main.css";
+// import Datepicker from "@vuepic/vue-datepicker";
 
 export default {
-  props: ["selectedDays"],
-  components: {
-    Datepicker,
-  },
+  props: ["selectedDays", "name"],
+  // components: {
+  //   Datepicker,
+  // },
   data() {
     return {
       loadingBtn: false,
@@ -188,13 +212,13 @@ export default {
         error: null,
       },
       days: {
-        Sun: "Sun",
         Mon: "Mon",
         Tue: "Tue",
         Wed: "Wed",
         Thu: "Thu",
         Fri: "Fri",
         Sat: "Sat",
+        Sun: "Sun",
       },
       daysTime: {
         Sun: "",
@@ -237,7 +261,7 @@ export default {
     submitForm() {
       let btn = document.createElement("button");
       btn.setAttribute("data-bs-toggle", "modal");
-      btn.setAttribute("data-bs-target", "#addClassModal");
+      btn.setAttribute("data-bs-target", this.name);
 
       document.body.appendChild(btn);
       setTimeout(() => {

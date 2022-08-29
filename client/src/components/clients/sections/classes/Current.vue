@@ -1,43 +1,5 @@
 <template>
   <div>
-    <!--Search -->
-    <div class="mt-4 d-flex justify-content-md-end flex-wrap">
-      <!-- Search -->
-      <div class="col-12 col-md-4">
-        <div class="d-flex position-relative align-items-center">
-          <input
-            type="text"
-            class="form-control"
-            v-model="search"
-            @keyup="getData()"
-            placeholder="Search by class title or id"
-          />
-          <div
-            class="f-color-1 rounded px-3 position-absolute py-1"
-            style="right: 7px"
-          >
-            <small><i class="fas fa-search"></i></small>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Alerts -->
-    <div class="mt-4">
-      <div
-        v-if="alerts.success"
-        class="text-start text-md-center alert text-center alert-success"
-      >
-        {{ alerts.success }}
-      </div>
-      <div
-        v-else-if="alerts.error"
-        class="text-start text-md-center alert text-center alert-warning"
-      >
-        {{ alerts.error }}
-      </div>
-    </div>
-
     <!-- Table -->
     <div
       class="mt-4 b-color-0 box-shadow-style px-md-2 py-3"
@@ -52,56 +14,65 @@
           <small class="col-2">Duration</small>
           <small class="col-1">More</small>
         </div>
-        <div v-for="row in data" :key="row.id">
-          <div class="table-row py-3">
-            <div
-              :class="[
-                Math.abs(moment().diff(row.startingDate, 'hours')) < 24
-                  ? 'nextClasses'
-                  : 'f-color-3',
-                'px-4 d-flex',
-              ]"
-            >
-              <span class="col-3" style="font-family: Merienda">
-                <span
-                  style="margin-left: 35px; font-weight: 900; color: #4c4a4c"
-                >
-                  {{ moment(row.startingDate).format("hh:mm A") }}
-                </span>
-                <br />
-                {{ moment(row.startingDate).format("ddd, MMM D, YYYY") }}
-              </span>
-
-              <span class="col-2">{{ row.studentName }}</span>
-              <span class="col-2">{{ row.teacherName }}</span>
-              <span class="col-2">{{ row.subject }}</span>
-
-              <span class="col-2">{{ row.duration }} m</span>
-
-              <!--             
-            <div class="col-1">
-              <router-link
-                :to="{ name: 'ClientClassInfo', params: { id: row.id } }"
-                 :class="[
+        <div v-for="row in data" :key="row.id" class="table-row py-1">
+          <div
+            @click="
+              $router.push({
+                name: 'ClientClassInfo',
+                params: {
+                  id: row.id,
+                },
+                query: {
+                  tap: false,
+                  page: pagination.page,
+                  offset: pagination.offset,
+                },
+              })
+            "
+            :class="[
               Math.abs(moment().diff(row.startingDate, 'hours')) < 24
-                ? 'f-color'
-                : 'f-color-1',
+                ? 'nextClasses'
+                : 'f-color-3',
+              'rowTable table-row p-2 d-flex',
             ]"
-                ><i class="fas fa-eye"></i
-              ></router-link>
-            </div> -->
+          >
+            <span class="col-3" style="font-family: Merienda">
+              <span
+                style="
+                  margin-left: 35px;
+                  font-weight: 900;
+                  color: #4c4a4c;
+                  font-family: Merienda;
+                "
+              >
+                {{ moment(row.startingDate).format("hh:mm A") }}
+              </span>
+              <br />
+              {{ moment(row.startingDate).format("ddd, MMM D, YYYY") }}
+            </span>
 
-              <div class="col-1">
-                <!-- Example single danger button -->
-                <div class="btn-group dropstart">
-                  <!-- <i data-bs-toggle="dropdown" class=" fa-2x fa fa-caret-down"></i> -->
-                  <div data-bs-toggle="dropdown" class="btn">
-                    <i class="fa fa-lg fa-ellipsis-v"></i>
-                  </div>
+            <span class="col-2">{{ row.studentName }}</span>
+            <span class="col-2">{{ row.teacherName }}</span>
+            <span class="col-2">{{ row.subject }}</span>
 
-                  <!-- Action -->
-                  <ul class="dropdown-menu">
-                    <li>
+            <span class="col-2">{{ row.duration }} m</span>
+
+            <div class="col-1">
+              <!-- Example single danger button -->
+              <div class="btn-group dropstart">
+                <!-- <i data-bs-toggle="dropdown" class=" fa-2x fa fa-caret-down"></i> -->
+                <div
+                  data-bs-toggle="dropdown"
+                  @click.stop=""
+                  style="border-radius: 2px"
+                  class="btn"
+                >
+                  <i class="fa fa-lg fa-ellipsis-v"></i>
+                </div>
+
+                <!-- Action -->
+                <ul @click.stop="" class="dropdown-menu">
+                  <!-- <li>
                       <router-link
                         :to="{
                           name: 'ClientClassInfo',
@@ -124,76 +95,82 @@
                         ></i>
                         More</router-link
                       >
-                    </li>
+                    </li> -->
 
-                    <li v-if="userType == 'Teacher'">
-                      <button
-                        @click="
-                          remindUser({
-                            userType: 'Student',
-                            classID: row.id,
-                            userID: row.studentID,
-                          })
-                        "
-                        class="dropdown-item"
-                      >
-                        <i class="fas fa fa-bell px-2" aria-hidden="true"></i>
+                  <li v-if="userType == 'Teacher'">
+                    <button
+                      @click="
+                        remindUser({
+                          userType: 'Student',
+                          classID: row.id,
+                          userID: row.studentID,
+                        })
+                      "
+                      class="dropdown-item"
+                    >
+                      <i class="fas fa fa-bell px-2" aria-hidden="true"></i>
 
-                        Remind student
-                      </button>
-                    </li>
-                    <li>
-                      <button
-                        @click="
-                          cancelClass({
-                            classID: row.id,
-                            studentID: row.studentID,
-                            teacherID: row.teacherID,
-                            startingDate: row.startingDate,
-                          })
-                        "
-                        class="dropdown-item"
-                      >
-                        <i
-                          data-bs-toggle="dropdown"
-                          class="fas fa-times px-2"
-                        ></i>
-                        Cancel
-                      </button>
-                    </li>
+                      Remind student
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      @click="
+                        cancelClass({
+                          classID: row.id,
+                          studentID: row.studentID,
+                          teacherID: row.teacherID,
+                          startingDate: row.startingDate,
+                        })
+                      "
+                      class="dropdown-item"
+                    >
+                      <i
+                        data-bs-toggle="dropdown"
+                        class="fas fa-times px-2"
+                      ></i>
+                      Cancel
+                    </button>
+                  </li>
 
-                    <li>
-                      <router-link
-                        :to="{
-                          name: 'ClientClassInfo',
-                          params: {
-                            id: row.id,
-                            // isReschedule: true,
-                            // tap: false,
-                            // page: pagination.page,
-                            // offset: pagination.offset,
-                          },
-                          query: {
-                            isReschedule: true,
-                            tap: false,
-                            page: pagination.page,
-                            offset: pagination.offset,
-                          },
-                        }"
-                        class="dropdown-item"
-                      >
-                        <i
-                          class="fas fa fa-calendar px-2"
-                          aria-hidden="true"
-                        ></i>
-                        Reschedule
-                      </router-link>
-                    </li>
-                  </ul>
-                </div>
+                  <li>
+                    <router-link
+                      :to="{
+                        name: 'ClientClassInfo',
+                        params: {
+                          id: row.id,
+                        },
+                        query: {
+                          isReschedule: true,
+                          tap: false,
+                        },
+                      }"
+                      class="dropdown-item"
+                    >
+                      <i class="fas fa fa-calendar px-2" aria-hidden="true"></i>
+                      Reschedule
+                    </router-link>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- Alerts -->
+      <div class="mt-4">
+        <div
+          v-if="alerts.success"
+          class="text-start text-md-center alert text-center alert-success"
+        >
+          {{ alerts.success }}
+        </div>
+        <div
+          v-else-if="alerts.error"
+          class="text-start text-md-center alert text-center alert-warning"
+        >
+          {{ alerts.error }}
         </div>
       </div>
     </div>
@@ -248,7 +225,11 @@ export default {
       }
       this.getData();
     },
-    getData() {
+
+    getData(search) {
+      if (search != null) {
+        this.search = search;
+      }
       let queryReq = {
         params: {
           date: this.userDateTime,
@@ -268,8 +249,11 @@ export default {
             this.data = [];
             return (this.alerts.error = res.data.msg);
           }
+
           this.alerts.error = null;
           this.data = res.data.rows;
+          this.$emit("noReportCount", this.data[0].noReportCount);
+
           this.pageCount = this.data[0].fullCount;
         })
         .catch(() => {

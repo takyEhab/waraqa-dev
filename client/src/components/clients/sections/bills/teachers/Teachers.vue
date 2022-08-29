@@ -61,11 +61,11 @@
           <div
             @click="
               $router.push({
-                  name: 'ClientTeacherInvoiceInfo',
-                  params: { id: row.id },
-                })
+                name: 'ClientTeacherInvoiceInfo',
+                params: { id: row.id },
+              })
             "
-            class="rowTable px-2 d-flex f-color-3"
+            class="rowTable p-2 d-flex f-color-3"
           >
             <span class="col-2">{{ row.teacherName }}</span>
             <span class="col-2">{{

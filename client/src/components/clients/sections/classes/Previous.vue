@@ -19,7 +19,7 @@
               getData();
             "
           >
-            <small>Old</small>
+            <small>Class reports</small>
           </li>
           <li
             :class="[filters.one ? 'opacity-100' : '', 'ms-2 ms-md-3 px-2']"
@@ -71,40 +71,6 @@
           </li>
         </ul>
       </div>
-      <!-- Search -->
-      <div class="mt-4 mt-md-0 col-12 col-md-4">
-        <div class="d-flex position-relative align-items-center">
-          <input
-            type="text"
-            class="form-control"
-            v-model="search"
-            @keyup="getData()"
-            placeholder="Search by class title or id"
-          />
-          <div
-            class="f-color-1 rounded px-3 position-absolute py-1"
-            style="right: 7px"
-          >
-            <small><i class="fas fa-search"></i></small>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Alerts -->
-    <div class="mt-4">
-      <div
-        v-if="alerts.success"
-        class="text-start text-md-center alert text-center alert-success"
-      >
-        {{ alerts.success }}
-      </div>
-      <div
-        v-else-if="alerts.error"
-        class="text-start text-md-center alert text-center alert-warning"
-      >
-        {{ alerts.error }}
-      </div>
     </div>
 
     <!-- Table -->
@@ -116,17 +82,35 @@
         <div class="px-2 table-colums f-color-3_3 d-flex mb-4">
           <small class="col-2">Date</small>
           <small class="col-2">Student</small>
-          <small class="col-2">Teacher</small>
+          <!-- <small class="col-2">Teacher</small> -->
           <small class="col-2">Subject</small>
           <small class="col-1">Status</small>
-          <small class="col-1 mx-2">Performance</small>
+          <small class="col-2">Performance</small>
           <small class="col-1">Duration</small>
-          <small class="col-1">More</small>
+          <small class="col-2">More</small>
         </div>
-        <div v-for="row in data" :key="row.id" class="table-row py-3">
-          <div class="px-2 d-flex f-color-3">
+        <div v-for="row in data" :key="row.id" class="table-row py-1">
+          <div
+            @click="
+              $router.push({
+                name: 'ClientClassInfo',
+                params: {
+                  id: row.id,
+                },
+                query: {
+                  tap: true,
+                  page: pagination.page,
+                  offset: pagination.offset,
+                  filter: Object.keys(filters).find(
+                    (key) => filters[key] == true
+                  ),
+                },
+              })
+            "
+            class="rowTable p-2 d-flex f-color-3"
+          >
             <span class="col-2" style="font-family: Merienda">
-              <span style="margin-left: 35px; font-weight: 900; color: #4c4a4c">
+              <span style="margin-left: 35px; font-weight: 900; color: #4c4a4c;font-family: Merienda">
                 {{ moment(row.startingDate).format("hh:mm A") }}
               </span>
               <br />
@@ -134,9 +118,9 @@
             </span>
 
             <span class="col-2">{{ row.studentName }}</span>
-            <span class="col-2">{{ row.teacherName }}</span>
+            <!-- <span class="col-2">{{ row.teacherName }}</span> -->
             <span class="col-2">{{ row.subject }}</span>
-            <span class="col-1 mx-2">{{
+            <span class="col-1">{{
               row.status == 0
                 ? "Active"
                 : row.status == 1
@@ -151,51 +135,28 @@
                 ? "Missed by teacher"
                 : "Cancelled by admin"
             }}</span>
-            <span class="col-1">{{
+            <span class="col-2">{{
               row.status == 0
                 ? "No Report"
                 : `5/${row.classPerformance ? row.classPerformance : "0"}`
             }}</span>
             <span class="col-1">{{ row.duration }} m</span>
 
-            <div class="col-1">
+            <div class="col-2">
               <!-- Example single danger button -->
               <div class="btn-group dropstart">
                 <!-- <i data-bs-toggle="dropdown" class=" fa-2x fa fa-caret-down"></i> -->
-                <div data-bs-toggle="dropdown" class="btn">
+                <div
+                  data-bs-toggle="dropdown"
+                  @click.stop=""
+                  style="border-radius: 2px"
+                  class="btn"
+                >
                   <i class="fa fa-lg fa-ellipsis-v"></i>
                 </div>
 
                 <!-- Action -->
-                <ul class="dropdown-menu">
-                  <li>
-                    <router-link
-                      :to="{
-                        name: 'ClientClassInfo',
-                        params: {
-                          id: row.id,
-                          // tap: true,
-                          // page: pagination.page,
-                          // offset: pagination.offset,
-                          // filter: Object.keys(filters).find(
-                          //   (key) => filters[key] == true
-                          // ),
-                        },
-                        query: {
-                          tap: true,
-                          page: pagination.page,
-                          offset: pagination.offset,
-                          filter: Object.keys(filters).find(
-                            (key) => filters[key] == true
-                          ),
-                        },
-                      }"
-                      class="dropdown-item"
-                      ><i data-bs-toggle="dropdown" class="fas fa-eye px-2"></i>
-                      More</router-link
-                    >
-                  </li>
-
+                <ul @click.stop="" class="dropdown-menu">
                   <li v-if="userType == 'Teacher'">
                     <button
                       @click="
@@ -224,16 +185,10 @@
                         name: 'ClientClassInfo',
                         params: {
                           id: row.id,
-                          //   isReschedule: true,
-                          //   tap: false,
-                          //   page: pagination.page,
-                          //   offset: pagination.offset,
                         },
                         query: {
                           isReschedule: true,
                           tap: false,
-                          page: pagination.page,
-                          offset: pagination.offset,
                         },
                       }"
                       class="dropdown-item"
@@ -242,48 +197,48 @@
                       Reschedule
                     </router-link>
                   </li>
-                  <li
-                    v-if="
-                      userType == 'Teacher' && !row.status && row.canReport == 1
-                    "
-                  >
-                    <router-link
-                      :to="{
-                        name: 'ClientClassInfo',
-                        params: {
-                          id: row.id,
-                          // submitClassReport: true,
-                          // isReschedule: false,
-
-                          // tap: true,
-                          // page: pagination.page,
-                          // offset: pagination.offset,
-                          // filter: Object.keys(filters).find(
-                          //   (key) => filters[key] == true
-                          // ),
-                        },
-                        query: {
-                          isReschedule: false,
-                          tap: true,
-                          page: pagination.page,
-                          offset: pagination.offset,
-                          filter: Object.keys(filters).find(
-                            (key) => filters[key] == true
-                          ),
-                        },
-                      }"
-                      class="dropdown-item"
-                      ><i
-                        class="fas fa fa-check-circle px-2"
-                        aria-hidden="true"
-                      ></i>
-                      Submit</router-link
-                    >
-                  </li>
                 </ul>
+                <router-link
+                  @click.stop=""
+                  :to="{
+                    name: 'ClientClassInfo',
+                    params: {
+                      id: row.id,
+                    },
+                    query: {
+                      isReschedule: false,
+                      tap: true,
+                      filter: Object.keys(filters).find(
+                        (key) => filters[key] == true
+                      ),
+                    },
+                  }"
+                  v-if="
+                    userType == 'Teacher' &&
+                    !row.status &&
+                    Math.abs(moment().diff(row.startingDate, 'hours')) < 72
+                  "
+                  class="soft-button-style rounded ms-2 px-3 py-2"
+                  >Submit</router-link
+                >
               </div>
             </div>
           </div>
+        </div>
+      </div>
+      <!-- Alerts -->
+      <div class="mt-4">
+        <div
+          v-if="alerts.success"
+          class="text-start text-md-center alert text-center alert-success"
+        >
+          {{ alerts.success }}
+        </div>
+        <div
+          v-else-if="alerts.error"
+          class="text-start text-md-center alert text-center alert-warning"
+        >
+          {{ alerts.error }}
         </div>
       </div>
     </div>
@@ -344,7 +299,11 @@ export default {
       }
       this.getData();
     },
-    getData() {
+
+    getData(search) {
+      if (search != null) {
+        this.search = search;
+      }
       let status;
       if (this.filters.one) {
         status = 1;

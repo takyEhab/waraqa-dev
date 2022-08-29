@@ -1,27 +1,34 @@
 <template>
   <div>
     <!-- Section Header -->
-    <div class="d-flex justify-content-between">
+    <div class="d-flex justify-content-between flex-wrap">
       <div>
         <h3 class="section-title">Students</h3>
-        <p class="f-color-3_3">Here you can review your students.</p>
       </div>
-      <div
-        v-if="userType == 'Guardian'"
-        class="f-color-1 text-on-hover"
-        type="button"
-        data-bs-toggle="modal"
-        data-bs-target="#addStudentModal"
-      >
-        <i class="fas fa-plus"></i> Add
-        <span class="d-none d-md-inline">Student</span>
+
+      <!-- Search -->
+      <div class="mt-4 mt-md-0 col-12 col-md-3">
+        <div class="d-flex position-relative align-items-center">
+          <input
+            type="text"
+            class="form-control"
+            v-model="search"
+            @keyup="getData()"
+            placeholder="Search by studen't name"
+          />
+          <div
+            class="f-color-1 rounded px-3 position-absolute py-1"
+            style="right: 7px"
+          >
+            <small><i class="fas fa-search"></i></small>
+          </div>
+        </div>
       </div>
-      <AddStudent v-if="userType == 'Guardian'" />
     </div>
     <!-- Filters & Search -->
     <div class="mt-4 d-flex justify-content-md-between flex-wrap">
       <!-- Filters -->
-      <div class="section-filters">
+      <div class="section-filters flex-wrap">
         <ul class="list-unstyled m-0 d-flex f-color-1">
           <li
             :class="[filters.one ? 'opacity-100' : '', 'px-2']"
@@ -67,24 +74,18 @@
           </li>
         </ul>
       </div>
-      <!-- Search -->
-      <div class="mt-4 mt-md-0 col-12 col-md-4">
-        <div class="d-flex position-relative align-items-center">
-          <input
-            type="text"
-            class="form-control"
-            v-model="search"
-            @keyup="getData()"
-            placeholder="Search by studen't name"
-          />
-          <div
-            class="f-color-1 rounded px-3 position-absolute py-1"
-            style="right: 7px"
-          >
-            <small><i class="fas fa-search"></i></small>
-          </div>
-        </div>
+
+      <div
+        v-if="userType == 'Guardian'"
+        class="f-color-1 text-on-hover"
+        type="button"
+        data-bs-toggle="modal"
+        data-bs-target="#addStudentModal"
+      >
+        <i class="fas fa-plus"></i> Add
+        <span class="d-none d-md-inline">Student</span>
       </div>
+      <AddStudent v-if="userType == 'Guardian'" />
     </div>
 
     <!-- Table -->
@@ -105,7 +106,7 @@
           <small class="col-2">Status</small>
           <!-- <small class="col-1" v-if="this.userType != 'Teacher'">Info</small> -->
         </div>
-        <div v-for="row in data" :key="row.id" class="table-row py-3">
+        <div v-for="row in data" :key="row.id" class="table-row py-1">
           <div
             @click="
               this.userType != 'Teacher' &&
@@ -114,7 +115,7 @@
                   params: { id: row.id },
                 })
             "
-            class="rowTable px-2 d-flex f-color-3"
+            class="rowTable p-2 d-flex f-color-3"
           >
             <span class="col-1">
               <img

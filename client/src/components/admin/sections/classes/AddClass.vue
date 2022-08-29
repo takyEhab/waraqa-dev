@@ -35,25 +35,15 @@
                   </option>
                 </select>
               </div>
-              <!-- Teacher -->
+
               <div class="col-12 col-md">
-                <v-select
-                  placeholder="Teacher"
-                  :options="teachers"
-                  label="name"
-                  :reduce="(teacher) => teacher.id"
-                  v-model="teacherID"
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Meeting Type"
+                  v-model="classTitle"
+                  required
                 />
-                <!-- <select class="form-select" v-model="teacherID" required>
-                  <option value="">Teacher</option>
-                  <option
-                    v-for="teacher in teachers"
-                    :key="teacher.id"
-                    :value="teacher.id"
-                  >
-                    {{ teacher.name }}
-                  </option>
-                </select> -->
               </div>
             </div>
             <!-- Student & Class lin -->
@@ -69,6 +59,16 @@
                 />
               </div>
 
+              <!-- Teacher -->
+              <div class="col-12 col-md mt-3">
+                <v-select
+                  placeholder="Teacher"
+                  :options="teachers"
+                  label="name"
+                  :reduce="(teacher) => teacher.id"
+                  v-model="teacherID"
+                />
+              </div>
               <!-- Student -->
               <!-- <div class="col-12 col-md mt-3">
                 <select
@@ -89,43 +89,29 @@
               </div> -->
 
               <!-- Class link -->
-              <div class="col-12 col-md mt-3">
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Meeting Type"
-                  v-model="classTitle"
-                  required
-                />
-              </div>
             </div>
             <!-- Starting date & Duration -->
             <div class="row flex-wrap">
               <!-- Starting date -->
               <div class="col-12 col-md mt-3">
                 <label class="f-color-3 mb-1">Start Date</label>
-                <!-- <input
-                  type="datetime-local"
+                <input
+                  type="date"
                   class="form-control"
                   v-model="startingDate"
                   required
-                /> -->
-
-                <Datepicker
-                  minutesIncrement="15"
-                  minutesGridIncrement="15"
-                  autoApply
-                  v-model="startingDate"
-                  placeholder="Type or choose a date"
-                  textInput
-                  showNowButton
-                  required
-                >
-                  <template #am-pm-button="{ toggle, value }">
-                    <button @click="toggle">{{ value }}</button>
-                  </template>
-                </Datepicker>
+                />
               </div>
+              <div class="col-12 col-md mt-3">
+                <label class="f-color-3 mb-1">Start Time</label>
+                <input
+                  type="time"
+                  class="form-control"
+                  v-model="startingTime"
+                  required
+                />
+              </div>
+
               <!-- Class Duration -->
               <div class="col-12 col-md mt-3">
                 <label class="f-color-3 mb-1">Duration</label>
@@ -142,34 +128,26 @@
                 </select>
               </div>
             </div>
-            <div style="display: flex; margin-top: 10px">
-              <div
-                class="btn btn-info mx-2"
-                type="button"
-                data-bs-toggle="modal"
-                data-bs-target="#RepeatingDaysModal"
-              >
-                Repeating Days
+            <div class="row flex-wrap">
+              <!-- timeZone -->
+              <div class="col-12 col-md mt-3">
+                <v-select
+                  placeholder="TimeZone"
+                  :options="TimeZoneList"
+                  v-model="timeZone"
+                />
               </div>
-              <!-- Repeat days -->
-              <!-- Days List -->
-              <!-- <ul class="list-unstyled m-0 days-list d-flex">
-                <li
-                  v-for="day in days"
-                  :key="day.id"
-                  class="me-2"
-                  :data-day="day"
-                  @click="selectDays"
+              <div class="col-12 col-md mt-3">
+                <div
+                  class="btn btn-info col-12"
+                  type="button"
+                  data-bs-toggle="modal"
+                  data-bs-target="#RepeatingDaysModal"
+                  style="background-color: #fff; border-color: gray"
                 >
-                  {{ day }}
-                </li>
-              </ul> -->
-              <!-- <input
-                  type="time"
-                  class="form-control"
-                  placeholder="Enter Sunday"
-                  v-model="daysTime.Mon"
-                /> -->
+                  Repeating Days
+                </div>
+              </div>
             </div>
 
             <!-- Invite guests & Description -->
@@ -184,17 +162,7 @@
                   v-model="guests"
                 />
               </div>
-              <!-- Class Description -->
-              <div class="col-12 col-md mt-3">
-                <textarea
-                  type="text"
-                  class="form-control"
-                  placeholder="Class Information"
-                  v-model="description"
-                ></textarea>
-              </div>
-            </div>
-            <div class="row flex-wrap">
+
               <div
                 v-if="
                   Object.values(selectedDays).filter((item) => item != '')
@@ -212,45 +180,43 @@
                   v-model="payEvery"
                 />
               </div>
-              <!-- <div :class="[`col-${Object.values(selectedDays).filter((item) => item != '').length >= 1?'12':'6'}`, 'col-md', 'mt-5']"> -->
-
-              <div class="col-12 col-md mt-5">
-                <v-select
-                  placeholder="TimeZone"
-                  :options="TimeZoneList"
-                  v-model="timeZone"
-                />
-              </div>
             </div>
-            <!-- Count for -->
-            <div class="col-12 col-md-6 mt-3">
-              <label class="f-color-3 mb-1">Count for</label>
-              <div>
-                <div class="form-check">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    value=""
-                    id="flexCheckDefault"
-                    v-model="countForTeacher"
-                    :checked="countForTeacher"
-                  />
-                  <label class="form-check-label" for="flexCheckDefault">
-                    Teacher
-                  </label>
-                </div>
-                <div class="form-check">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    value=""
-                    id="flexCheckChecked"
-                    v-model="countForStudent"
-                    :checked="countForStudent"
-                  />
-                  <label class="form-check-label" for="flexCheckChecked">
-                    Student
-                  </label>
+            <div class="row flex-wrap">
+              <!-- Class Description -->
+              <div class="col-12 col-md mt-3">
+                <textarea
+                  type="text"
+                  class="form-control"
+                  placeholder="Class Information"
+                  v-model="description"
+                ></textarea>
+              </div>
+              <!-- Count for -->
+              <div class="col-12 col-md-6 mt-3">
+                <label class="f-color-3 mb-1">Count for</label>
+                <div class="d-flex">
+                  <div class="me-4">
+                    <label class="switch">
+                      <input
+                        v-model="countForTeacher"
+                        :checked="countForTeacher"
+                        type="checkbox"
+                      />
+                      <span class="slider round"></span>
+                    </label>
+                    <span> Teacher </span>
+                  </div>
+                  <div>
+                    <label class="switch">
+                      <input
+                        v-model="countForStudent"
+                        :checked="countForStudent"
+                        type="checkbox"
+                      />
+                      <span class="slider round"></span>
+                    </label>
+                    <span> Student </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -259,7 +225,7 @@
               <button
                 :disabled="loadingBtn"
                 type="submit"
-                class="main-button-style with-100px f-color-0 border-0 py-2 px-3 rounded"
+                class="main-button-style with-100px f-color-0 border-0 py-2 px-3"
               >
                 <div>
                   <span
@@ -273,19 +239,17 @@
               </button>
             </div>
             <!-- Alerts -->
-            <div class="mt-4">
-              <div
-                v-if="alerts.success"
-                class="text-center alert text-center alert-success"
-              >
-                {{ alerts.success }}
-              </div>
-              <div
-                v-else-if="alerts.error"
-                class="text-center alert text-center alert-warning"
-              >
-                {{ alerts.error }}
-              </div>
+            <div
+              v-if="alerts.success"
+              class="text-center alert text-center alert-success mt-4"
+            >
+              {{ alerts.success }}
+            </div>
+            <div
+              v-else-if="alerts.error"
+              class="text-center alert text-center alert-warning mt-4"
+            >
+              {{ alerts.error }}
             </div>
           </form>
         </div>
@@ -293,7 +257,7 @@
     </div>
   </div>
   <RepeatingDays
-    :day="test"
+    name="#addClassModal"
     :selectedDays="selectedDays"
     v-on:selectDay="updateSelectDay($event)"
     v-on:datePicker="updateDayTime($event)"
@@ -304,15 +268,13 @@ import moment from "moment-timezone";
 import axios from "axios";
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
-import Datepicker from "@vuepic/vue-datepicker";
-import "@vuepic/vue-datepicker/dist/main.css";
 import RepeatingDays from "@/components/admin/sections/classes/RepeatingDays";
 import Tz from "@/components/Tz.json";
 
 export default {
   components: {
     vSelect,
-    Datepicker,
+    // Datepicker,
     RepeatingDays,
   },
   data() {
@@ -351,6 +313,7 @@ export default {
       subject: "",
       classTitle: "",
       startingDate: "",
+      startingTime: "",
       duration: "",
       guests: "",
       description: "",
@@ -397,49 +360,27 @@ export default {
       } else {
         //Empty Day & time
         this.selectedDays[day] = "";
-        // this.daysTime[day] = "";
+        this.daysTime[day] = "";
       }
       event.target.classList.toggle("selected-day");
     },
-    // selectDays(event) {
-    //   let day = event.target.getAttribute("data-day");
-    //   if (!this.selectedDays[day]) {
-    //     // Fill Day
-    //     this.selectedDays[day] = day;
-    //   } else {
-    //     //Empty Day & time
-    //     this.selectedDays[day] = "";
-    //     this.daysTime[day] = "";
-    //   }
-    //   event.target.classList.toggle("selected-day");
-    //   console.log(this.selectDays);
-    // },
-    // getGuardian() {
-    //   let guardianID = this.students.find(
-    //     (elm) => elm.id == this.studentID
-    //   ).guardianID;
-    //   this.guardianID = guardianID;
-    // },
     addClass() {
       this.alerts.error = "";
       this.alerts.success = "";
       this.loadingBtn = true;
-      console.log(this.daysTime);
-      console.log(this.selectedDays);
       if (!this.studentID) {
         this.loadingBtn = false;
-
         return (this.alerts.error = "You have to choose a student.");
       }
 
       if (!this.teacherID) {
         this.loadingBtn = false;
-
         return (this.alerts.error = "You have to choose a teacher.");
       }
       // this.guardianID = this.students.find(
       //   (elm) => elm.id == this.studentID
       // ).guardianID;
+      this.startingDate = `${this.startingDate}T${this.startingTime}`;
 
       if (moment(this.startingDate).isBefore(moment())) {
         this.loadingBtn = false;
@@ -449,14 +390,6 @@ export default {
 
       let classes = [];
 
-      this.daysTime.Sun = `${this.daysTime.Sun.hours}:${this.daysTime.Sun.minutes}`;
-      this.daysTime.Mon = `${this.daysTime.Mon.hours}:${this.daysTime.Mon.minutes}`;
-      this.daysTime.Tue = `${this.daysTime.Tue.hours}:${this.daysTime.Tue.minutes}`;
-      this.daysTime.Wed = `${this.daysTime.Wed.hours}:${this.daysTime.Wed.minutes}`;
-      this.daysTime.Thu = `${this.daysTime.Thu.hours}:${this.daysTime.Thu.minutes}`;
-      this.daysTime.Fri = `${this.daysTime.Fri.hours}:${this.daysTime.Fri.minutes}`;
-      this.daysTime.Sat = `${this.daysTime.Sat.hours}:${this.daysTime.Sat.minutes}`;
-      console.log(this.daysTime);
       let weeklyDaysTimes = {
         Sun: moment(this.daysTime.Sun, "HH:mm"),
         Mon: moment(this.daysTime.Mon, "HH:mm"),
@@ -466,17 +399,17 @@ export default {
         Fri: moment(this.daysTime.Fri, "HH:mm"),
         Sat: moment(this.daysTime.Sat, "HH:mm"),
       };
-      console.log(weeklyDaysTimes);
       // 1- Class of this field => Starting Date
       let directClass = {
-        weeklyDaysTimes: weeklyDaysTimes,
+        weeklyDaysTimes,
         guardianID: this.students.find((elm) => elm.id == this.studentID)
           .guardianID,
         teacherID: this.teacherID,
         studentID: this.studentID,
         subject: this.subject,
         classTitle: this.classTitle,
-        startingDate: moment(this.startingDate, "YYYY-MM-DD HH:mm"),
+        // startingDate: moment(this.startingDate, "YYYY-MM-DD HH:mm"),
+        startingDate: moment(this.startingDate).format("YYYY-MM-DD HH:mm"),
         duration: this.duration,
         guests: this.guests,
         description: this.description,
@@ -494,9 +427,7 @@ export default {
 
       //Convert times to array
       let timesOfDays = Object.values(this.daysTime);
-      timesOfDays = timesOfDays.filter(
-        (item) => item !== "undefined:undefined"
-      );
+      timesOfDays = timesOfDays.filter((item) => item !== "");
 
       //Convert days to array
       let selectedDaysArray = Object.values(this.selectedDays);
@@ -531,7 +462,6 @@ export default {
       }
       let url = "http://localhost:3300/api/v1/admin/classes/path0";
       axios
-        // .post(url, { payEvery: this.payEvery })
         .post(url, { classes, payEvery: this.payEvery })
         .then((res) => {
           if (!res.data.success) {
@@ -552,7 +482,7 @@ export default {
       //Uses in AddEvaluation modal
       let url = "http://localhost:3300/api/v1/admin/teachers/path0";
       axios
-        .get(url, { params: { status: 1 } })
+        .get(url)
         .then((res) => {
           this.teachers = res.data.rows;
         })
@@ -563,7 +493,7 @@ export default {
     fetchStudents() {
       let url = "http://localhost:3300/api/v1/admin/students/path0";
       axios
-        .get(url, { params: { status: 1 } })
+        .get(url)
         .then((res) => {
           this.students = res.data.rows;
         })

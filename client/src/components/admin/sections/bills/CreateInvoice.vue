@@ -176,7 +176,7 @@
               <button
                 :disabled="loadingBtn"
                 type="submit"
-                class="main-button-style with-100px f-color-0 border-0 py-2 px-3 rounded"
+                class="main-button-style with-100px f-color-0 border-0 py-2 px-3"
               >
                 <div>
                   <span

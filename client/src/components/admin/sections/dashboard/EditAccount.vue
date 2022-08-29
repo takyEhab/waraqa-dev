@@ -36,7 +36,7 @@
               </div>
               <div
                 class="mt-3 position-relative"
-                style="width: 90px; height: 80px"
+                style="width: 90px; height: 100px"
               >
                 <!-- <div class="avatar-btn" @click="openUpload"> -->
                 <div
@@ -52,10 +52,11 @@
                   class="avatar-img rounded-circle"
                   alt="teacher picture"
                 />
-                <span v-else class="avatar">{{
-                  data[0].name.charAt(0).toUpperCase()
-                }}</span>
-
+                <span v-else class="avatar">
+                  <div style="font-size: 3rem">
+                    {{ data[0].name.charAt(0).toUpperCase() }}
+                  </div>
+                </span>
                 <!-- <input type="file" ref="avatar" @change="selectFile" hidden /> -->
               </div>
             </div>
@@ -85,20 +86,7 @@
                     required
                   />
                 </div>
-              </div>
-              <!-- Phone & Email -->
-              <div class="row flex-wrap">
-                <!-- Phone -->
-                <div class="col-12 col-md mt-3">
-                  <label class="f-color-3 mb-1">Phone</label>
-                  <input
-                    type="number"
-                    class="form-control"
-                    placeholder="Enter your Phone"
-                    required
-                    v-model="data[0].phone"
-                  />
-                </div>
+
                 <!-- Email -->
                 <div class="col-12 col-md mt-3">
                   <label class="f-color-3 mb-1">Email</label>
@@ -110,6 +98,21 @@
                     required
                   />
                 </div>
+              </div>
+              <!-- Phone -->
+              <div class="row flex-wrap">
+                <div class="col-12 col-md mt-3">
+                  <label class="f-color-3 mb-1">Phone</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    placeholder="Enter your Phone"
+                    required
+                    v-model="data[0].phone"
+                  />
+                </div>
+                <div class="col-12 col-md mt-3"></div>
+                <div class="col-12 col-md mt-3"></div>
               </div>
             </div>
             <!-- Submit -->

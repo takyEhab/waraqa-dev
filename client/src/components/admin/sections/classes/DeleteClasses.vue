@@ -7,9 +7,9 @@
     aria-hidden="true"
   >
     <div class="modal-dialog">
-      <div class="modal-content text-start">
+      <div class="modal-content text-start borderRadius">
         <header
-          class="b-color-5 f-color-0 py-3 px-4 d-flex justify-content-between"
+          class="b-color-2 f-color-0 py-3 px-4 d-flex justify-content-between"
         >
           <h5 class="m-0">Delete All Classes</h5>
           <button
@@ -112,7 +112,6 @@ export default {
       let url = "http://localhost:3300/api/v1/admin/classes/path15";
       axios
         .post(url, {
-          // data: this.startingRescheduled,
           data: this.startingRescheduled,
         })
         .then((res) => {

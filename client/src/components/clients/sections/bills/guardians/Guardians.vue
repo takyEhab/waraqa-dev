@@ -33,7 +33,6 @@
           </li>
         </ul>
       </div>
-      <!-- Search -->
     </div>
 
     <!-- Table -->
@@ -51,7 +50,7 @@
 
           <!-- <small class="col-1">More</small> -->
         </div>
-        <div v-for="row in data" :key="row.id" class="table-row py-3">
+        <div v-for="row in data" :key="row.id" class="table-row py-1">
           <div
             @click="
               this.userType != 'Teacher' &&
@@ -60,7 +59,7 @@
                   params: { id: row.id },
                 })
             "
-            class="rowTable px-2 d-flex f-color-3"
+            class="rowTable p-2 d-flex f-color-3"
           >
             <span class="col-2">{{ row.guardianName }}</span>
             <span class="col-2">{{
@@ -81,17 +80,6 @@
             <span :class="[row.paid == 1 ? 'f-color-1' : 'f-color-4', 'col-2']">
               {{ row.paid == 1 ? "Paid" : "Unpaid" }}
             </span>
-
-            <!-- <div class="col-1">
-              <router-link
-                :to="{
-                  name: 'ClientGuardianInvoiceInfo',
-                  params: { id: row.id },
-                }"
-                class="f-color-1"
-                ><i class="fas fa-eye"></i
-              ></router-link>
-            </div> -->
           </div>
         </div>
         <!-- Alerts -->

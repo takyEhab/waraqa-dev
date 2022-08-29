@@ -4,19 +4,18 @@
       <!-- SideBar Info -->
       <div
         class="col-12 col-md-4 d-flex justify-content-between flex-column b-color-1 z-index-1 f-color-2 px-4 py-5"
-        style="min-height: 25em"
+        style="min-height: 25em; border-radius: 35px 0px 0px 35px"
       >
         <header class="text-center">
           <img
             src="@/assets/logo.jpg"
             alt="waraqa logo"
             classs="img-fluid"
-            style="width: 80px"
+            style="width: 170px"
           />
         </header>
         <article class="text-center f-color-0">
           <h4>Log In</h4>
-          <p class="m-0 px-5">Go to the Waraqa control panel.</p>
         </article>
         <footer class="text-center media">
           <!-- Social Media -->
@@ -28,13 +27,13 @@
       </div>
       <!-- Form -->
       <div
+        style="border-radius: 0px 35px 35px 0px"
         class="col-12 col-md-8 mt-4 mt-md-0 b-color-0 d-flex justify-content-center py-5 px-md-5 box-shadow-style"
       >
         <div class="col-11 col-md-10">
           <!-- Login -->
           <div class="text-center">
             <h3 class="f-color-3">Log In</h3>
-            <p class="f-color-3_3">Go to the Waraqa control panel.</p>
           </div>
           <form class="mt-5" @submit.prevent="login">
             <!-- Email -->
@@ -46,6 +45,7 @@
                 v-model="email"
                 class="form-control"
                 placeholder="Enter your Email"
+                style="border-radius: 35px"
                 required
               />
             </div>
@@ -54,6 +54,7 @@
               <label class="f-color-3 mb-1">Passowrd</label>
               <input
                 type="password"
+                style="border-radius: 35px"
                 v-model="password"
                 class="form-control"
                 placeholder="Enter your Passowrd"
@@ -72,7 +73,7 @@
                   Forget Password ?
                 </button></span
               >
-              <ForgetPass />
+              <ForgetPass userType='admin' />
             </div>
             <!-- Submit -->
             <div class="mt-4 text-end">
@@ -126,7 +127,7 @@
 </style>
 <script>
 import axios from "axios";
-import ForgetPass from "@/components/admin/auth/ForgetPass";
+import ForgetPass from "@/components/auth/login/ForgetPass";
 export default {
   components: {
     ForgetPass,

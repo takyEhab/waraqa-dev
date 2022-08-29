@@ -24,7 +24,12 @@
         <div class="mt-3 px-3 px-md-5 py-5">
           <input type="file" ref="avatar" @change="selectFile" hidden />
           <div v-if="cropperImage">
-            <cropper ref="cropper" :src="cropperImage" />
+            <cropper ref="cropper" @change="change" :src="cropperImage" />
+          </div>
+          <div v-if="height">
+            height: {{ height }}
+            <br />
+            width: {{ width }}
           </div>
 
           <div style="text-align: center; margin-top: 20px">
@@ -33,13 +38,23 @@
               @click="this.$refs.avatar.click()"
               >Upload image</span
             >
-            <span
-              class="btn btn-primary"
-              @click="cropImage"
-              data-bs-toggle="modal"
-              :data-bs-target="name"
-              >Done</span
-            >
+            <span class="btn btn-primary" @click="cropImage">Done</span>
+          </div>
+        </div>
+        <span ref="goBack" data-bs-toggle="modal" :data-bs-target="name"></span>
+        <!-- Alerts -->
+        <div class="mt-4">
+          <div
+            v-if="alerts.success"
+            class="text-start text-md-center alert text-center alert-success"
+          >
+            {{ alerts.success }}
+          </div>
+          <div
+            v-else-if="alerts.error"
+            class="text-start text-md-center alert text-center alert-warning"
+          >
+            {{ alerts.error }}
           </div>
         </div>
       </div>
@@ -64,11 +79,17 @@ export default {
         error: null,
       },
       cropperImage: null,
+      height: null,
+      width: null,
     };
   },
   methods: {
     moment(date) {
       return moment(date);
+    },
+    change({ coordinates }) {
+      this.height = coordinates.height;
+      this.width = coordinates.width;
     },
     selectFile(event) {
       // Update Preview Start
@@ -84,13 +105,26 @@ export default {
       reader.readAsDataURL(files[0]);
     },
     cropImage() {
+      this.alerts.error = "";
+      this.alerts.success = "";
       const result = this.$refs.cropper.getResult();
+      // if (result.canvas.height) {
+
+      // }
       //   const newTab = window.open();
 
       //   // for testing open the result in a new tab
       //   newTab.document.body.innerHTML = `<img src="${result.canvas.toDataURL(
       //     "image/jpeg"
       //   )}"></img>`;
+
+      console.log(result.canvas);
+      console.log(result.coordinates);
+
+      if (Math.abs(result.coordinates.width - result.coordinates.height) > 50) {
+        return (this.alerts.error =
+          "The difference in vertical and horizontal lengths cannot be more than 50px.");
+      }
       fetch(result.canvas.toDataURL("image/jpeg"))
         .then((res) => res.blob())
         .then((blob) => {
@@ -100,6 +134,7 @@ export default {
             file,
             src: result.canvas.toDataURL("image/jpeg"),
           });
+          this.$refs.goBack.click();
         });
 
       //   console.log(result.canvas.toDataURL("image/jpeg"));

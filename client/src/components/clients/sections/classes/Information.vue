@@ -463,7 +463,7 @@ export default {
           }
           this.reportPermission =
             moment().isAfter(this.data[0].startingDate) &&
-            this.data[0].canReport;
+            Math.abs(moment().diff(this.data[0].startingDate, "hours")) < 72;
           this.displayData = true;
         })
         .then(() => {

@@ -3,7 +3,6 @@
     <!-- Section Header -->
     <div>
       <h3 class="section-title">Teachers</h3>
-      <p class="f-color-3_3">Here you can review all teachers in Waraqa.</p>
     </div>
     <!-- Filters & Search -->
     <div class="mt-4 d-flex justify-content-md-between flex-wrap">

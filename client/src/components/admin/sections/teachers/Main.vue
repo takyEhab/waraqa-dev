@@ -1,8 +1,26 @@
 <template>
-  <div>
+  <div class="position-relative">
     <!-- Section Header -->
-    <div>
+    <div class="d-flex justify-content-between flex-wrap">
       <h3 class="section-title">Teachers</h3>
+      <!-- Search -->
+      <div class="mt-4 mt-md-0 col-12 col-md-3">
+        <div class="d-flex position-relative align-items-center">
+          <input
+            type="text"
+            class="form-control"
+            v-model="search"
+            @keyup="getData()"
+            placeholder="Search"
+          />
+          <div
+            class="f-color-1 rounded px-3 position-absolute py-1"
+            style="right: 7px"
+          >
+            <small><i class="fas fa-search"></i></small>
+          </div>
+        </div>
+      </div>
     </div>
     <!-- Filters & Search -->
     <div class="mt-4 d-flex justify-content-md-between flex-wrap">
@@ -53,24 +71,6 @@
           </li>
         </ul>
       </div>
-      <!-- Search -->
-      <div class="mt-4 mt-md-0 col-12 col-md-4">
-        <div class="d-flex position-relative align-items-center">
-          <input
-            type="text"
-            class="form-control"
-            v-model="search"
-            @keyup="getData()"
-            placeholder="Search"
-          />
-          <div
-            class="f-color-1 rounded px-3 position-absolute py-1"
-            style="right: 7px"
-          >
-            <small><i class="fas fa-search"></i></small>
-          </div>
-        </div>
-      </div>
     </div>
     <div
       v-if="Paywages"
@@ -87,30 +87,28 @@
     >
       <div style="min-width: 62em">
         <div class="px-2 table-colums f-color-3_3 d-flex mb-4">
-          <small class="col-2"> </small>
+          <small class="col-2 ms-1"> </small>
           <small class="col-3">Full Name</small>
           <small class="col-1">Students</small>
           <small class="col-1">Hours</small>
-          <small class="col-3">Zoom Link</small>
+          <small class="col-2">Zoom Link</small>
           <small class="col-2">Status</small>
           <!-- <small class="col-1">More</small> -->
         </div>
-        <div v-for="row in data" :key="row.id" class="table-row py-3">
+        <div v-for="(row, i) in data" :key="row.id" class="table-row py-1">
+          <span class="position-absolute" style="margin-top: 22.5px;left: -10px">{{
+            i + 1 + pagination.offset
+          }}</span>
           <div
             @click="
               $router.push({
-                  name: 'TeacherInfo',
-                  params: {
-                    id: row.id,
-                    page: pagination.page,
-                    offset: pagination.offset,
-                    filter: Object.keys(filters).find(
-                      (key) => filters[key] == true
-                    ),
-                  },
-                })
+                name: 'TeacherInfo',
+                params: {
+                  id: row.id,
+                },
+              })
             "
-            class="rowTable px-2 d-flex f-color-3"
+            class="rowTable p-2 d-flex f-color-3"
           >
             <span class="col-2">
               <img
@@ -130,7 +128,7 @@
             <span :class="[row.hours < 1 ? 'f-color-4' : '', 'col-1']">{{
               row.hours ? (row.hours / 60).toFixed(2) : 0
             }}</span>
-            <span class="col-3"
+            <span @click.stop="" class="col-2"
               ><a :href="row.classLink" target="_blank"
                 ><i class="fas fa-play f-color-1 me-4"></i
               ></a>
@@ -304,15 +302,6 @@ export default {
     },
   },
   created() {
-    const { params } = this.$route;
-    if (params) {
-      this.pagination.page = params.page;
-      this.pagination.offset = params.offset;
-    }
-    if (params.filter) {
-      this.filters[params.filter] = true;
-    }
-
     this.getData();
 
     let today = moment().format("YYYY-MM-DD");

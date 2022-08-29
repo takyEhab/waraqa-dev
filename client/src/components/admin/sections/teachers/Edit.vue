@@ -12,7 +12,7 @@
         <header
           class="b-color-2 f-color-0 py-3 px-4 d-flex justify-content-between"
         >
-          <h5 class="m-0">Edit</h5>
+          <h5 class="m-0">Edit Teacher's information</h5>
           <button
             type="button"
             class="f-color-0 border-0 background-none"
@@ -36,7 +36,7 @@
               </div>
               <div
                 class="mt-3 position-relative"
-                style="width: 90px; height: 80px"
+                style="width: 90px; height: 100px"
               >
                 <!-- <div class="avatar-btn" @click="openUpload"> -->
                 <div
@@ -52,9 +52,11 @@
                   class="avatar-img rounded-circle"
                   alt="teacher picture"
                 />
-                <span v-else class="avatar">{{
-                  data[0].name.charAt(0).toUpperCase()
-                }}</span>
+                <span v-else class="avatar">
+                  <div style="font-size: 3rem">
+                    {{ data[0].name.charAt(0).toUpperCase() }}
+                  </div>
+                </span>
 
                 <!-- <input type="file" ref="avatar" @change="selectFile" hidden /> -->
               </div>
@@ -62,10 +64,11 @@
             <!-- Personal Information -->
             <div class="mt-5">
               <span class="d-block f-color-2">Personal Information</span>
-              <!-- First Name & Last Name -->
               <div class="row flex-wrap">
                 <!-- First Name -->
                 <div class="col-12 col-md mt-3">
+                  <label class="f-color-3 mb-1">First Name</label>
+
                   <input
                     type="text"
                     class="form-control"
@@ -76,6 +79,8 @@
                 </div>
                 <!-- Last Name -->
                 <div class="col-12 col-md mt-3">
+                  <label class="f-color-3 mb-1">Last Name</label>
+
                   <input
                     type="text"
                     class="form-control"
@@ -84,9 +89,7 @@
                     required
                   />
                 </div>
-              </div>
-              <!-- Birthday & Address -->
-              <div class="row flex-wrap">
+
                 <!-- Birthday -->
                 <div class="col-12 col-md mt-3">
                   <label class="f-color-3 mb-1">Birthday</label>
@@ -97,8 +100,12 @@
                     required
                   />
                 </div>
+              </div>
+              <div class="row flex-wrap">
                 <!-- Address -->
                 <div class="col-12 col-md mt-3">
+                  <label class="f-color-3 mb-1">Address</label>
+
                   <input
                     type="text"
                     class="form-control"
@@ -106,11 +113,10 @@
                     v-model="data[0].address"
                   />
                 </div>
-              </div>
-              <!-- Language & Email -->
-              <div class="row flex-wrap">
                 <!-- Language -->
                 <div class="col-12 col-md mt-3">
+                  <label class="f-color-3 mb-1">Languages</label>
+
                   <input
                     type="text"
                     class="form-control"
@@ -120,6 +126,8 @@
                 </div>
                 <!-- Email -->
                 <div class="col-12 col-md mt-3">
+                  <label class="f-color-3 mb-1">Email</label>
+
                   <input
                     type="text"
                     class="form-control"
@@ -131,23 +139,10 @@
               </div>
               <!-- TimeZone & Phone -->
               <div class="row flex-wrap">
-                <!-- TimeZone -->
-                <div class="col-12 col-md mt-3">
-                  <v-select
-                    placeholder="TimeZone"
-                    :options="TimeZoneList"
-                    v-model="data[0].timeZone"
-                  />
-
-                  <!-- <select class="form-select" v-model="data[0].timeZone">
-                    <option value="">Select TimeZone</option>
-                    <option v-for="timeZone in TimeZoneList" :key="timeZone.id">
-                      {{ timeZone }}
-                    </option>
-                  </select> -->
-                </div>
                 <!-- Phone -->
                 <div class="col-12 col-md mt-3">
+                  <label class="f-color-3 mb-1">Phone</label>
+
                   <input
                     type="number"
                     class="form-control"
@@ -155,11 +150,20 @@
                     v-model="data[0].phone"
                   />
                 </div>
-              </div>
-              <!-- Description -->
-              <div class="row flex-wrap">
-                <!-- Contact Note -->
-                <div class="col-12 col-md-6 mt-3">
+
+                <!-- TimeZone -->
+                <div class="col-12 col-md mt-3">
+                  <label class="f-color-3 mb-1">Time Zone</label>
+
+                  <v-select
+                    placeholder="TimeZone"
+                    :options="TimeZoneList"
+                    v-model="data[0].timeZone"
+                  />
+                </div>
+
+                <!-- Biography -->
+                <div class="col-12 col-md mt-3">
                   <label class="f-color-3 mb-1">Biography</label>
                   <textarea
                     type="text"
@@ -187,6 +191,8 @@
                 </div>
                 <!--  Zoom Link -->
                 <div class="col-12 col-md mt-3">
+                  <label class="f-color-3 mb-1">Zoom Link</label>
+
                   <input
                     type="text"
                     class="form-control"
@@ -194,11 +200,11 @@
                     v-model="data[0].classLink"
                   />
                 </div>
-              </div>
-              <!-- A bonus money & Payment method -->
-              <div class="row flex-wrap">
+
                 <!-- A bonus money -->
                 <div class="col-12 col-md mt-3">
+                  <label class="f-color-3 mb-1">A bonus money</label>
+
                   <input
                     type="number"
                     class="form-control"
@@ -206,8 +212,12 @@
                     v-model="data[0].bonus"
                   />
                 </div>
+              </div>
+              <div class="row flex-wrap">
                 <!-- Payment method -->
                 <div class="col-12 col-md mt-3">
+                  <label class="f-color-3 mb-1">Payment method</label>
+
                   <input
                     type="text"
                     class="form-control"
@@ -215,17 +225,18 @@
                     v-model="data[0].paymentMethod"
                   />
                 </div>
-              </div>
-            </div>
 
-            <div class="col-12 col-md-2 mt-3">
-              <label class="f-color-3 mb-1">Done Hours</label>
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Done Hours"
-                v-model="data[0].hours"
-              />
+                <div class="col-12 col-md mt-3">
+                  <label class="f-color-3 mb-1">Done Hours</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Done Hours"
+                    v-model="data[0].hours"
+                  />
+                </div>
+                <div class="col-12 col-md mt-3"></div>
+              </div>
             </div>
 
             <!-- Banking data  -->
@@ -262,9 +273,7 @@
                     <option>CAD</option>
                   </select>
                 </div>
-              </div>
-              <!-- SWIFT Code & Beneficiary Branch Name -->
-              <div class="row flex-wrap">
+
                 <!-- SWIFT Code -->
                 <div class="col-12 col-md mt-3">
                   <label class="f-color-3 mb-1"
@@ -287,6 +296,8 @@
                     v-model="data[0].swiftCode"
                   />
                 </div>
+              </div>
+              <div class="row flex-wrap">
                 <!-- Beneficiary Branch Name -->
                 <div class="col-12 col-md mt-3">
                   <label class="f-color-3 mb-1">Beneficiary Branch Name</label>
@@ -297,9 +308,6 @@
                     v-model="data[0].branchName"
                   />
                 </div>
-              </div>
-              <!-- Beneficiary Bank Name & Beneficiary IBAN -->
-              <div class="row flex-wrap">
                 <!-- Beneficiary Bank Name -->
                 <div class="col-12 col-md mt-3">
                   <label class="f-color-3 mb-1">Beneficiary Bank Name</label>
@@ -322,19 +330,16 @@
                 </div>
               </div>
               <!-- Beneficiary's Account Number -->
-              <div class="row flex-wrap">
-                <!-- Beneficiary's Account Number -->
-                <div class="col-12 col-md-6 mt-3">
-                  <label class="f-color-3 mb-1"
-                    >Beneficiary's Account Number</label
-                  >
-                  <input
-                    type="text"
-                    class="form-control"
-                    placeholder="Enter Beneficiary's Account Number"
-                    v-model="data[0].accountNumber"
-                  />
-                </div>
+              <div class="col-4 mt-3">
+                <label class="f-color-3 mb-1"
+                  >Beneficiary's Account Number</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Beneficiary's Account Number"
+                  v-model="data[0].accountNumber"
+                />
               </div>
             </div>
 
@@ -391,7 +396,6 @@
                 </div>
                 <!--  New Password -->
                 <div class="col-12 col-md mt-3">
-                  <label class="f-color-3 mb-1">New Password</label>
                   <input
                     type="password"
                     class="form-control"
