@@ -61,7 +61,7 @@
                 <div class="mt-2">
                   <span
                     class="px-3 py-2 secondery-btn cursor-pointer float-end"
-                    style="color:black"
+                    style="color: black"
                     @click="logout()"
                     >sign out<i class="ms-2 fal fa-sign-out"></i
                   ></span>
@@ -114,22 +114,6 @@
             >
               The next class is {{ nextClass }} with {{ nextClassStudent }}.
             </div>
-
-            <!-- <div class="b-color-0 box-shadow-style px-3 px-md-4 py-4 mb-4">
-          <div class="d-flex justify-content-between">
-            
-          </div>
-        </div> -->
-          </div>
-        </div>
-
-        <!-- v-if="nextClass" -->
-        <div v-if="nextClass" class="column col-12 mt-4">
-          <div
-            class="alert alert-primary d-flex align-items-center"
-            role="alert"
-          >
-            The next class is {{ nextClass }} with {{ nextClassStudent }}.
           </div>
         </div>
 
@@ -226,14 +210,16 @@ export default {
       axios
         .get("http://localhost:3300/api/v1/client/classes/path0", queryReq)
         .then((res) => {
+          console.log(res.data);
+
           if (res.data.success) {
             (this.hours = res.data.rows[0].hours),
-              (this.studentsCount = res.data.rows[0].studentsCount);
+              (this.studentsCount = res.data.rows[0].activeStudentsCount);
             this.savedPaidHours = res.data.rows[0].savedPaidHours;
-            // const timeAgo = new TimeAgo("en-US");
-            // this.nextClass = timeAgo.format(
-            //   Date.parse(res.data.rows[0].nextClass)
-            // );
+            const timeAgo = new TimeAgo("en-US");
+            this.nextClass = timeAgo.format(
+              Date.parse(res.data.rows[0].nextClass)
+            );
             this.nextClassStudent = res.data.rows[0].studentName;
             // console.log(timeAgo.format(Date.parse('2022-08-21 19:57:21')))
           }

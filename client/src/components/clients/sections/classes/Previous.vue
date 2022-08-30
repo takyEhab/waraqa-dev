@@ -336,6 +336,7 @@ export default {
             this.data = [];
             return (this.alerts.error = res.data.msg);
           }
+          
           this.alerts.error = null;
           this.data = res.data.rows;
           this.pageCount = this.data[0].fullCount;

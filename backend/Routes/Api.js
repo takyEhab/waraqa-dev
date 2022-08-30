@@ -53,6 +53,7 @@ const {
   getDueInvoices,
   getHoursAndStudentsNum,
   deleteClasses,
+  getReportCount
 } = require("../Controllers/ClassesController");
 const {
   oneGuardianInvoice,
@@ -398,6 +399,13 @@ router.get(
   "/v1/client/classes/path0",
   VerifyToken,
   getHoursAndStudentsNum,
+  nextDbProccess
+);
+//Path 1: Fetch ReportCount
+router.get(
+  "/v1/client/classes/path1",
+  VerifyToken,
+  getReportCount,
   nextDbProccess
 );
 //Path 0: Fetch classes of Guardian's students

@@ -245,6 +245,7 @@ export default {
       axios
         .get(url, queryReq)
         .then((res) => {
+          console.log(res.data);
           if (!res.data.success) {
             this.data = [];
             return (this.alerts.error = res.data.msg);
@@ -252,8 +253,6 @@ export default {
 
           this.alerts.error = null;
           this.data = res.data.rows;
-          this.$emit("noReportCount", this.data[0].noReportCount);
-
           this.pageCount = this.data[0].fullCount;
         })
         .catch(() => {

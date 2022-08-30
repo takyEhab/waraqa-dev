@@ -505,7 +505,7 @@ let addClass = (req, res) => {
   // }
   // return console.log(bodyData)
   let startingDate = moment(bodyData[0].startingDate).format(
-    "YYYY-MM-DD hh:mm:ss"
+    "YYYY-MM-DD HH:mm:ss"
   );
 
   dataBase.query(`UPDATE students SET status = 1 WHERE id = ${studentID}`);
@@ -600,10 +600,9 @@ let addClass = (req, res) => {
         // Add scheduleID=null to each Object
         bodyData[0].scheduleID = null;
 
-        bodyData[0].startingDate = moment(
-          bodyData[0].startingDate,
-          "YYYY/MM/DD HH:mm:ss"
-        ).format("YYYY-MM-DD HH:mm:ss");
+        bodyData[0].startingDate = moment(bodyData[0].startingDate).format(
+          "YYYY-MM-DD HH:mm:ss"
+        );
 
         //Convert the array of objects to array of arrays
         sqlValues = bodyData.map((object) => Object.values(object));

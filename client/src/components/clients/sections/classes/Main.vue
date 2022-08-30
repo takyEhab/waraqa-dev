@@ -68,7 +68,6 @@
       :userType="userType"
       :offsetNum="offsetNum"
       :params="$route.query"
-      @noReportCount="handleNoReportChange"
       ref="current"
     />
   </div>
@@ -77,6 +76,8 @@
 <script>
 import Previous from "@/components/clients/sections/classes/Previous";
 import Current from "@/components/clients/sections/classes/Current";
+import axios from "axios";
+
 export default {
   props: ["offsetNum", "userType"],
   components: {
@@ -95,19 +96,34 @@ export default {
     };
   },
   methods: {
-    handleNoReportChange(variable) {
-      this.noReportCount = variable;
-    },
     searchFun() {
       this.previousTab
         ? this.$refs.previous.getData(this.search)
         : this.$refs.current.getData(this.search);
     },
+    getReportCount() {
+      let queryReq = {
+        params: {
+          userType: this.userType,
+        },
+      };
+      const url = "http://localhost:3300/api/v1/client/classes/path1";
+      axios
+        .get(url, queryReq)
+        .then((res) => {
+          this.noReportCount = res.data.rows[0].noReportCount;
+        })
+        .catch(() => {
+          console.log("Previous/Error catched");
+        });
+    },
   },
   created() {
+    if (this.userType == "Teacher") this.getReportCount();
     if (this.$route.query.tap) {
       this.previousTab = JSON.parse(this.$route.query.tap);
     }
+
     this.$watch("previousTab", () => {
       this.$route.query = {};
     });

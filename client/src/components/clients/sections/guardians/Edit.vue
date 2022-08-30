@@ -41,7 +41,6 @@
                 class="mt-3 position-relative"
                 style="width: 90px; height: 100px"
               >
-                <!-- <div class="avatar-btn" @click="openUpload"> -->
                 <div
                   class="avatar-btn"
                   data-bs-toggle="modal"
@@ -60,7 +59,6 @@
                     {{ data[0].name.charAt(0).toUpperCase() }}
                   </div>
                 </span>
-                <!-- <input type="file" ref="avatar" @change="selectFile" /> -->
               </div>
             </div>
             <!-- Personal Information -->

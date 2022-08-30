@@ -108,7 +108,6 @@
       v-else
       ref="current"
       :offsetNum="offsetNum"
-      @noReportCount="handleNoReportChange"
       :params="$route.query"
     />
   </div>
@@ -120,6 +119,7 @@ import Reschedule from "@/components/admin/sections/classes/Reschedule";
 import DeleteClasses from "@/components/admin/sections/classes/DeleteClasses";
 import Previous from "@/components/admin/sections/classes/Previous";
 import Current from "@/components/admin/sections/classes/Current";
+import axios from "axios";
 
 export default {
   props: ["offsetNum"],
@@ -143,16 +143,25 @@ export default {
     };
   },
   methods: {
-    handleNoReportChange(variable) {
-      this.noReportCount = variable;
-    },
     searchFun() {
       this.previousTab
         ? this.$refs.previous.getData(this.search)
         : this.$refs.current.getData(this.search);
     },
+    getReportCount() {
+      const url = "http://localhost:3300/api/v1/client/classes/path1";
+      axios
+        .get(url)
+        .then((res) => {
+          this.noReportCount = res.data.rows[0].noReportCount;
+        })
+        .catch(() => {
+          console.log("Previous/Error catched");
+        });
+    },
   },
   created() {
+    this.getReportCount();
     if (this.$route.query.tap) {
       this.previousTab = JSON.parse(this.$route.query.tap);
     }

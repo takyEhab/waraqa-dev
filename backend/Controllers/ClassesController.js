@@ -1828,7 +1828,6 @@ let RescheduleClasses = (req, res) => {
       obj.scheduleID = scheduleID;
     });
 
-
     //Convert the array of objects to array of arrays
     sqlValues = classes.map((object) => Object.values(object));
 
@@ -2053,8 +2052,16 @@ let getHoursAndStudentsNum = (req, res, next) => {
   return next();
 };
 let getDueInvoices = (req, res, next) => {
-  console.log("te");
   query = `SELECT DISTINCT (SELECT SUM(savedPaidHours) FROM guardianinvoices INNER JOIN guardians ON guardianinvoices.guardianID = guardians.id WHERE guardians.id = students.guardianID ) AS paidHours,(SELECT SUM(students.attendedHours) FROM students WHERE students.guardianID = guardians.id ) AS hours FROM guardians LEFT JOIN students ON students.guardianID = guardians.id`;
+  msg = "There are no results available to display.";
+  return next();
+};
+
+let getReportCount = (req, res, next) => {
+  const id = tokenData.id;
+  query = `SELECT (SELECT COUNT(*) FROM classes WHERE classes.startingDate BETWEEN (CURRENT_DATE() - INTERVAL 3 day) AND CURRENT_DATE() AND classes.status = 0 ${
+    req.query.userType ? `AND classes.teacherID=${id}` : ""
+  })AS noReportCount`;
   msg = "There are no results available to display.";
   return next();
 };
@@ -2076,4 +2083,5 @@ module.exports = {
   getHoursAndStudentsNum,
   deleteClasses,
   getDueInvoices,
+  getReportCount,
 };

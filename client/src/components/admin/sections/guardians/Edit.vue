@@ -38,7 +38,6 @@
                 class="mt-3 position-relative"
                 style="width: 90px; height: 100px"
               >
-                <!-- <div class="avatar-btn" @click="openUpload"> -->
                 <div
                   class="avatar-btn"
                   data-bs-toggle="modal"
@@ -49,8 +48,7 @@
                 <img
                   v-if="temporalPic"
                   :src="temporalPic"
-                  class="rounded-circle"
-                  alt="teacher picture"
+                  class="avatar-img rounded-circle"
                 />
                 <span v-else class="avatar">
                   <div style="font-size: 3rem">
