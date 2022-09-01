@@ -96,9 +96,11 @@
           <!-- <small class="col-1">More</small> -->
         </div>
         <div v-for="(row, i) in data" :key="row.id" class="table-row py-1">
-          <span class="position-absolute" style="margin-top: 22.5px;left: -10px">{{
-            i + 1 + pagination.offset
-          }}</span>
+          <span
+            class="position-absolute"
+            style="margin-top: 22.5px; left: -10px"
+            >{{ i + 1 + pagination.offset }}</span
+          >
           <div
             @click="
               $router.push({
@@ -235,18 +237,6 @@ export default {
     moment(date) {
       return moment(date);
     },
-    pagiTransitions(sense) {
-      if (sense == "back") {
-        if (this.pagination.offset > 0) {
-          this.pagination.offset = this.pagination.offset - this.offsetNum;
-          this.pagination.page--;
-        }
-      } else if (sense == "next") {
-        this.pagination.offset = this.pagination.offset + this.offsetNum;
-        this.pagination.page++;
-      }
-      this.getData();
-    },
     sendPaywages() {
       let url = "http://localhost:3300/api/v1/admin/bills/path10";
       axios
@@ -282,7 +272,6 @@ export default {
       axios
         .get(url, queryReq)
         .then((res) => {
-          console.log(res.data.rows);
           if (!res.data.success) {
             this.data = [];
             return (this.alerts.error = res.data.msg);
@@ -303,12 +292,9 @@ export default {
   },
   created() {
     this.getData();
-
     let today = moment().format("YYYY-MM-DD");
     let firstDayOfMonth = moment().startOf("month").format("YYYY-MM-DD");
-    if (today == firstDayOfMonth) {
-      this.Paywages = true;
-    }
+    if (today == firstDayOfMonth) this.Paywages = true
   },
 };
 </script>

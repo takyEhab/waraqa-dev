@@ -249,7 +249,7 @@ let updateTeacherInvoice = (req, res) => {
     });
   });
 };
-let teachersPaywages = (req, res, next) => {
+let teachersPayWages = (req, res, next) => {
   let firstDateOfLastMonth = moment()
     .subtract(1, "months")
     .startOf("month")
@@ -258,9 +258,6 @@ let teachersPaywages = (req, res, next) => {
     .subtract(1, "months")
     .endOf("month")
     .format("YYYY-MM-DD HH:mm:ss"); //last date of the last month
-
-  // let firstDateOfMonth = moment().startOf('month').format('YYYY-MM-DD HH:mm:ss'); // first date of Current month
-  // let lastDateOfMonth = moment().endOf('month').format('YYYY-MM-DD HH:mm:ss'); //last date of Current month
 
   // Get Emails of all teachers who has classes(status = 1 or 4)
   query = `SELECT teachers.email, teachers.id FROM teachers
@@ -280,9 +277,7 @@ let teachersPaywages = (req, res, next) => {
     //Config Admin Email
     configAdminEmail = {
       subject: "Teachers payday!",
-      html: `
-                <p>Teachers have been notified that their invoices are now available on the platform.</p>
-                `,
+      html: `<p>Teachers have been notified that their invoices are now available on the platform.</p>`,
     };
     sendEmail(configAdminEmail);
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -290,8 +285,7 @@ let teachersPaywages = (req, res, next) => {
     configTeacherEmail = {
       to: "",
       subject: "Happy payday!",
-      html: `
-                <p>Assalamu alaykum Teacher,</p>
+      html: `<p>Assalamu alaykum Teacher,</p>
                 <p>We hope you are doing well,</p>
                 <p>We'd like to let you know that your invoice is now available on the Waraqa web platform; please for more details check bills section in your account.</p>
                 <p>Best regards</p>
@@ -501,7 +495,6 @@ let billsOfGuardian = (req, res, next) => {
 };
 
 let guardianPaymentReq = (req, res) => {
-  console.log("guardianPaymentReq");
   //Get emails of guardian that their payment type is "postpaid", and has students that they have [ classes(status=1 or status=4) and classes.startingDate between first and last of last month
   let firstDateOfLastMonth = moment()
     .subtract(1, "months")
@@ -835,7 +828,7 @@ module.exports = {
   oneTeacherInvoice,
   teacherInvoiceClasses,
   updateTeacherInvoice,
-  teachersPaywages,
+  teachersPayWages,
   openNewTeacherInvoice,
   billsOfTeacher,
   billsOfGuardian,

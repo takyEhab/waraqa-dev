@@ -53,7 +53,7 @@ const {
   getDueInvoices,
   getHoursAndStudentsNum,
   deleteClasses,
-  getReportCount
+  getReportCount,
 } = require("../Controllers/ClassesController");
 const {
   oneGuardianInvoice,
@@ -66,14 +66,14 @@ const {
   oneTeacherInvoice,
   teacherInvoiceClasses,
   updateTeacherInvoice,
-  teachersPaywages,
+  teachersPayWages,
   openNewTeacherInvoice,
   billsOfTeacher,
   billsOfGuardian,
   sentInvoice,
   changeClassInvoiceCount,
   addInvoice,
-  getClassesForInvoice
+  getClassesForInvoice,
 } = require("../Controllers/BillsController");
 const {
   allGuardians,
@@ -432,7 +432,7 @@ router.get(
   nextDbProccess
 );
 // Path3: Fetch prepaidClasses of an Invoice
-router.post(
+router.get(
   "/v1/admin/bills/path3/:id",
   VerifyToken,
   prepaidClasses,
@@ -470,12 +470,8 @@ router.post(
   activatePostPaidGuardianInvoice
 );
 // path 9
-router.post(
-  "/v1/admin/bills/guardian/path9",
-  adminVerifyToken,
-  addInvoice
-);
-// path 9
+router.post("/v1/admin/bills/guardian/path9", adminVerifyToken, addInvoice);
+// path 10
 router.get(
   "/v1/admin/bills/guardian/path10/:id",
   VerifyToken,
@@ -530,7 +526,7 @@ router.post(
 router.get(
   "/v1/admin/bills/path10",
   adminVerifyToken,
-  teachersPaywages,
+  teachersPayWages,
   nextDbProccess
 );
 // Path11: Teacher's invoice: Open new (run on teacher join his account)

@@ -219,7 +219,6 @@ export default {
         .then((res) => {
           if (!res.data.success) {
             this.data = [];
-            console.log(res.data);
             return (this.alerts.error = res.data.msg);
           }
           this.alerts.error = null;

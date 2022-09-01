@@ -131,22 +131,7 @@ let allTeachers = (req, res, next) => {
   let search = queryReq.search;
   let status = queryReq.status;
   let offset = queryReq.offset;
-  // let invoiceCreatedDate= `(SELECT createdAt FROM teacherinvoices WHERE teacherID=classes.teacherID ORDER BY createdAt DESC LIMIT 1)`
 
-  let firstDateOfThisMonth = moment()
-    .startOf("month")
-    .format("YYYY-MM-DD HH:mm:ss"); // first date of this month
-  let lastDateOfThisMonth = moment()
-    .endOf("month")
-    .format("YYYY-MM-DD HH:mm:ss"); //last date of this month
-
-  console.log("dates ", firstDateOfThisMonth, lastDateOfThisMonth);
-  // (SELECT SUM(classes.duration)
-  // FROM classes
-  // WHERE classes.teacherID = teachers.id
-  // AND (status=1 OR status=4) AND countForTeacher=1
-  // AND classes.startingDate BETWEEN '${firstDateOfThisMonth}' AND '${lastDateOfThisMonth}'
-  // ) AS hours
   query = `SELECT teachers.*, count(*) OVER() AS fullCount,
                     (SELECT COUNT (DISTINCT classes.studentID)
                     FROM classes
@@ -155,20 +140,15 @@ let allTeachers = (req, res, next) => {
                     WHERE classes.teacherID = teachers.id 
                     AND students.status = 1
                     ) AS studentsCount
-
- 
                     FROM teachers
-                WHERE 1=1
-                ${status ? `AND teachers.status = ${status}` : ""}
+                WHERE ${status ? `teachers.status = ${status}` : ""}
                 ${
                   search
                     ? ` AND ( teachers.name LIKE '%${search}%' OR teachers.email LIKE '%${search}%' OR teachers.phone LIKE '%${search}%' ) `
                     : ""
                 }
                 ORDER BY teachers.name
-                ${offset ? `LIMIT 30 OFFSET ${offset}` : ""}
-                `;
-  // AND (status = 1 OR status = 4)) AS hours
+                ${offset ? `LIMIT 30 OFFSET ${offset}` : ""}`;
   msg = "There are no results available to display.";
   return next();
 };
@@ -503,7 +483,6 @@ let addClass = (req, res) => {
   // if(bodyData.length > 1){ //On repated Class, don't consider the first (of the Starting Date field)
   //     bodyData.shift()
   // }
-  // return console.log(bodyData)
   let startingDate = moment(bodyData[0].startingDate).format(
     "YYYY-MM-DD HH:mm:ss"
   );

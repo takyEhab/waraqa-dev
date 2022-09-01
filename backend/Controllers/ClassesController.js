@@ -486,9 +486,9 @@ let endClass = (req, res) => {
           // Check if second time in row of missed by the student
           let query = `SELECT status FROM classes WHERE studentID = ${studentID} AND startingDate < NOW() ORDER BY startingDate DESC LIMIT 2`;
           dataBase.query(query, (error, data) => {
-            if (error) return;
+            if (error || !data.length) return;
             // last class missed
-            if (data[1].status == 4 && data[0].status == 4) {
+            if (data[1]?.status == 4 && data[0].status == 4) {
               //Send Notification
               notiConfig = {
                 type: 2,
@@ -2059,9 +2059,14 @@ let getDueInvoices = (req, res, next) => {
 
 let getReportCount = (req, res, next) => {
   const id = tokenData.id;
-  query = `SELECT (SELECT COUNT(*) FROM classes WHERE classes.startingDate BETWEEN (CURRENT_DATE() - INTERVAL 3 day) AND CURRENT_DATE() AND classes.status = 0 ${
-    req.query.userType ? `AND classes.teacherID=${id}` : ""
-  })AS noReportCount`;
+  query = `SELECT (
+    SELECT COUNT(*) FROM classes
+    WHERE classes.startingDate
+    BETWEEN (NOW() - INTERVAL 3 day)
+     AND NOW()
+     AND classes.status = 0 ${
+       req.query.userType ? `AND classes.teacherID=${id}` : ""
+    })AS noReportCount`;
   msg = "There are no results available to display.";
   return next();
 };
