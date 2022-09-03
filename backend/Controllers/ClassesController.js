@@ -1038,7 +1038,7 @@ let classesOfTeacher = (req, res, next) => {
   let search = queryReq.search || "";
   let offset = queryReq.offset;
 
-  query = `SELECT classes.*,count(*) OVER() AS fullCount, teachers.name AS teacherName, students.name AS studentName ,(SELECT COUNT(*) FROM classes WHERE classes.startingDate BETWEEN (CURRENT_DATE() - INTERVAL 3 day) AND CURRENT_DATE() AND classes.status = 0 and classes.teacherID=${id}) AS noReportCount
+  query = `SELECT classes.*,count(*) OVER() AS fullCount, teachers.name AS teacherName, students.name AS studentName 
                 FROM classes 
                 INNER JOIN teachers 
                 ON classes.teacherID = teachers.id 

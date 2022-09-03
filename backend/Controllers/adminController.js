@@ -131,7 +131,6 @@ let allTeachers = (req, res, next) => {
   let search = queryReq.search;
   let status = queryReq.status;
   let offset = queryReq.offset;
-
   query = `SELECT teachers.*, count(*) OVER() AS fullCount,
                     (SELECT COUNT (DISTINCT classes.studentID)
                     FROM classes
@@ -141,10 +140,14 @@ let allTeachers = (req, res, next) => {
                     AND students.status = 1
                     ) AS studentsCount
                     FROM teachers
-                WHERE ${status ? `teachers.status = ${status}` : ""}
+                ${
+                  search || status
+                    ? `WHERE ${status ? `teachers.status = ${status}` : ""}
                 ${
                   search
                     ? ` AND ( teachers.name LIKE '%${search}%' OR teachers.email LIKE '%${search}%' OR teachers.phone LIKE '%${search}%' ) `
+                    : ""
+                }`
                     : ""
                 }
                 ORDER BY teachers.name
@@ -630,8 +633,7 @@ let allClasses = (req, res, next) => {
   let search = queryReq.search || "";
   let offset = queryReq.offset;
 
-  query = `SELECT classes.*,(SELECT COUNT(*) FROM classes WHERE classes.startingDate BETWEEN (CURRENT_DATE() - INTERVAL 3 day) AND CURRENT_DATE() AND classes.status = 0) AS noReportCount,
-   count(*) OVER() AS fullCount, teachers.name AS teacherName, students.name AS studentName 
+  query = `SELECT classes.*, count(*) OVER() AS fullCount, teachers.name AS teacherName, students.name AS studentName 
                 FROM classes 
                 INNER JOIN teachers
                 ON classes.teacherID = teachers.id
