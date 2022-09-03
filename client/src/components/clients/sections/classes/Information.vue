@@ -328,7 +328,6 @@
         >
       </div>
       <div v-if="!data[0].report">
-        <!-- <small class="f-color-3_3 me-3">Would you like to Reschedule {{userType== "Teacher" ? 'or End ':''}}this Class?</small> -->
         <small
           v-if="
             userType == 'Teacher' && (!closeRescheduleReq || reportPermission)
@@ -406,7 +405,7 @@ import EndClass from "@/components/admin/sections/classes/EndClass";
 import RescheduleReq from "@/components/clients/sections/classes/RescheduleReq";
 
 export default {
-  props: ["userType"],
+  props: ["userType", "timeZone"],
   components: { EndClass, RescheduleReq },
   data() {
     return {
@@ -428,7 +427,7 @@ export default {
   },
   methods: {
     moment(date) {
-      return moment(date);
+      return this.timeZone ? moment(date).tz(this.timeZone) : moment(date);
     },
     getData() {
       let url = `http://localhost:3300/api/v1/admin/classes/path2/${this.classID}`;

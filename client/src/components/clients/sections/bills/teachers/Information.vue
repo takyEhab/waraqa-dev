@@ -159,23 +159,13 @@
       </div>
     </div>
   </div>
-  <!-- Delete -->
-  <!-- <hr class="my-5 opacity-0">
-        <div class="mt-5 d-flex justify-content-end align-items-center">
-            <span class="delete-btn px-3 py-2" @click="deleteData">Delete</span>
-        </div> -->
-  <!-- Alerts -->
-  <!-- <div class="mt-4">
-            <div v-if="alerts.success" class="text-center alert text-center alert-success" >{{alerts.success}}</div>
-            <div v-else-if="alerts.error" class="text-center alert text-center alert-warning">{{alerts.error}}</div>
-        </div> 
-  </div> -->
 </template>
 
 <script>
 import axios from "axios";
 import moment from "moment";
 export default {
+  props: ["timeZone"],
   data() {
     return {
       displayData: false,
@@ -192,7 +182,7 @@ export default {
   },
   methods: {
     moment(date) {
-      return moment(date);
+      return this.timeZone ? moment(date).tz(this.timeZone) : moment(date);
     },
 
     getData() {

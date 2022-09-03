@@ -5,7 +5,10 @@
       <h3 class="section-title">Bills</h3>
     </div>
     <Guardians v-if="userType == 'Guardian'" :offsetNum="offsetNum" />
-    <Teachers v-else-if="userType == 'Teacher'" :offsetNum="offsetNum" />
+    <Teachers
+      v-else-if="userType == 'Teacher'"
+      :offsetNum="offsetNum"
+    />
   </div>
 </template>
 

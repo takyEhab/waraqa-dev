@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="teacherAuthorized || guardianAuthorized">
-      <Home :userType="userType" />
+      <Home :userType="userType" :timeZone="timeZone" />
     </div>
     <div v-else>
       <Auth />
@@ -17,16 +17,14 @@ import axios from "axios";
 export default {
   components: {
     Home,
-    // TeacherHome,
-    // GuardianHome,
     Auth,
   },
   data() {
     return {
       userType: null,
+      timeZone: null,
       teacherAuthorized: false,
       guardianAuthorized: false,
-
       paymentType: null, //For guardian
       guardianID: null,
     };
@@ -50,6 +48,7 @@ export default {
         .get("http://localhost:3300/auth/v1/path2")
         .then((res) => {
           if (res.data.success) {
+            this.timeZone =res.data.data[0].timeZone
             let userType = res.data.userType;
             if (userType == "Guardian") {
               this.paymentType = res.data.data[0].paymentType;

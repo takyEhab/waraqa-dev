@@ -72,31 +72,6 @@
 
                 <!-- Action -->
                 <ul @click.stop="" class="dropdown-menu">
-                  <!-- <li>
-                      <router-link
-                        :to="{
-                          name: 'ClientClassInfo',
-                          params: {
-                            id: row.id,
-                            // tap: false,
-                            // page: pagination.page,
-                            // offset: pagination.offset,
-                          },
-                          query: {
-                            tap: false,
-                            page: pagination.page,
-                            offset: pagination.offset,
-                          },
-                        }"
-                        class="dropdown-item"
-                        ><i
-                          data-bs-toggle="dropdown"
-                          class="fas fa-eye px-2"
-                        ></i>
-                        More</router-link
-                      >
-                    </li> -->
-
                   <li v-if="userType == 'Teacher'">
                     <button
                       @click="
@@ -188,10 +163,8 @@
 <script>
 import axios from "axios";
 import moment from "moment-timezone";
-// import RescheduleReq from "@/components/clients/sections/classes/RescheduleReq";
 export default {
-  props: ["offsetNum", "userType", "params"],
-  // components: { RescheduleReq },
+  props: ["offsetNum", "userType", "params", "timeZone"],
   data() {
     return {
       data: [],
@@ -211,7 +184,7 @@ export default {
   },
   methods: {
     moment(date) {
-      return moment(date);
+      return this.timeZone ? moment(date).tz(this.timeZone) : moment(date);
     },
     pagiTransitions(sense) {
       if (sense == "back") {

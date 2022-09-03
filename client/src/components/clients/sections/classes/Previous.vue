@@ -110,7 +110,14 @@
             class="rowTable p-2 d-flex f-color-3"
           >
             <span class="col-2" style="font-family: Merienda">
-              <span style="margin-left: 35px; font-weight: 900; color: #4c4a4c;font-family: Merienda">
+              <span
+                style="
+                  margin-left: 35px;
+                  font-weight: 900;
+                  color: #4c4a4c;
+                  font-family: Merienda;
+                "
+              >
                 {{ moment(row.startingDate).format("hh:mm A") }}
               </span>
               <br />
@@ -244,7 +251,6 @@
     </div>
 
     <!-- Pagination -->
-
     <vue-awesome-paginate
       style="margin-top: 20px"
       :total-items="pageCount"
@@ -259,7 +265,7 @@
 import axios from "axios";
 import moment from "moment-timezone";
 export default {
-  props: ["offsetNum", "userType", "params"],
+  props: ["offsetNum", "userType", "params", "timeZone"],
   data() {
     return {
       data: [],
@@ -285,7 +291,7 @@ export default {
   },
   methods: {
     moment(date) {
-      return moment(date);
+      return this.timeZone ? moment(date).tz(this.timeZone) : moment(date);
     },
     pagiTransitions(sense) {
       if (sense == "back") {
@@ -336,7 +342,7 @@ export default {
             this.data = [];
             return (this.alerts.error = res.data.msg);
           }
-          
+
           this.alerts.error = null;
           this.data = res.data.rows;
           this.pageCount = this.data[0].fullCount;

@@ -444,7 +444,7 @@ let recheckauth = (req, res) => {
       (error, data) => {
         if (error) throw error;
         if (data.length) {
-          return res.json({ success: true, userType: userType, data: data });
+          return res.json({ success: true, userType, data });
         }
       }
     );

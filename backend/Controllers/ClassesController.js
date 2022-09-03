@@ -2066,7 +2066,7 @@ let getReportCount = (req, res, next) => {
      AND NOW()
      AND classes.status = 0 ${
        req.query.userType ? `AND classes.teacherID=${id}` : ""
-    })AS noReportCount`;
+     })AS noReportCount`;
   msg = "There are no results available to display.";
   return next();
 };

@@ -53,7 +53,6 @@
         <div v-for="row in data" :key="row.id" class="table-row py-1">
           <div
             @click="
-              this.userType != 'Teacher' &&
                 $router.push({
                   name: 'ClientGuardianInvoiceInfo',
                   params: { id: row.id },

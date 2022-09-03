@@ -71,7 +71,11 @@
     <!-- Other Sections -->
     <div class="col-10 me-md-5 p-0 container-fluid">
       <div class="px-3 py-5 p-lg-2" style="overflow: hidden; overflow-x: auto">
-        <router-view :userType="userType" :offsetNum="30"></router-view>
+        <router-view
+          :userType="userType"
+          :timeZone="timeZone"
+          :offsetNum="30"
+        ></router-view>
       </div>
     </div>
   </div>
@@ -79,7 +83,7 @@
 <script>
 // import axios from 'axios'
 export default {
-  props: ["userType"],
+  props: ["userType", "timeZone"],
   data() {
     return {
       displaySidebarOnMobile: false,

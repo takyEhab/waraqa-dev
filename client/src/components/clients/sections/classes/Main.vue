@@ -60,12 +60,14 @@
       v-if="previousTab"
       ref="previous"
       :userType="userType"
+      :timeZone="timeZone"
       :offsetNum="offsetNum"
       :params="$route.query"
     />
     <Current
       v-else
       :userType="userType"
+      :timeZone="timeZone"
       :offsetNum="offsetNum"
       :params="$route.query"
       ref="current"
@@ -79,7 +81,7 @@ import Current from "@/components/clients/sections/classes/Current";
 import axios from "axios";
 
 export default {
-  props: ["offsetNum", "userType"],
+  props: ["userType", "timeZone", "offsetNum"],
   components: {
     Previous,
     Current,
@@ -123,7 +125,6 @@ export default {
     if (this.$route.query.tap) {
       this.previousTab = JSON.parse(this.$route.query.tap);
     }
-
     this.$watch("previousTab", () => {
       this.$route.query = {};
     });

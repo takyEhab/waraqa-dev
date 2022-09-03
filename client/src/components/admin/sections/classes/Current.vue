@@ -187,7 +187,7 @@ export default {
   },
   methods: {
     moment(date) {
-      return moment(date);
+      return moment(date)
     },
     pagiTransitions(sense) {
       if (sense == "back") {

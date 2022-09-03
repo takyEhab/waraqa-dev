@@ -239,27 +239,6 @@
                   />
                 </div>
               </div>
-              <!-- Count for -->
-              <!-- <div class="row flex-wrap">
-                                    <div class="col-12 col-md-6 mt-3">
-                                        <label class="f-color-3 mb-1">Count for</label>
-                                        <div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="flexCheckDefault" :checked="data[0].countForTeacher" v-model="data[0].countForTeacher" >
-                                                <label class="form-check-label" for="flexCheckDefault">
-                                                    Teacher
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="flexCheckChecked" :checked="data[0].countForStudent" v-model="data[0].countForStudent">
-                                                <label class="form-check-label" for="flexCheckChecked">
-                                                    Student
-                                                </label>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div> -->
 
               <!-- Submit -->
               <div class="mt-4 d-flex justify-content-between">

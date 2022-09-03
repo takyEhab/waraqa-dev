@@ -212,6 +212,7 @@
 import axios from "axios";
 import moment from "moment";
 export default {
+  props: ["timeZone"],
   data() {
     return {
       displayData: false,
@@ -228,7 +229,7 @@ export default {
   },
   methods: {
     moment(date) {
-      return moment(date);
+      return this.timeZone ? moment(date).tz(this.timeZone) : moment(date);
     },
 
     getData() {
