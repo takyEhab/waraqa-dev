@@ -1535,8 +1535,7 @@ let RescheduleClasses = (req, res) => {
   delete bodyData.createdAt;
 
   // delete all upcoming classes first
-
-  let query1 = `SELECT id FROM classes WHERE teacherID=${teacherID} AND studentID = ${studentID} AND ( startingDate >= NOW() AND status=0 )`;
+  let query1 = `SELECT id FROM classes WHERE teacherID=${teacherID} AND studentID = ${studentID} AND ( startingDate >= NOW() AND status=0 ) AND scheduleID IS NOT NULL`;
   dataBase.query(query1, (error, data) => {
     if (error || !data.length) {
       return res.json({ success: false, msg: "Failed find classes!" });
@@ -1560,7 +1559,6 @@ let RescheduleClasses = (req, res) => {
     });
   });
 
-  // return console.log(bodyData)
   let insertClass = (sqlValues) => {
     let query = `INSERT INTO classes (teacherID, studentID, subject, classTitle, startingDate, duration, guests, description, timeZone,countForTeacher, countForStudent, scheduleID) VALUES ? `;
     dataBase.query(query, [sqlValues], (error, data) => {
@@ -1712,7 +1710,6 @@ let RescheduleClasses = (req, res) => {
       bodyData.Sat = moment(bodyData.Sat).format("YYYY-MM-DD HH:mm:ss");
     }
 
-    // console.log(moment(req.body.Fri).format('HH:mm'))
     let query = `UPDATE scheduledclasses SET ? WHERE id = ${id}`;
     dataBase.query(query, bodyData, (error, data) => {
       if (error || !data) {

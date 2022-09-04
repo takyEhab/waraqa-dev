@@ -8,27 +8,11 @@ module.exports = con = mysql.createConnection({
   // database: 'defaultdb',
   // port:25060
 
-//   host: "localhost",
-//   user: "root",
-//   password: "",
-//   database: "waraqa",
-
-    // host: "db",
-    // user: "taky",
-    // password: "secret",
-    // database: "nodeApp",
-    // port: 3306,
-    host: 'localhost',
-    port: 3306,
-    user: 'root',
-    password: '',
-    database: 'test',
-
-    // host: process.env.DB_HOST,
-    // user: process.env.DB_USER,
-    // password: process.env.DB_PASSWORD,
-    // database: process.env.DB_NAME,
-    // port: process.env.DB_PORT,
+  host: "localhost",
+  port: 3306,
+  user: "root",
+  password: "",
+  database: "test",
 });
 con.connect(function (err) {
   if (err) throw err;

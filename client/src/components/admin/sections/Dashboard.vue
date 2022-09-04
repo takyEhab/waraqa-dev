@@ -44,8 +44,7 @@
                 <div class="mt-2">
                   <span
                     class="px-3 py-2 secondery-btn cursor-pointer float-end"
-                    style="color:black"
-
+                    style="color: black"
                     @click="logout()"
                     >sign out<i class="ms-2 fal fa-sign-out"></i
                   ></span>
@@ -262,31 +261,6 @@
           </div>
         </div>
       </div>
-
-      <!-- <div class="col-12 col-md-3 mt-3 mt-md-0 top-small-boxes">
-        <div
-          class="b-color-1 f-color-0 box-shadow-style px-3 px-md-4 py-4 h-100"
-        >
-          <span class="d-block">Done Hours</span>
-
-          <h3 class="numb text-end">
-            {{ usersData?.hours ? (usersData.hours / 60).toFixed(2) : 0 }}
-          </h3>
-        </div>
-      </div>
-      <div class="col-12 col-md-3 mt-3 mt-md-0 top-small-boxes">
-        <div
-          class="b-color-4 f-color-0 box-shadow-style px-3 px-md-4 py-4 h-100"
-        >
-          <span class="d-block">Active Students</span>
-          <h3 class="numb text-end">
-            {{
-              usersData?.activeStudentsCount ? usersData.activeStudentsCount : 0
-            }}
-          </h3>
-        </div>
-      </div> -->
-
       <div class="col-12 col-md-4 mt-3 mt-md-0">
         <Notifications />
       </div>
@@ -371,20 +345,6 @@ export default {
         .then((res) => {
           if (res.data.success) {
             this.usersData = res.data.rows[0];
-
-            // console.log(this.usersData.dueInvoicesHours);
-
-            // (this.hours = res.data.rows[0].hours),
-            //   (this.activeStudentsCount = res.data.rows[0].activeStudentsCount);
-            // this.vacationStudentsCount = res.data.rows[0].vacationStudentsCount;
-            // this.inactiveStudentsCount = res.data.rows[0].inactiveStudentsCount;
-
-            // this.activeTeachersCount = res.data.rows[0].activeTeachersCount;
-            // this.inactiveTeachersCount = res.data.rows[0].inactiveTeachersCount;
-            // this.vacationTeachersCount = res.data.rows[0].vacationTeachersCount;
-            // this.attendedClassHours = res.data.rows[0].attendedClassHours;
-
-            // this.savedPaidHours = res.data.rows[0].savedPaidHours;
           }
         })
         .catch(() => {
@@ -396,11 +356,9 @@ export default {
         .get("http://localhost:3300/api/v1/client/hours/path0")
         .then((res) => {
           if (res.data.success) {
-            // console.log(res.data.rows.filter(row => row.paidHours != null));
             let rows = res.data.rows;
             let due = 0;
             for (let i = 0; i < rows.length; i++) {
-              // console.log(parseInt(rows[i].paidHours));
               let hours = parseInt(rows[i].hours ? rows[i].hours : 0);
               let paidHours = parseInt(
                 rows[i].paidHours ? rows[i].paidHours : 0
@@ -410,17 +368,6 @@ export default {
               }
             }
             this.usersData["dueInvoice"] = Math.abs(due / 60);
-            // (this.hours = res.data.rows[0].hours),
-            //   (this.activeStudentsCount = res.data.rows[0].activeStudentsCount);
-            // this.vacationStudentsCount = res.data.rows[0].vacationStudentsCount;
-            // this.inactiveStudentsCount = res.data.rows[0].inactiveStudentsCount;
-
-            // this.activeTeachersCount = res.data.rows[0].activeTeachersCount;
-            // this.inactiveTeachersCount = res.data.rows[0].inactiveTeachersCount;
-            // this.vacationTeachersCount = res.data.rows[0].vacationTeachersCount;
-            // this.attendedClassHours = res.data.rows[0].attendedClassHours;
-
-            // this.savedPaidHours = res.data.rows[0].savedPaidHours;
           }
         })
         .catch(() => {
@@ -432,29 +379,19 @@ export default {
       axios
         .get(url)
         .then((res) => {
-          console.log(res.data);
           this.isEmailEnabled = res.data.status;
         })
         .catch((e) => console.log(e));
     },
     enableEmails() {
       let url = "http://localhost:3300/api/v1/admin/emails/path1";
-      axios
-        .post(url, { enable: this.isEmailEnabled })
-        .then((res) => {
-          console.log(res.data);
-        })
-        .catch((e) => console.log(e));
+      axios.post(url, { enable: this.isEmailEnabled });
     },
   },
   created() {
     this.getUserData();
     this.getEmailsStatus();
-    // window.setInterval(() => {
-    // Display local current time of user
-    // this.userTime = moment().tz("Africa/Algiers").format("HH:mm");
     this.userTime = moment().format("HH:mm");
-    // }, 1000);
   },
 };
 </script>

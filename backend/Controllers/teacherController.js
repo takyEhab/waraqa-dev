@@ -75,7 +75,7 @@ let updateTeacher = (req, res)=>{
         let query = `UPDATE teachers SET ? WHERE id = ${id}`;
         dataBase.query(query,[bodyData],(error, data)=>{
             if(error || !data){
-                return res.json({success:false, msg:"Failed update teacher"});
+                return res.json({success:false, msg:"Failed update teacher",error});
             }
             //Config Admin Email
             configAdminEmail = {

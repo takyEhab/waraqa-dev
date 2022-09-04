@@ -166,11 +166,9 @@ export default {
       this.previousTab = JSON.parse(this.$route.query.tap);
     }
     this.$watch("previousTab", () => {
-      this.$route.query = {};
+      this.$router.replace({ query: null });
+      this.search = "";
     });
   },
-  // handleNoReportChange() {
-
-  // }
 };
 </script>

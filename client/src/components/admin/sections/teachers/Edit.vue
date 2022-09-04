@@ -557,25 +557,6 @@ export default {
           console.log("Teacher Info/Error catched");
         });
     },
-    // openUpload() {
-    //   this.$refs.avatar.click();
-    // },
-    // selectFile(event) {
-    //   this.avatar = event.target.files[0];
-
-    //   // Update Preview Start
-    //   let files = event.target.files;
-    //   if (!files.length) {
-    //     console.log("file input is empty");
-    //     return;
-    //   }
-    //   let reader = new FileReader();
-    //   reader.onload = (event) => {
-    //     this.temporalPic = event.target.result;
-    //   };
-    //   reader.readAsDataURL(files[0]);
-    //   // Update Preview End
-    // },
     updateImage(data) {
       this.temporalPic = data.src;
       this.avatar = data.file;
@@ -608,6 +589,8 @@ export default {
       axios
         .post(url, formData)
         .then((res) => {
+
+          console.log(res.data)
           if (!res.data.success) {
             this.loadingBtn = false;
             return (this.alerts.error = res.data.msg);

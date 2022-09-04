@@ -479,7 +479,6 @@ export default {
         });
     },
     fetchTeachers() {
-      //Uses in AddEvaluation modal
       let url = "http://localhost:3300/api/v1/admin/teachers/path0";
       axios
         .get(url)
