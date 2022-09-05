@@ -326,7 +326,7 @@ export default {
       this.alerts.success = "";
       this.loadingBtn = true;
 
-      let dataClassTabel = {
+      let dataClassTable = {
         status: this.data.status,
         previousAssignment: this.data.previousAssignment,
         classPerformance: this.data.classPerformance,
@@ -351,7 +351,7 @@ export default {
       let url = `http://localhost:3300/api/v1/admin/classes/path5/${this.classID}`;
       axios
         .post(url, [
-          dataClassTabel,
+          dataClassTable,
           dataReportTable,
           { currentStatus: this.currentStatus },
         ])
@@ -365,7 +365,7 @@ export default {
           this.alerts.success = res.data.msg;
           this.$parent.getData();
           this.loadingBtn = false;
-          this.currentStatus = dataClassTabel.status;
+          this.currentStatus = dataClassTable.status;
         })
         .catch(() => {
           console.log("Error catched");

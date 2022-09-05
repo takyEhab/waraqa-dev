@@ -12,7 +12,7 @@
         <header
           class="b-color-2 f-color-0 py-3 px-4 d-flex justify-content-between"
         >
-          <h5 class="m-0">Add a student in Wait-list</h5>
+          <h5 class="m-0">Edit teacher invoice</h5>
           <button
             type="button"
             class="f-color-0 border-0 background-none"
@@ -25,7 +25,6 @@
         <div class="mt-3 px-3 px-md-5 py-5">
           <!-- Form -->
           <form class="mt-1" @submit.prevent="updateInvoice">
-            <!-- Status & Cancelation requests -->
             <div class="row flex-wrap">
               <!-- Status -->
               <div class="col-12 col-md mt-3">
@@ -37,7 +36,7 @@
                 </select>
               </div>
               <!-- Payment date -->
-              <div class="col-12 col-md-6 mt-3">
+              <div class="col-12 col-md mt-3">
                 <label class="f-color-3 mb-1">Payment date</label>
                 <input
                   type="date"
@@ -45,78 +44,80 @@
                   v-model="data.paymentDate"
                   required
                 />
-                <!-- Cancelation requests -->
-                <div class="col-12 col-md mt-3">
-                  <label class="f-color-3 mb-1">Cancelation requests</label>
-                  <input
-                    type="number"
-                    class="form-control"
-                    placeholder="Cancelation Requests"
-                    v-model="cancelationReqValue"
-                  />
-                </div>
               </div>
-              <!-- Bonus & paidHours -->
-              <div class="row flex-wrap">
-                <!-- Bonus -->
-                <div class="col-12 col-md mt-3">
-                  <label class="f-color-3 mb-1">Bonus</label>
-                  <input
-                    type="number"
-                    class="form-control"
-                    placeholder="Bonus"
-                    v-model="bonusValue"
-                  />
-                </div>
-                <!-- paidHours -->
-                <div class="col-12 col-md mt-3">
-                  <label class="f-color-3 mb-1">Teaching Hours</label>
-                  <input
-                    type="number"
-                    class="form-control"
-                    placeholder="Teaching Hours"
-                    v-model="hoursCalculted"
-                    required
-                  />
-                </div>
+              <!-- Cancelation requests -->
+              <div class="col-12 col-md mt-3">
+                <label class="f-color-3 mb-1">Cancelation requests</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  placeholder="Cancelation Requests"
+                  v-model="cancelationReqValue"
+                />
               </div>
-              <!-- Total amount paid & Payment method -->
-              <div class="row flex-wrap">
-                <!-- Total amount paid -->
-                <div class="col-12 col-md mt-3">
-                  <label class="f-color-3 mb-1">Salary</label>
-                  <input
-                    type="number"
-                    class="form-control"
-                    placeholder="Salary"
-                    v-model="data.totalAmountPaid"
-                    required
-                  />
-                </div>
-                <!-- Payment method -->
-                <div class="col-12 col-md mt-3">
-                  <label class="f-color-3 mb-1">Payment method</label>
-                  <input
-                    type="number"
-                    class="form-control"
-                    v-model="data.paymentMethod"
-                    required
-                  />
-                </div>
+            </div>
+            <div class="row flex-wrap">
+              <!-- Bonus -->
+              <div class="col-12 col-md mt-3">
+                <label class="f-color-3 mb-1">Bonus</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  placeholder="Bonus"
+                  v-model="bonusValue"
+                />
               </div>
-              <!-- Payment date : & Invoice Number -->
-              <div class="row flex-wrap">
-                <div class="col-12 col-md-6 mt-3">
-                  <label class="f-color-3 mb-1">Invoice Number</label>
-                  <input
-                    type="number"
-                    class="form-control"
-                    placeholder="Invoice Number"
-                    v-model="data.invoiceNumber"
-                    required
-                  />
-                </div>
+              <!-- paidHours -->
+              <div class="col-12 col-md mt-3">
+                <label class="f-color-3 mb-1">Teaching Hours</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  placeholder="Teaching Hours"
+                  v-model="hoursCalculted"
+                  required
+                />
               </div>
+              <!-- Total amount paid -->
+              <div class="col-12 col-md mt-3">
+                <label class="f-color-3 mb-1">Salary</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  placeholder="Salary"
+                  v-model="data.totalAmountPaid"
+                  required
+                />
+              </div>
+            </div>
+            <div class="row flex-wrap">
+              <!-- Payment method -->
+              <div class="col-12 col-md mt-3">
+                <label class="f-color-3 mb-1">Payment method</label>
+                <select
+                  class="form-select"
+                  v-model="data.paymentMethod"
+                  required
+                >
+                  <option value="0">Not selected</option>
+                  <option value="1">PayPal</option>
+                  <option value="2">Bank account</option>
+                  <option value="3">Ria</option>
+                  <option value="4">Western Union</option>
+                  <option value="5">Other</option>
+                </select>
+              </div>
+              <div class="col-12 col-md mt-3">
+                <label class="f-color-3 mb-1">Invoice Number</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  placeholder="Invoice Number"
+                  v-model="data.invoiceNumber"
+                  required
+                />
+              </div>
+              <div class="col-12 col-md mt-3"></div>
             </div>
             <!-- Submit -->
             <div class="mt-4 text-end">
@@ -202,6 +203,9 @@ export default {
             ? this.autoBonus
             : 0;
 
+          this.data.paymentMethod = this.data.paymentMethod
+            ? this.data.paymentMethod
+            : 0;
           this.displayData = true;
         })
         .catch(() => {

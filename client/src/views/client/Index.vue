@@ -48,7 +48,7 @@ export default {
         .get("http://localhost:3300/auth/v1/path2")
         .then((res) => {
           if (res.data.success) {
-            this.timeZone =res.data.data[0].timeZone
+            this.timeZone = res.data.data[0].timeZone;
             let userType = res.data.userType;
             if (userType == "Guardian") {
               this.paymentType = res.data.data[0].paymentType;

@@ -126,7 +126,7 @@
         This invoice has not yet been paid.
       </div>
       <!-- Classes that must be paid -->
-      <div class="b-color-0 box-shadow-style">
+      <div class="b-color-0 box-shadow-style mt-4">
         <div class="d-flex justify-content-end align-items-center flex-wrap">
           <div class="col-12 col-md-2 f-color-1 px-md-3 text-md-end">
             <span>Total hours: {{ (totalHours / 60).toFixed(2) }}</span>
@@ -264,12 +264,6 @@
         </div>
       </div>
     </div>
-    <!-- Delete -->
-    <!-- <hr class="my-5 opacity-0">
-        <div class="mt-5 d-flex justify-content-end align-items-center">
-            <small class="f-color-3_3 me-3">Would you like to Delete this Invoice?</small>
-            <span class="delete-btn px-3 py-2" @click="deleteData">Delete</span>
-        </div> -->
     <!-- Alerts -->
     <div class="mt-4">
       <div
@@ -419,9 +413,6 @@ export default {
             ids.push(arrayOfObject[i].id);
           }
           this.classesIDs = ids.join(",");
-          console.log(this.classesIDs);
-
-          ///
         })
         .catch(() => {
           console.log("Invoice Info/Error catched");
@@ -456,7 +447,6 @@ export default {
             ids.push(arrayOfObject[i].id);
           }
           this.classesIDs = ids.join(",");
-          console.log(this.classesIDs);
 
           ///
         })

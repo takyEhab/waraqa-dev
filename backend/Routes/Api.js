@@ -61,6 +61,7 @@ const {
   updateGuardianInvoice,
   postPaidClasses,
   deleteGuardianInvoice,
+  deleteTeacherInvoice,
   guardianPaymentReq,
   activatePostPaidGuardianInvoice,
   oneTeacherInvoice,
@@ -457,6 +458,7 @@ router.delete(
   adminVerifyToken,
   deleteGuardianInvoice
 );
+
 // Path7: Guardians(postpad) 1er of month (Inform them (email))
 router.get(
   "/v1/admin/bills/guardian/path7",
@@ -534,6 +536,12 @@ router.post(
   "/v1/admin/bills/teachers/path11/:id",
   VerifyToken,
   openNewTeacherInvoice
+);
+// Path12: Delete teacher Invoice
+router.delete(
+  "/v1/admin/bills/teachers/path12/:id",
+  adminVerifyToken,
+  deleteTeacherInvoice
 );
 //Path 0: Fetch Bills of Teacher
 router.get(

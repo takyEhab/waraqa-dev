@@ -12,7 +12,6 @@ let allGuardians = (req, res) => {
   let queryReq = req.query;
   let search = queryReq.search;
   let offset = queryReq.offset;
-  // let invoiceCreatedDate= `(SELECT establishedAt FROM guardianinvoices WHERE guardianID=students.guardianID ORDER BY establishedAt DESC LIMIT 1)`
 
   let query = `SELECT guardians.*,count(*) OVER() AS fullCount, COUNT(students.guardianID) AS studentsCount,
                     (SELECT SUM(students.attendedHours) 
@@ -268,22 +267,10 @@ let addClass = (req, res) => {
         classes.forEach((obj) => {
           obj.scheduleID = scheduleID;
         });
-        console.log(classes);
         //Convert the array of objects to array of arrays
         sqlValues = classes.map((object) => Object.values(object));
         insertClass(sqlValues);
       });
-
-      /*
-            // Add scheduleID to each Object
-            bodyData.forEach(obj => {obj.scheduleID=scheduleID})
-        
-            //Convert the array of objects to array of arrays
-            sqlValues = bodyData.map(object => Object.values(object))
-
-            // Step5: Save classes (Contain invoiceID)
-            insertClass(sqlValues);
-            */
 
       console.log("The Classes scheduled successfully");
     });
@@ -483,9 +470,7 @@ let addClass = (req, res) => {
   // Delete guardian from bodyData
   delete bodyData[0].guardianID;
   delete bodyData[0].weeklyDaysTimes;
-  // if(bodyData.length > 1){ //On repated Class, don't consider the first (of the Starting Date field)
-  //     bodyData.shift()
-  // }
+
   let startingDate = moment(bodyData[0].startingDate).format(
     "YYYY-MM-DD HH:mm:ss"
   );
@@ -540,16 +525,6 @@ let addClass = (req, res) => {
         });
       }
     }
-    // delete scheduledclasse if there any
-
-    if (data[0]) {
-      dataBase.query(
-        `DELETE FROM scheduledclasses WHERE ${data[0].id}`,
-        (error, data) => {
-          console.log(error ? error : data);
-        }
-      );
-    }
     // Step2: Check guardian has an Inovice
     let query = `SELECT * FROM guardianinvoices WHERE guardianID = ${guardianID} ORDER BY guardianinvoices.createdAt DESC`;
     dataBase.query(query, (error, data) => {
@@ -582,15 +557,10 @@ let addClass = (req, res) => {
         // Add scheduleID=null to each Object
         bodyData[0].scheduleID = null;
 
-        bodyData[0].startingDate = moment(bodyData[0].startingDate).format(
-          "YYYY-MM-DD HH:mm:ss"
-        );
-
         //Convert the array of objects to array of arrays
         sqlValues = bodyData.map((object) => Object.values(object));
 
         // Step3.1 Save classes
-        console.log(sqlValues);
         insertClass(sqlValues);
       }
     });
@@ -645,7 +615,11 @@ let allClasses = (req, res, next) => {
                     : `WHERE (classes.startingDate ${sign} NOW() AND classes.status =0) AND students.status = 1 AND teachers.status = 1`
                 }
                 ${status == 0 ? `AND classes.status = 0` : ""}
-                ${status == 1 ? `AND classes.status = 1` : ""}
+                ${
+                  status == 1
+                    ? `AND (classes.id IN (SELECT classID FROM reportsubjects)) AND (classes.status = 1 OR classes.status = 4 OR classes.status = 5)`
+                    : ""
+                }
                 ${
                   status == 2
                     ? `AND classes.status = 2 OR classes.status = 3 OR classes.status= 6`
@@ -653,7 +627,7 @@ let allClasses = (req, res, next) => {
                 }
                 ${
                   status == 3
-                    ? `AND classes.status = 4 OR classes.status = 5`
+                    ? `AND classes.status != 0 AND classes.id NOT IN (SELECT classID FROM reportsubjects)`
                     : ""
                 }
                 ${

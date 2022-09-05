@@ -187,7 +187,7 @@ export default {
   },
   methods: {
     moment(date) {
-      return moment(date)
+      return moment(date);
     },
     pagiTransitions(sense) {
       if (sense == "back") {
@@ -223,7 +223,6 @@ export default {
           }
           this.alerts.error = null;
           this.data = res.data.rows;
-
           this.pageCount = this.data[0].fullCount;
         })
         .catch(() => {

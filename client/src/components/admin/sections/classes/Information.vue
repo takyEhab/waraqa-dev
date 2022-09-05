@@ -548,7 +548,6 @@ export default {
       this.alerts.error = "";
       this.alerts.success = "";
       this.loadingBtn = true;
-      // return console.log(select)
       let data = {
         rescheduleApproved: true,
         oldStartingDate: this.data[0].startingDate,

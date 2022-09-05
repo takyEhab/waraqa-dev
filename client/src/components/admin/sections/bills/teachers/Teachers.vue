@@ -75,7 +75,17 @@
               row.paidHours ? (row.paidHours / 60).toFixed(2) : 0
             }}</span>
             <span class="col-2">{{
-              row.paymentMethod ? row.paymentMethod : "Not selected"
+              data[0].paymentMethod == 0 || data[0].paymentMethod == null
+                ? "Not Selected"
+                : data[0].paymentMethod == 1
+                ? "PayPal"
+                : data[0].paymentMethod == 2
+                ? "Bank account"
+                : data[0].paymentMethod == 3
+                ? "Ria"
+                : data[0].paymentMethod == 4
+                ? "Western Union"
+                : "Other"
             }}</span>
             <span class="col-3">{{
               moment(row.activatedAt).format("ddd, D MMM YYYY")

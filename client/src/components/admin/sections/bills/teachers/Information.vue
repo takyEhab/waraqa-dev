@@ -24,7 +24,7 @@
         </div>
         <Edit
           :invoiceID="invoiceID"
-          :totalHours="totalHours"
+          :totalHours="data[0].teachingHours"
           :autoCancelationReq="data[0].autoCancelationReq"
           :autoBonus="data[0].autoBonus"
         />
@@ -102,7 +102,17 @@
           >
             <small class="info-title">Payment method :</small>
             <span class="info-content">{{
-              data[0].paymentMethod ? data[0].paymentMethod : "Not Selected"
+              data[0].paymentMethod == 0 || data[0].paymentMethod == null
+                ? "Not Selected"
+                : data[0].paymentMethod == 1
+                ? "PayPal"
+                : data[0].paymentMethod == 2
+                ? "Bank account"
+                : data[0].paymentMethod == 3
+                ? "Ria"
+                : data[0].paymentMethod == 4
+                ? "Western Union"
+                : "Other"
             }}</span>
           </div>
           <div
@@ -183,17 +193,6 @@
         </div>
       </div>
     </div>
-    <!-- Delete -->
-    <!-- <hr class="my-5 opacity-0">
-        <div class="mt-5 d-flex justify-content-end align-items-center">
-            <small class="f-color-3_3 me-3">Would you like to Delete this Invoice?</small>
-            <span class="delete-btn px-3 py-2" @click="deleteData">Delete</span>
-        </div> -->
-    <!-- Alerts -->
-    <!-- <div class="mt-4">
-            <div v-if="alerts.success" class="text-center alert text-center alert-success" >{{alerts.success}}</div>
-            <div v-else-if="alerts.error" class="text-center alert text-center alert-warning">{{alerts.error}}</div>
-        </div> -->
   </div>
 </template>
 
@@ -273,7 +272,7 @@ export default {
       if (window.confirm("Are you sure you want to delete this Invoice?")) {
         axios
           .delete(
-            `http://localhost:3300/api/v1/admin/bills/path9/${this.invoiceID}`
+            `http://localhost:3300/api/v1/admin/bills/teachers/path12/${this.invoiceID}`
           )
           .then((res) => {
             if (!res.data.success) {

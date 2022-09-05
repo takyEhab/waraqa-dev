@@ -218,7 +218,6 @@ export default {
       axios
         .get(url, queryReq)
         .then((res) => {
-          console.log(res.data);
           if (!res.data.success) {
             this.data = [];
             return (this.alerts.error = res.data.msg);
@@ -270,18 +269,10 @@ export default {
       }
     },
     cancelClass(data) {
-      console.log(data);
       if (window.confirm("Are you sure you want to cancel this Class?")) {
         this.alerts.error = "";
         this.alerts.success = "";
         this.loadingBtn = true;
-
-        //   // let data = {
-        //   //   classID: this.classID,
-        //   //   studentID: this.data[0].studentID,
-        //   //   teacherID: this.data[0].teacherID,
-        //   //   startingDate: this.data[0].startingDate,
-        //   // };
 
         let url = `http://localhost:3300/api/v1/admin/classes/path7`;
         axios

@@ -39,12 +39,14 @@ let prepaidClasses = (req, res, next) => {
             AND (classes.status=0 OR classes.status=1 OR classes.status=4)
             AND guardianinvoices.id = ${id}
             AND (
-                    (guardianinvoices.paid=1 AND classes.invoiceID=${id}) 
+                    (classes.invoiceID=${id}) 
                 OR 
-                    (guardianinvoices.paid!=1 AND classes.invoiceID IS NULL AND classes.startingDate BETWEEN guardianinvoices.createdAt AND (guardianinvoices.createdAt + INTERVAL (SELECT payEvery FROM scheduledclasses WHERE id = classes.scheduleID LIMIT 1) MONTH))
+                    (guardianinvoices.paid!=1 AND classes.invoiceID IS NULL AND classes.startingDate BETWEEN guardianinvoices.createdAt AND (guardianinvoices.createdAt + INTERVAL (SELECT payEvery FROM scheduledclasses WHERE guardianID = guardians.id ORDER BY payEvery DESC LIMIT 1) MONTH))
                 )
             ORDER BY classes.startingDate
     `;
+  // (guardianinvoices.paid=1 AND classes.invoiceID=${id})
+
   msg = "There are no results available to display.";
   return next();
 };
@@ -96,7 +98,6 @@ let postPaidClasses = (req, res, next) => {
   let queryReq = req.query;
 
   let fromActivatedAt = queryReq.InvoiceActivatedAt;
-  console.log(fromActivatedAt);
 
   let firstDateOfMonth = moment(fromActivatedAt)
     .subtract(1, "months")
@@ -138,10 +139,10 @@ let deleteGuardianInvoice = (req, res) => {
   let query = `DELETE FROM guardianinvoices WHERE id = ${id}`;
   dataBase.query(query, (error, data) => {
     if (error) {
-      console.log(error);
       return res.json({
         success: false,
         msg: "Sorry, this Invoice could not be deleted.",
+        error,
       });
     }
     res.json({
@@ -150,7 +151,24 @@ let deleteGuardianInvoice = (req, res) => {
     });
   });
 };
+let deleteTeacherInvoice = (req, res) => {
+  let id = req.params.id;
 
+  let query = `DELETE FROM teacherinvoices WHERE id = ${id}`;
+  dataBase.query(query, (error, data) => {
+    if (error) {
+      return res.json({
+        success: false,
+        msg: "Sorry, this Invoice could not be deleted.",
+        error,
+      });
+    }
+    res.json({
+      success: true,
+      msg: "The Invoice has been successfully deleted.",
+    });
+  });
+};
 // Path7: Fetch One teacher's Invoice
 let oneTeacherInvoice = (req, res, next) => {
   let id = req.params.id;
@@ -233,6 +251,8 @@ let updateTeacherInvoice = (req, res) => {
   delete bodyData.teacherName;
   delete bodyData.autoCancelationReq;
   delete bodyData.autoBonus;
+  delete bodyData.activatedAt;
+  delete bodyData.createdAt;
 
   let query = `UPDATE teacherinvoices SET ? WHERE id = ${id}`;
   dataBase.query(query, bodyData, (error, data) => {
@@ -825,6 +845,7 @@ module.exports = {
   updateGuardianInvoice,
   postPaidClasses,
   deleteGuardianInvoice,
+  deleteTeacherInvoice,
   oneTeacherInvoice,
   teacherInvoiceClasses,
   updateTeacherInvoice,

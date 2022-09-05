@@ -1,23 +1,19 @@
 const mysql = require("mysql2");
 
 // MySQL connection configurations
-module.exports = con = mysql.createConnection({
-  // host: 'db-waraqa-do-user-10896504-0.b.db.ondigitalocean.com',
-  // user: 'doadmin',
-  // password: 'AVNS_6klkifeMukzt--v',
-  // database: 'defaultdb',
-  // port:25060
-
+// module.exports = con = mysql.createConnection({
+module.exports = con = mysql.createPool({
+  connectionLimit: 100, //important
   host: "localhost",
   port: 3306,
   user: "root",
   password: "",
   database: "test",
 });
-con.connect(function (err) {
-  if (err) throw err;
-  console.log("Connected!");
-});
+// con.connect(function (err) {
+//   if (err) throw err;
+//   console.log("Connected!")
+// });
 
 /*
 (Foreign key : guardians - students ) :

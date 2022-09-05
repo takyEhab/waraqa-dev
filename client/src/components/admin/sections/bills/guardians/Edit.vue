@@ -25,7 +25,6 @@
         <div class="mt-3 px-3 px-md-5 py-5">
           <!-- Form -->
           <form class="mt-1" @submit.prevent="updateInvoice">
-            <!-- Status & transferFess -->
             <div class="row flex-wrap">
               <!-- Status -->
               <div class="col-12 col-md mt-3">
@@ -37,7 +36,7 @@
                 </select>
               </div>
               <!-- Payment date -->
-              <div class="col-12 col-md-6 mt-3">
+              <div class="col-12 col-md mt-3">
                 <label class="f-color-3 mb-1">Payment date</label>
                 <input
                   type="date"
@@ -51,13 +50,13 @@
                 <label class="f-color-3 mb-1">Transfer Fees</label>
                 <input
                   type="number"
+                  required
                   class="form-control"
                   placeholder="Transfer Fess"
                   v-model="data.transferFess"
                 />
               </div>
             </div>
-            <!-- Extra amount & paidHours -->
             <div class="row flex-wrap">
               <!-- Extra amount -->
               <div class="col-12 col-md mt-3">
@@ -74,35 +73,36 @@
                 <label class="f-color-3 mb-1">Paid Hours</label>
                 <input
                   type="number"
+                  step="any"
                   class="form-control"
                   ref="totalHours"
                   placeholder="Enter Paid Hours"
                   :value="
-                    data.savedPaidHours ? data.savedPaidHours : totalHours / 60
+                    data.savedPaidHours == null
+                      ? totalHours / 60
+                      : data.savedPaidHours
                   "
                   @input="data.savedPaidHours = $event.target.value"
                   required
                 />
-                <!-- v-model="hoursCalculted" -->
               </div>
-            </div>
-            <!-- Total amount paid & Payment method -->
-            <div class="row flex-wrap">
               <!-- Total amount paid -->
               <div class="col-12 col-md mt-3">
                 <label class="f-color-3 mb-1">Total amount paid</label>
                 <input
                   type="number"
+                  step="any"
                   class="form-control"
                   placeholder="Edit total amount paid"
                   v-model="data.totalAmountPaid"
                   required
                 />
               </div>
+            </div>
+            <div class="row flex-wrap">
               <!-- Payment method -->
               <div class="col-12 col-md mt-3">
                 <label class="f-color-3 mb-1">Payment method</label>
-
                 <select
                   class="form-select"
                   v-model="data.paymentMethod"
@@ -116,11 +116,8 @@
                   <option value="5">Other</option>
                 </select>
               </div>
-            </div>
-            <!-- Invoice Number & Payment date -->
-            <div class="row flex-wrap">
               <!-- Invoice Number -->
-              <div class="col-12 col-md-6 mt-3">
+              <div class="col-12 col-md mt-3">
                 <label class="f-color-3 mb-1">Invoice Number</label>
                 <input
                   type="number"
@@ -130,11 +127,8 @@
                   required
                 />
               </div>
-            </div>
-
-            <div class="row flex-wrap">
               <!-- Count for -->
-              <div class="col-12 col-md-6 mt-4">
+              <div class="col-12 col-md mt-5">
                 <div>
                   <div class="form-check">
                     <input
@@ -143,7 +137,6 @@
                       value=""
                       id="flexCheckDefault"
                       v-model="data.isSent"
-                      :checked="data.isSent"
                     />
                     <label class="form-check-label" for="flexCheckDefault">
                       Sent
@@ -152,6 +145,8 @@
                 </div>
               </div>
             </div>
+
+            <div class="row flex-wrap"></div>
             <!-- Submit -->
             <div class="mt-4 text-end">
               <button
@@ -228,7 +223,9 @@ export default {
             ? this.data.paymentMethod
             : 0;
           this.data.savedPaidHours =
-            this.data.savedPaidHours != null && this.data.savedPaidHours / 60;
+            this.data.savedPaidHours != null
+              ? this.data.savedPaidHours / 60
+              : null;
           this.displayData = true;
         })
         .catch(() => {
@@ -239,15 +236,16 @@ export default {
       this.alerts.error = "";
       this.alerts.success = "";
       this.loadingBtn = true;
-
+      console.log(this.$refs.totalHours.value);
       this.data.savedPaidHours =
         this.data.savedPaidHours != null
           ? this.data.savedPaidHours * 60
-          : this.$refs.totalHours * 60; //Save as minutes
+          : this.$refs.totalHours.value * 60; //Save as minutes
       this.data.classesIDs = this.classesIDs; //Store invoiceID as paid classes
       this.data.isSent = this.data.isSent ? 1 : 0;
       delete this.data.hoursPrice;
       delete this.data.transferPrice;
+      console.log(this.data);
       let url = `http://localhost:3300/api/v1/admin/bills/path4/${this.invoiceID}`;
       axios
         .post(url, this.data)

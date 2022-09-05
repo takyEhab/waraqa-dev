@@ -199,7 +199,6 @@
                     <label class="switch">
                       <input
                         v-model="countForTeacher"
-                        :checked="countForTeacher"
                         type="checkbox"
                       />
                       <span class="slider round"></span>
@@ -210,7 +209,6 @@
                     <label class="switch">
                       <input
                         v-model="countForStudent"
-                        :checked="countForStudent"
                         type="checkbox"
                       />
                       <span class="slider round"></span>
@@ -347,9 +345,6 @@ export default {
     moment(date) {
       return moment(date);
     },
-    // updateDayTime(event) {
-    //   console.log(event);
-    // },
     updateSelectDay(data) {
       this.daysTime = data.daysTime;
       const { event } = data;
@@ -377,9 +372,6 @@ export default {
         this.loadingBtn = false;
         return (this.alerts.error = "You have to choose a teacher.");
       }
-      // this.guardianID = this.students.find(
-      //   (elm) => elm.id == this.studentID
-      // ).guardianID;
       this.startingDate = `${this.startingDate}T${this.startingTime}`;
 
       if (moment(this.startingDate).isBefore(moment())) {

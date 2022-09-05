@@ -67,7 +67,7 @@
               getData();
             "
           >
-            <small>Missed</small>
+            <small>Missed reports</small>
           </li>
         </ul>
       </div>
@@ -145,7 +145,7 @@
             <span class="col-2">{{
               row.status == 0
                 ? "No Report"
-                : `5/${row.classPerformance ? row.classPerformance : "0"}`
+                : `${row.classPerformance ? row.classPerformance : "0"}/5`
             }}</span>
             <span class="col-1">{{ row.duration }} m</span>
 
@@ -384,7 +384,6 @@ export default {
       this.pagination.offset = this.params.offset;
     }
     if (this.params.filter) {
-      console.log(this.params.filter);
       this.filters[this.params.filter] = true;
     }
 

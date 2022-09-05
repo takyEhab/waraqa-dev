@@ -71,7 +71,7 @@
               getData();
             "
           >
-            <small>Missed</small>
+            <small>Missed reports</small>
           </li>
           <li
             :class="[filters.four ? 'opacity-100' : '', 'ms-2 ms-md-3 px-2']"
@@ -158,7 +158,7 @@
             <span class="col-1">{{
               row.status == 0
                 ? "No Report"
-                : `5/${row.classPerformance ? row.classPerformance : "0"}`
+                : `${row.classPerformance ? row.classPerformance : "0"}/5`
             }}</span>
 
             <span class="col-1">{{ row.duration }} m</span>
