@@ -173,7 +173,6 @@ let endClass = (req, res) => {
                 //Invoice that created on first class
                 invoiceStatus = data[0].active;
                 //Step5: If "Paid hours of last paid invoice" - "submit classes(status = 1 or 4 and count for student)" of all students of this guardian = 0 FROM last invoice : Active the invoice
-
                 let query = `SELECT 
                                 (SELECT SUM(students.attendedHours) 
                                 FROM students
@@ -191,17 +190,32 @@ let endClass = (req, res) => {
                   if (error || !data.length) {
                     return console.log("Failed find students hours!");
                   }
+
                   //Active In case A-B = 0 OR In case First class (invoice active = 0)
                   let lastCountedStartingDate = data[0].startingDate;
                   let allHoursIsZero = false;
-                  let paidHours = data[0].savedPaidHours
-                    ? parseInt(data[0].savedPaidHours)
-                    : 0;
-                  let hours = parseInt(data[0].hours);
-                  if (paidHours - hours <= 0) allHoursIsZero = true;
+                  if (
+                    data[0].savedPaidHours &&
+                    data[0].hours &&
+                    data[0].savedPaidHours == data[0].hours
+                  ) {
+                    allHoursIsZero = true;
+                  }
+                  // console.log(
+                  //   "allHoursIsZero " + allHoursIsZero,
+                  //   data[0].savedPaidHours,
+                  //   data[0].hours
+                  // );
+                  // //Active In case A-B = 0 OR In case First class (invoice active = 0)
+                  // let lastCountedStartingDate = data[0].startingDate;
+                  // let allHoursIsZero = false;
+                  // let paidHours = data[0].savedPaidHours
+                  //   ? parseInt(data[0].savedPaidHours)
+                  //   : 0;
+                  // let hours = parseInt(data[0].hours);
+                  // if (paidHours - hours <= 0) allHoursIsZero = true;
 
                   if (allHoursIsZero || invoiceStatus == 0) {
-                    console.log("all hours = 0 or invoice is inactive");
                     let query = `UPDATE guardianinvoices SET active = 1 WHERE guardianID = ${guardianID}`;
                     dataBase.query(query, bodyData, (error, data) => {
                       if (error || !data) {
@@ -228,32 +242,31 @@ let endClass = (req, res) => {
                   }
                   // check if class starting date between invoice createdAT and payEvery of gaurdian
                   if (allHoursIsZero && invoiceStatus == 1) {
-                    console.log("all hours = 0");
                     //Step5.1: Get startingDate of first not paid class (invoiceID IS NULL) of this guardian
-                    let query = `SELECT classes.id
-                      FROM classes 
-                      INNER JOIN students 
-                      ON classes.studentID = students.id
-                      INNER JOIN guardians
-                      ON guardians.id = students.guardianID
-                      INNER JOIN guardianinvoices
-                      ON guardianinvoices.guardianID = guardians.id
-                      WHERE classes.countForStudent = 1
-                      AND (classes.status=0 OR classes.status=1 OR classes.status=4)
-                      AND guardianinvoices.guardianID = ${guardianID}
-                      AND (classes.invoiceID IS NULL AND classes.startingDate BETWEEN guardianinvoices.createdAt AND (guardianinvoices.createdAt + INTERVAL (SELECT payEvery FROM scheduledclasses WHERE guardianID = guardians.id ORDER BY payEvery DESC LIMIT 1) MONTH))
-                    `;
-                    dataBase.query(query, (error, data) => {
-                      if (!error && data.length >= 1) {
-                        const isFound = data.some((element) => {
-                          if (element.id === id) {
-                            return true;
-                          }
-                          return false;
-                        });
-                        if (isFound) return;
-                      }
-                      let query = `SELECT classes.startingDate
+                    // let query = `SELECT classes.id
+                    //   FROM classes
+                    //   INNER JOIN students
+                    //   ON classes.studentID = students.id
+                    //   INNER JOIN guardians
+                    //   ON guardians.id = students.guardianID
+                    //   INNER JOIN guardianinvoices
+                    //   ON guardianinvoices.guardianID = guardians.id
+                    //   WHERE classes.countForStudent = 1
+                    //   AND (classes.status=0 OR classes.status=1 OR classes.status=4)
+                    //   AND guardianinvoices.guardianID = ${guardianID}
+                    //   AND (classes.invoiceID IS NULL AND classes.startingDate BETWEEN guardianinvoices.createdAt AND (guardianinvoices.createdAt + INTERVAL (SELECT payEvery FROM scheduledclasses WHERE guardianID = guardians.id ORDER BY payEvery DESC LIMIT 1) MONTH))
+                    // `;
+                    // dataBase.query(query, (error, data) => {
+                    //   if (!error && data.length >= 1) {
+                    //     const isFound = data.some((element) => {
+                    //       if (element.id === id) {
+                    //         return true;
+                    //       }
+                    //       return false;
+                    //     });
+                    //     if (isFound) return;
+                    //   }
+                    let query = `SELECT classes.*
                                     FROM classes
                                     INNER JOIN students
                                     ON classes.studentID = students.id
@@ -262,134 +275,139 @@ let endClass = (req, res) => {
                                     WHERE guardians.id = ${guardianID}
                                     AND (classes.invoiceID IS NULL)
                                     AND (classes.status=0 OR classes.status=1 OR classes.status = 4) AND countForStudent = 1
-                                    ORDER BY classes.startingDate LIMIT 1`;
-                      dataBase.query(query, (error, data) => {
-                        if (error || !data.length) {
-                          return console.log(
-                            "Failed find start not paid classes"
-                          );
-                        }
-                        let saveData = {
-                          active: 1,
-                          guardianID,
-                          createdAt: data[0].startingDate,
-                        };
+                                    ORDER BY classes.startingDate`;
+                    dataBase.query(query, (error, data) => {
+                      if (error || !data.length) {
+                        return console.log(
+                          "Failed find start not paid classes"
+                        );
+                      }
+                      let totalHours = 0;
+                      data.forEach(
+                        (obj) => (totalHours += parseInt(obj.duration))
+                      );
+                      let saveData = {
+                        active: 1,
+                        guardianID,
+                        createdAt: data[0].startingDate,
+                        savedPaidHours: totalHours,
+                      };
 
-                        //Step5.2: Open a new active Invoice(createdAt = startingDate(Step5.1)).
-                        dataBase.query(
-                          `INSERT INTO guardianinvoices SET ?`,
-                          saveData,
-                          (error, data) => {
-                            if (error || !data) {
-                              return res.json({
-                                success: false,
-                                msg: "Failed Open new invoice[5]",
-                              });
-                            }
-                            // Expected upcoming
-                            let query = `SELECT classes.*
-                            FROM classes 
-                            INNER JOIN students 
-                            ON classes.studentID = students.id
-                            INNER JOIN guardians
-                            ON guardians.id = students.guardianID
-                            INNER JOIN guardianinvoices
-                            ON guardianinvoices.guardianID = guardians.id
-                            WHERE classes.countForStudent = 1
-                            AND guardianinvoices.id = ${data.insertId}
-                            AND guardianinvoices.paid!=1 AND classes.invoiceID IS NULL AND classes.startingDate BETWEEN guardianinvoices.createdAt AND (guardianinvoices.createdAt + INTERVAL (SELECT payEvery FROM scheduledclasses WHERE guardianID = guardians.id ORDER BY payEvery DESC LIMIT 1) MONTH)
-                            ORDER BY classes.startingDate`;
-                            dataBase.query(query, (error, data) => {
-                              if (error) return;
-                              // get Previous classes
-                              let query = `SELECT classes.* FROM classes WHERE classes.invoiceID=(SELECT id FROM guardianinvoices WHERE guardianID = 78 AND paid = 1 ORDER BY establishedAt DESC LIMIT 1)`;
-                              dataBase.query(query, (error2, data2) => {
-                                if (error2) return;
-
-                                let upcomingHours = null;
-                                if (data[0]) {
-                                  data.forEach((obj) => {
-                                    if (obj.duration)
-                                      upcomingHours += parseInt(obj.duration);
-                                  });
-                                }
-
-                                configAdminEmail = {
-                                  subject: "A new invoice",
-                                  html: `<p> Send (${guardianName}) a new invoice. His remaining hours are 0 or less.</p>`,
-                                };
-                                sendEmail(configAdminEmail);
-                                let expectedUpcomingClasses = data ? [] : null;
-                                for (i in data) {
-                                  expectedUpcomingClasses.push(
-                                    moment(data[i]?.startingDate).format(
-                                      "dddd, D MMM , hh:mm A"
-                                    )
-                                  );
-                                }
-                                expectedUpcomingClasses =
-                                  expectedUpcomingClasses.join(" <br/> ");
-
-                                let previousClasses = data2 ? [] : null;
-                                for (i in data2) {
-                                  previousClasses.push(
-                                    moment(data2[i]?.startingDate).format(
-                                      "dddd, D MMM , hh:mm A"
-                                    )
-                                  );
-                                }
-                                previousClasses =
-                                  previousClasses.join(" <br/> ");
-
-                                configGuardianEmail = {
-                                  to: guardianEmail,
-                                  subject: "A new invoice",
-                                  html: `<p> Your paid hours have been completed. Here's a summary of the last payment period and the new one:
-                              Previous classes from last payment report:
-                              ${
-                                previousClasses
-                                  ? previousClasses
-                                  : "No Previous classes classes"
-                              }
-
-                              Expected upcoming classes within a month:
-                              ${
-                                expectedUpcomingClasses
-                                  ? expectedUpcomingClasses
-                                  : "No Expected upcoming classes"
-                              }
-                              The due amount: ${
-                                upcomingHours == null
-                                  ? "No upcoming classes"
-                                  : upcomingHours * hoursPrice
-                              }
-                              </p>`,
-                                };
-                                sendEmail(configGuardianEmail);
-
-                                notiConfig = {
-                                  type: 3,
-                                  admin: 1,
-                                  teacherID: null,
-                                  guardianID,
-                                  studentID: null,
-                                  adminMsg: `Send (${guardianName}) a new invoice. His remaining hours are 0 or less.`,
-                                  teacherMsg: null,
-                                  guardianMsg: `Your paid hours have been completed. 
-                              The due amount: (${
-                                upcomingHours == null
-                                  ? "No upcoming classes"
-                                  : upcomingHours * hoursPrice
-                              })
-                              Check your new invoice details for more information about last payment period and the new one. All data are recorded on your billing details page.`,
-                                };
-                                sendNotification(notiConfig);
-                              });
+                      //Step5.2: Open a new active Invoice(createdAt = startingDate(Step5.1)).
+                      dataBase.query(
+                        `INSERT INTO guardianinvoices SET ?`,
+                        saveData,
+                        (error, data) => {
+                          if (error || !data) {
+                            return res.json({
+                              success: false,
+                              msg: "Failed Open new invoice[5]",
                             });
                           }
-                        );
-                      });
+                          // // Expected upcoming
+                          // let query = `SELECT classes.*
+                          // FROM classes
+                          // INNER JOIN students
+                          // ON classes.studentID = students.id
+                          // INNER JOIN guardians
+                          // ON guardians.id = students.guardianID
+                          // INNER JOIN guardianinvoices
+                          // ON guardianinvoices.guardianID = guardians.id
+                          // WHERE classes.countForStudent = 1
+                          // AND guardianinvoices.id = ${data.insertId}
+                          // AND guardianinvoices.paid!=1 AND classes.invoiceID IS NULL AND classes.startingDate BETWEEN guardianinvoices.createdAt AND (guardianinvoices.createdAt + INTERVAL (SELECT payEvery FROM scheduledclasses WHERE guardianID = guardians.id ORDER BY payEvery DESC LIMIT 1) MONTH)
+                          // ORDER BY classes.startingDate`;
+                          // dataBase.query(query, (error, data) => {
+                          //   if (error) return;
+                          //   // get Previous classes
+                          //   let query = `SELECT classes.* FROM classes WHERE classes.invoiceID=(SELECT id FROM guardianinvoices WHERE guardianID = 78 AND paid = 1 ORDER BY establishedAt DESC LIMIT 1)`;
+                          //   dataBase.query(query, (error2, data2) => {
+                          //     if (error2) return;
+
+                          //     let upcomingHours = null;
+                          //     if (data[0]) {
+                          //       data.forEach((obj) => {
+                          //         if (obj.duration)
+                          //           upcomingHours += parseInt(obj.duration);
+                          //       });
+                          //     }
+
+                          //     configAdminEmail = {
+                          //       subject: "A new invoice",
+                          //       html: `<p> Send (${guardianName}) a new invoice. His remaining hours are 0 or less.</p>`,
+                          //     };
+                          //     sendEmail(configAdminEmail);
+                          //     let expectedUpcomingClasses = data ? [] : null;
+                          //     for (i in data) {
+                          //       expectedUpcomingClasses.push(
+                          //         moment(data[i]?.startingDate).format(
+                          //           "dddd, D MMM , hh:mm A"
+                          //         )
+                          //       );
+                          //     }
+                          //     expectedUpcomingClasses =
+                          //       expectedUpcomingClasses.join(" <br/> ");
+
+                          //     let previousClasses = data2 ? [] : null;
+                          //     for (i in data2) {
+                          //       previousClasses.push(
+                          //         moment(data2[i]?.startingDate).format(
+                          //           "dddd, D MMM , hh:mm A"
+                          //         )
+                          //       );
+                          //     }
+                          //     previousClasses =
+                          //       previousClasses.join(" <br/> ");
+
+                          //     configGuardianEmail = {
+                          //       to: guardianEmail,
+                          //       subject: "A new invoice",
+                          //       html: `<p> Your paid hours have been completed. Here's a summary of the last payment period and the new one:
+                          //   Previous classes from last payment report:
+                          //   ${
+                          //     previousClasses
+                          //       ? previousClasses
+                          //       : "No Previous classes classes"
+                          //   }
+
+                          //   Expected upcoming classes within a month:
+                          //   ${
+                          //     expectedUpcomingClasses
+                          //       ? expectedUpcomingClasses
+                          //       : "No Expected upcoming classes"
+                          //   }
+                          //   The due amount: ${
+                          //     upcomingHours == null
+                          //       ? "No upcoming classes"
+                          //       : upcomingHours * hoursPrice
+                          //   }
+                          //   </p>`,
+                          //     };
+                          //     sendEmail(configGuardianEmail);
+
+                          //     notiConfig = {
+                          //       type: 3,
+                          //       admin: 1,
+                          //       teacherID: null,
+                          //       guardianID,
+                          //       studentID: null,
+                          //       adminMsg: `Send (${guardianName}) a new invoice. His remaining hours are 0 or less.`,
+                          //       teacherMsg: null,
+                          //       guardianMsg: `Your paid hours have been completed.
+                          //   The due amount: (${
+                          //     upcomingHours == null
+                          //       ? "No upcoming classes"
+                          //       : upcomingHours * hoursPrice
+                          //   })
+                          //   Check your new invoice details for more information about last payment period and the new one. All data are recorded on your billing details page.`,
+                          //     };
+                          //     sendNotification(notiConfig);
+                          //   });
+                          // });
+                        }
+                      );
                     });
+                    // });
                   }
                 });
               }
@@ -540,7 +558,6 @@ let endClass = (req, res) => {
               };
               sendEmail(configAdminEmail);
             } else if (data[0].status == 4) {
-              // console.log("dsasda");
               //Send Notification
               notiConfig = {
                 type: 2,
@@ -604,8 +621,7 @@ let updateClass = (req, res) => {
     let query = `UPDATE classes SET ? WHERE id = ${id}`;
     dataBase.query(query, data, (error, data) => {
       if (error || !data) {
-        console.log(error);
-        return res.json({ success: false, msg: "Failed update Class" });
+        return res.json({ success: false, msg: "Failed update Class", error });
       }
       let startingDate = moment(req.body.startingDate).format(
         "ddd, D MMM YYYY, HH:mm"
@@ -867,10 +883,10 @@ let updateClass = (req, res) => {
         } (SELECT duration FROM classes WHERE id = ${id}) WHERE id = ${teacherID}`;
         dataBase.query(query1, (error, data) => {
           if (error || !data) {
-            console.log(error);
             return res.json({
               success: false,
               msg: "Failed update hours for teacher",
+              error,
             });
           }
         });
@@ -899,11 +915,10 @@ let updateClass = (req, res) => {
     let query = `UPDATE classes SET ? WHERE id = ${id}`;
     dataBase.query(query, bodyData, (error, data) => {
       if (error || !data) {
-        console.log(error);
         return res.json({
           success: false,
           msg: "Failed update Class",
-          error: error,
+          error,
         });
       }
       // IF status = 6 (Cancel): Check if there is Cancellation request
@@ -967,7 +982,6 @@ let updateClassReport = (req, res) => {
             msg: "Failed update hours for student",
           });
         }
-        console.log(data);
       });
     }
   }
@@ -1026,7 +1040,6 @@ let deleteClass = (req, res) => {
         // check if teacher has another classes in the future
         let query2 = `SELECT * FROM classes WHERE teacherID=${teacherID} AND startingDate >= NOW() AND status=0`;
         dataBase.query(query2, (error, data) => {
-          console.log(data);
           if (error || data.length >= 1) return;
           // set teacher inactive
           let query = `UPDATE teachers SET status=2 WHERE id = ${teacherID}`;
@@ -1226,7 +1239,6 @@ let cancelClassReq = (req, res) => {
             let studentName = data[0].studentName;
             let guardianEmail = data[0].guardianEmail;
             let guardianID = data[0].guardianID;
-            // return console.log(data)
             ////////////////////////////////////////////////////////////////////////////////////////////
             //Config Admin Email
             configAdminEmail = {
@@ -1385,7 +1397,6 @@ let RescheduleClassReq = (req, res) => {
             let guardianEmail = data[0].guardianEmail;
             let guardianID = data[0].guardianID;
 
-            // return console.log(teacherName,teacherEmail,studentName,guardianEmail,guardianID)
             ////////////////////////////////////////////////////////////////////////////////////////////
             //Config Admin Email
             configAdminEmail = {
@@ -1556,7 +1567,6 @@ let RescheduleClasses = (req, res) => {
   let subject = bodyData.subject;
   let guests = bodyData.guests;
   let emailClassesDetails = [];
-  console.log("IDs" + bodyData.classesIDs);
   delete bodyData.classesIDs;
   delete bodyData.createdAt;
 
@@ -1712,8 +1722,6 @@ let RescheduleClasses = (req, res) => {
   };
 
   let updateScheduledClasses = () => {
-    // console.log(req.body.Fri)
-
     if (bodyData.Sun) {
       bodyData.Sun = moment(bodyData.Sun).format("YYYY-MM-DD HH:mm:ss");
     }
@@ -1851,13 +1859,18 @@ let RescheduleClasses = (req, res) => {
       obj.scheduleID = scheduleID;
     });
 
+    // update invoice
+    let totalHours = 0;
+    classes.forEach((obj) => (totalHours += parseInt(obj.duration)));
+    let query = `UPDATE guardianinvoices SET ? WHERE guardianID = ${guardianID} ORDER BY guardianinvoices.createdAt DESC LIMIT 1`;
+    dataBase.query(query, { savedPaidHours: totalHours });
+    // update invoice
+
     //Convert the array of objects to array of arrays
     sqlValues = classes.map((object) => Object.values(object));
-
     insertClass(sqlValues);
 
     //Step : Update Scheduled Classes
-
     updateScheduledClasses();
   });
 };
@@ -1928,13 +1941,10 @@ let deleteManyClasses = (req, res) => {
         });
       });
     });
-
-    console.log(...ids);
   });
 };
 
 let deleteClasses = (req, res) => {
-  console.log(req.body.data);
   const date = moment(req.body.data, "YYYY/MM/DD HH:mm:ss").format(
     "YYYY-MM-DD HH:mm:ss"
   );
@@ -1947,7 +1957,6 @@ let deleteClasses = (req, res) => {
         error: error,
       });
     }
-    console.log(data);
     let classesIDs = [];
     let scheduleIDs = [];
     let arrayOfObject = data;
@@ -1958,10 +1967,10 @@ let deleteClasses = (req, res) => {
     for (i in arrayOfObject) {
       scheduleIDs.push(arrayOfObject[i].scheduleID);
     }
-    console.log(classesIDs);
     scheduleIDs = [...new Set(scheduleIDs)];
-    console.log(scheduleIDs);
 
+    scheduleIDs = scheduleIDs.filter((item) => item != null);
+    classesIDs = classesIDs.filter((item) => item != null);
     //Step2: delete classes
     let query = `DELETE FROM classes WHERE id IN (${classesIDs.join(",")})`;
     dataBase.query(query, (error, data) => {
@@ -1987,14 +1996,13 @@ let deleteClasses = (req, res) => {
 };
 
 let getHoursAndStudentsNum = (req, res, next) => {
-  /*
-        Teacher
-        Guardian
-        Admin
-    */
+  /* 
+    Teacher
+    Guardian
+    Admin
+  */
   let id = tokenData.id;
   let userType = req.query.userType;
-  console.log(userType);
   if (userType == "Teacher") {
     query = `SELECT 
         (SELECT COUNT (DISTINCT classes.studentID)

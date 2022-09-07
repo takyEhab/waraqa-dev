@@ -25,6 +25,28 @@ let oneGuardianInvoice = (req, res, next) => {
 */
 let prepaidClasses = (req, res, next) => {
   let id = req.params.id; // InvoiceID
+  // query = `SELECT classes.*, teachers.name AS teacherName, students.name AS studentName
+  //           FROM classes
+  //           INNER JOIN teachers
+  //           ON classes.teacherID = teachers.id
+  //           INNER JOIN students
+  //           ON classes.studentID = students.id
+  //           INNER JOIN guardians
+  //           ON guardians.id = students.guardianID
+  //           INNER JOIN guardianinvoices
+  //           ON guardianinvoices.guardianID = guardians.id
+  //           WHERE classes.countForStudent = 1
+  //           AND (classes.status=0 OR classes.status=1 OR classes.status=4)
+  //           AND guardianinvoices.id = ${id}
+  //           AND (
+  //                   (classes.invoiceID=${id})
+  //               OR
+  //                   (guardianinvoices.paid!=1 AND classes.invoiceID IS NULL AND classes.startingDate BETWEEN guardianinvoices.createdAt AND (guardianinvoices.createdAt + INTERVAL (SELECT payEvery FROM scheduledclasses WHERE guardianID = guardians.id ORDER BY payEvery DESC LIMIT 1) MONTH))
+  //               )
+  //           ORDER BY classes.startingDate
+  //   `;
+  // (guardianinvoices.paid=1 AND classes.invoiceID=${id})
+
   query = `SELECT classes.*, teachers.name AS teacherName, students.name AS studentName
             FROM classes 
             INNER JOIN teachers 
@@ -41,11 +63,9 @@ let prepaidClasses = (req, res, next) => {
             AND (
                     (classes.invoiceID=${id}) 
                 OR 
-                    (guardianinvoices.paid!=1 AND classes.invoiceID IS NULL AND classes.startingDate BETWEEN guardianinvoices.createdAt AND (guardianinvoices.createdAt + INTERVAL (SELECT payEvery FROM scheduledclasses WHERE guardianID = guardians.id ORDER BY payEvery DESC LIMIT 1) MONTH))
+                    ( classes.invoiceID IS NULL)
                 )
-            ORDER BY classes.startingDate
-    `;
-  // (guardianinvoices.paid=1 AND classes.invoiceID=${id})
+            ORDER BY classes.startingDate`;
 
   msg = "There are no results available to display.";
   return next();

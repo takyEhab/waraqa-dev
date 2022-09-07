@@ -447,8 +447,6 @@ export default {
             countForStudent: this.countForStudent ? 1 : 0,
           };
           classes.push(weeklyClass);
-          // console.log(day.format("YYYY-MM-DD").toString())
-          // console.log(day.toString())
           day.add(7, "d");
         }
       }

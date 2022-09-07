@@ -311,17 +311,11 @@ export default {
       let url = `http://localhost:3300/api/v1/admin/bills/path11/${classID}`;
       axios
         .patch(url, { CurrentCountOnInvoice })
-        .then((res) => {
-          console.log(res.data);
-
+        .then(() => {
           const objIndex = this.classes.findIndex((item) => item.id == classID);
           this.classes[objIndex].countOnInvoice =
             CurrentCountOnInvoice === 1 ? 2 : 1;
-          this.totalHours = 0;
-          this.classes.forEach((row) => {
-            if (parseInt(row.countOnInvoice) === 1)
-              this.totalHours = this.totalHours + row.duration;
-          });
+          this.getData();
         })
         .catch((err) => console.log(err));
     },
@@ -368,7 +362,7 @@ export default {
           this.totalHours = 0; // Re-Inisialization
           this.classes.forEach((row) => {
             if (parseInt(row.countOnInvoice) === 1)
-              this.totalHours = this.totalHours + row.duration;
+              this.totalHours += row.duration;
           });
 
           ///
@@ -379,7 +373,6 @@ export default {
             ids.push(arrayOfObject[i].id);
           }
           this.classesIDs = ids.join(",");
-          console.log(this.classesIDs);
 
           ///
         })
@@ -399,12 +392,17 @@ export default {
           this.alerts.error = null;
           this.classes = res.data.rows;
 
+          let invoiceHours = this.data[0].savedPaidHours;
+          this.classes = this.classes.filter((row) => {
+            if (parseInt(row.countOnInvoice) === 1)
+              invoiceHours -= row.duration;
+            return invoiceHours >= 0;
+          });
           this.totalHours = 0; // Re-Inisialization
           this.classes.forEach((row) => {
             if (parseInt(row.countOnInvoice) === 1)
-              this.totalHours = this.totalHours + row.duration;
+              this.totalHours += row.duration;
           });
-
           ///
           let ids = [];
           let arrayOfObject = this.classes;
@@ -436,7 +434,7 @@ export default {
           this.totalHours = 0; // Re-Inisialization
           this.classes.forEach((row) => {
             if (parseInt(row.countOnInvoice) === 1)
-              this.totalHours = this.totalHours + row.duration;
+              this.totalHours += row.duration;
           });
 
           ///

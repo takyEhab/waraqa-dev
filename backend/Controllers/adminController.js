@@ -1,4 +1,4 @@
-const { validationResult } = require("express-validator");
+const { validationResult, body } = require("express-validator");
 const bcrypt = require("bcrypt-nodejs");
 const dataBase = require("../Database/Config.js");
 const moment = require("moment-timezone");
@@ -279,11 +279,10 @@ let addClass = (req, res) => {
     let query = `INSERT INTO classes (teacherID, studentID, subject, classTitle, startingDate, duration, guests, description, timeZone,countForTeacher, countForStudent, scheduleID) VALUES ? `;
     dataBase.query(query, [sqlValues], (error, data) => {
       if (error || !data) {
-        console.log(error);
         return res.json({
           success: false,
           msg: "Failed store classes",
-          error: error,
+          error,
         });
       }
       //Send Emails and notifications
@@ -525,6 +524,12 @@ let addClass = (req, res) => {
         });
       }
     }
+
+    let totalHours = 0;
+    let classesInc = bodyData.length > 1 ? bodyData.slice(1) : bodyData;
+    classesInc.forEach((obj) => {
+      totalHours += parseInt(obj.duration);
+    });
     // Step2: Check guardian has an Inovice
     let query = `SELECT * FROM guardianinvoices WHERE guardianID = ${guardianID} ORDER BY guardianinvoices.createdAt DESC`;
     dataBase.query(query, (error, data) => {
@@ -536,17 +541,21 @@ let addClass = (req, res) => {
         //Create inactive Inovice
         dataBase.query(
           `INSERT INTO guardianinvoices SET ?`,
-          { guardianID: guardianID, createdAt: startingDate },
+          { guardianID, createdAt: startingDate, savedPaidHours: totalHours },
           (error, data) => {
             if (error || !data) {
-              console.log(error);
               return res.json({
                 success: false,
                 msg: "Failed create first invoice to this guardian!",
-                error: error,
+                error,
               });
             }
           }
+        );
+      } else {
+        dataBase.query(
+          `UPDATE guardianinvoices SET ? WHERE id = ${data[0].id}`,
+          { savedPaidHours: parseInt(data[0].savedPaidHours) + totalHours }
         );
       }
       //Step5: IF Weekly classes, Save classes with scheduleID=data.insertId
