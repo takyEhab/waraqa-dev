@@ -60,7 +60,6 @@
             <div class="col-1">
               <!-- Example single danger button -->
               <div class="btn-group dropstart">
-                <!-- <i data-bs-toggle="dropdown" class=" fa-2x fa fa-caret-down"></i> -->
                 <div
                   data-bs-toggle="dropdown"
                   @click.stop=""
@@ -239,14 +238,14 @@ export default {
       axios
         .post(url, data)
         .then((res) => {
-          window.scrollTo(
-            0,
-            document.body.scrollHeight || document.documentElement.scrollHeight
-          );
           if (!res.data.success) {
             return (this.alerts.error = res.data.msg);
           }
           this.alerts.success = res.data.msg;
+          window.scrollTo(
+            0,
+            document.body.scrollHeight || document.documentElement.scrollHeight
+          );
         })
         .catch(() => {
           console.log("Error catched");

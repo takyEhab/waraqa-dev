@@ -55,7 +55,6 @@
             <div class="col-1">
               <!-- Example single danger button -->
               <div class="btn-group dropstart">
-                <!-- <i data-bs-toggle="dropdown" class=" fa-2x fa fa-caret-down"></i> -->
                 <div
                   @click.stop=""
                   data-bs-toggle="dropdown"
@@ -67,28 +66,6 @@
 
                 <!-- Action -->
                 <ul @click.stop="" class="dropdown-menu">
-                  <!-- <li>
-                    <router-link
-                      :to="{
-                        name: 'ClassInfo',
-                        params: {
-                          id: row.id,
-                          // tap: false,
-                          // page: pagination.page,
-                          // offset: pagination.offset,
-                        },
-                        query: {
-                          tap: false,
-                          page: pagination.page,
-                          offset: pagination.offset,
-                        },
-                      }"
-                      class="dropdown-item"
-                      ><i data-bs-toggle="dropdown" class="fas fa-eye px-2"></i>
-                      More</router-link
-                    >
-                  </li> -->
-
                   <li>
                     <button @click="deleteData(row.id)" class="dropdown-item">
                       <i

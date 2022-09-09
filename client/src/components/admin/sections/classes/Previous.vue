@@ -130,7 +130,14 @@
             class="rowTable p-2 d-flex f-color-3"
           >
             <span class="col-2" style="font-family: Merienda">
-              <span style="margin-left: 35px; font-weight: 900; color: #4c4a4c;font-family: Merienda">
+              <span
+                style="
+                  margin-left: 35px;
+                  font-weight: 900;
+                  color: #4c4a4c;
+                  font-family: Merienda;
+                "
+              >
                 {{ moment(row.startingDate).format("hh:mm A") }}
               </span>
               <br />
@@ -176,34 +183,6 @@
 
                 <!-- Action -->
                 <ul @click.stop="" class="dropdown-menu">
-                  <!-- <li>
-                    <router-link
-                      :to="{
-                        name: 'ClassInfo',
-                        params: {
-                          id: row.id,
-                          // tap: true,
-                          // page: pagination.page,
-                          // offset: pagination.offset,
-                          // filter: Object.keys(filters).find(
-                          //   (key) => filters[key] == true
-                          // ),
-                        },
-                        query: {
-                          tap: true,
-                          page: pagination.page,
-                          offset: pagination.offset,
-                          filter: Object.keys(filters).find(
-                            (key) => filters[key] == true
-                          ),
-                        },
-                      }"
-                      class="dropdown-item"
-                      ><i data-bs-toggle="dropdown" class="fas fa-eye px-2"></i>
-                      More</router-link
-                    >
-                  </li> -->
-
                   <li>
                     <button @click="deleteData(row.id)" class="dropdown-item">
                       <i
@@ -280,25 +259,6 @@
                   </li>
                 </ul>
               </div>
-
-              <!-- <router-link
-                v-if="!row.status"
-                :to="{
-                  name: 'ClassInfo',
-                  params: {
-                    id: row.id,
-                    submitClassReport: true,
-                    tap: true,
-                    page: pagination.page,
-                    offset: pagination.offset,
-                    filter: Object.keys(filters).find(
-                      (key) => filters[key] == true
-                    ),
-                  },
-                }"
-                class="soft-button-style rounded px-3 py-2"
-                >Submit</router-link
-              > -->
             </div>
           </div>
         </div>
@@ -471,14 +431,15 @@ export default {
       axios
         .post(url, data)
         .then((res) => {
-          // window.scrollTo(
-          //   0,
-          //   document.body.scrollHeight || document.documentElement.scrollHeight
-          // );
           if (!res.data.success) {
             return (this.alerts.error = res.data.msg);
           }
           this.alerts.success = res.data.msg;
+
+          window.scrollTo(
+            0,
+            document.body.scrollHeight || document.documentElement.scrollHeight
+          );
         })
         .catch(() => {
           console.log("Error catched");

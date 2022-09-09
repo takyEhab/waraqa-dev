@@ -118,7 +118,6 @@ export default {
   z-index: 1;
   height: 100%;
   position: fixed;
-  /* overflow-y: scroll; */
 }
 .logo img {
   width: 4em !important;

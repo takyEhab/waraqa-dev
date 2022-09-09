@@ -292,6 +292,13 @@ export default {
           this.classes = res.data.rows.filter(
             (item) => item.countOnInvoice == 1
           );
+          let invoiceHours = this.data[0].savedPaidHours;
+          this.classes = this.classes.filter((row) => {
+            if (parseInt(row.countOnInvoice) === 1)
+              invoiceHours -= row.duration;
+            return invoiceHours >= 0;
+          });
+
           this.totalHours = 0; // Re-Inisialization
           this.classes.forEach((row) => {
             if (parseInt(row.countOnInvoice) === 1)

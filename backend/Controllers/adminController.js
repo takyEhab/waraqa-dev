@@ -24,7 +24,7 @@ let allGuardians = (req, res) => {
                         FROM guardianinvoices
                         INNER JOIN guardians 
                         ON guardianinvoices.guardianID = guardians.id
-                        WHERE guardians.id = students.guardianID 
+                        WHERE guardians.id = students.guardianID AND guardianinvoices.paid = 1 
                     ) AS savedPaidHours
 
                 FROM guardians
@@ -59,28 +59,6 @@ let allStudents = (req, res, next) => {
   let status = queryReq.status;
   let offset = queryReq.offset;
 
-  // let invoiceCreatedDate= `(SELECT establishedAt FROM guardianinvoices WHERE guardianID=students.guardianID ORDER BY establishedAt DESC LIMIT 1)`
-
-  // (SELECT SUM(classes.duration)
-  // FROM classes
-  // INNER JOIN students
-  // ON classes.studentID = students.id
-  // INNER JOIN guardianinvoices
-  // ON guardianinvoices.guardianID = students.guardianID
-  // WHERE classes.studentID != students.id AND countForStudent = 1
-  // AND (
-  //         (guardianinvoices.paid=1 AND classes.invoiceID=guardianinvoices.id)
-  //     OR
-  //         (guardianinvoices.paid!=1 AND classes.startingDate BETWEEN ${invoiceCreatedDate} AND (${invoiceCreatedDate} + INTERVAL 1 MONTH))
-  //     )
-  // ) AS hoursOfOthers
-
-  // (SELECT SUM(classes.duration)
-  // FROM classes
-  // WHERE classes.studentID = students.id
-  // AND (status=1 OR status = 4) AND countForStudent = 1
-  // ) AS hours,
-
   query = `SELECT students.*, count(*) OVER() AS fullCount, guardians.name AS guardianName, 
 
                     (SELECT SUM(classes.duration)
@@ -89,6 +67,7 @@ let allStudents = (req, res, next) => {
                     ON classes.invoiceID = guardianinvoices.id
                     WHERE classes.studentID = students.id 
                     AND classes.invoiceID IS NOT NULL
+                    AND guardianinvoices.paid = 1
                     AND countForStudent = 1
                     ) AS savedPaidHours
 
@@ -553,10 +532,12 @@ let addClass = (req, res) => {
           }
         );
       } else {
-        dataBase.query(
-          `UPDATE guardianinvoices SET ? WHERE id = ${data[0].id}`,
-          { savedPaidHours: parseInt(data[0].savedPaidHours) + totalHours }
-        );
+        if (data[0]?.paid != 1) {
+          dataBase.query(
+            `UPDATE guardianinvoices SET ? WHERE id = ${data[0]?.id}`,
+            { savedPaidHours: parseInt(data[0]?.savedPaidHours) + totalHours }
+          );
+        }
       }
       //Step5: IF Weekly classes, Save classes with scheduleID=data.insertId
       if (bodyData.length > 1) {

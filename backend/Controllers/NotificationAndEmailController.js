@@ -17,7 +17,7 @@ const sendEmail = (config) => {
     console.log("emails are disabled");
     return false;
   }
-  config.from = appEmail
+  config.from = appEmail;
   if ("to" in config == false) {
     config.to = appEmail; //Send to admin email
   }

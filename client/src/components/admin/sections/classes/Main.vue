@@ -1,4 +1,7 @@
 <template>
+  <AddClass />
+  <Reschedule />
+  <DeleteClasses />
   <div class="position-relative">
     <!-- Section Header -->
     <div class="d-flex justify-content-between flex-wrap">
@@ -94,10 +97,6 @@
         <i class="fas fa-trash"></i> Delete Classes
       </div>
     </div>
-
-    <AddClass />
-    <Reschedule />
-    <DeleteClasses />
     <Previous
       v-if="previousTab"
       ref="previous"

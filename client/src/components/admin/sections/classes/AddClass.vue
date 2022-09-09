@@ -13,6 +13,7 @@
         >
           <h5 class="m-0">Create new Class</h5>
           <button
+            ref="dismissModel"
             type="button"
             class="f-color-0 border-0 background-none"
             data-bs-dismiss="modal"
@@ -46,7 +47,6 @@
                 />
               </div>
             </div>
-            <!-- Student & Class lin -->
             <div class="row flex-wrap">
               <!-- Student -->
               <div class="col-12 col-md mt-3">
@@ -69,28 +69,7 @@
                   v-model="teacherID"
                 />
               </div>
-              <!-- Student -->
-              <!-- <div class="col-12 col-md mt-3">
-                <select
-                  class="form-select"
-                  v-model="studentID"
-                  @change="getGuardian"
-                  required
-                >
-                  <option value="">Student</option>
-                  <option
-                    v-for="student in students"
-                    :key="student.id"
-                    :value="student.id"
-                  >
-                    {{ student.name }}
-                  </option>
-                </select>
-              </div> -->
-
-              <!-- Class link -->
             </div>
-            <!-- Starting date & Duration -->
             <div class="row flex-wrap">
               <!-- Starting date -->
               <div class="col-12 col-md mt-3">
@@ -197,20 +176,14 @@
                 <div class="d-flex">
                   <div class="me-4">
                     <label class="switch">
-                      <input
-                        v-model="countForTeacher"
-                        type="checkbox"
-                      />
+                      <input v-model="countForTeacher" type="checkbox" />
                       <span class="slider round"></span>
                     </label>
                     <span> Teacher </span>
                   </div>
                   <div>
                     <label class="switch">
-                      <input
-                        v-model="countForStudent"
-                        type="checkbox"
-                      />
+                      <input v-model="countForStudent" type="checkbox" />
                       <span class="slider round"></span>
                     </label>
                     <span> Student </span>
@@ -462,6 +435,7 @@ export default {
           this.teacherID = null;
           this.studentID = null;
           this.loadingBtn = false;
+          window.scrollTo(0, 0);
         })
         .catch(() => {
           console.log("Error catched");

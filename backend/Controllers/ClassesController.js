@@ -192,28 +192,28 @@ let endClass = (req, res) => {
                   }
 
                   //Active In case A-B = 0 OR In case First class (invoice active = 0)
-                  let lastCountedStartingDate = data[0].startingDate;
-                  let allHoursIsZero = false;
-                  if (
-                    data[0].savedPaidHours &&
-                    data[0].hours &&
-                    data[0].savedPaidHours == data[0].hours
-                  ) {
-                    allHoursIsZero = true;
-                  }
+                  // let lastCountedStartingDate = data[0].startingDate;
+                  // let allHoursIsZero = false;
+                  // if (
+                  //   data[0].savedPaidHours &&
+                  //   data[0].hours &&
+                  //   data[0].savedPaidHours == data[0].hours
+                  // ) {
+                  //   allHoursIsZero = true;
+                  // }
                   // console.log(
                   //   "allHoursIsZero " + allHoursIsZero,
                   //   data[0].savedPaidHours,
                   //   data[0].hours
                   // );
-                  // //Active In case A-B = 0 OR In case First class (invoice active = 0)
-                  // let lastCountedStartingDate = data[0].startingDate;
-                  // let allHoursIsZero = false;
-                  // let paidHours = data[0].savedPaidHours
-                  //   ? parseInt(data[0].savedPaidHours)
-                  //   : 0;
-                  // let hours = parseInt(data[0].hours);
-                  // if (paidHours - hours <= 0) allHoursIsZero = true;
+                  //Active In case A-B = 0 OR In case First class (invoice active = 0)
+                  let lastCountedStartingDate = data[0].startingDate;
+                  let allHoursIsZero = false;
+                  let paidHours = data[0].savedPaidHours
+                    ? parseInt(data[0].savedPaidHours)
+                    : 0;
+                  let hours = parseInt(data[0].hours);
+                  if (paidHours - hours <= 0) allHoursIsZero = true;
 
                   if (allHoursIsZero || invoiceStatus == 0) {
                     let query = `UPDATE guardianinvoices SET active = 1 WHERE guardianID = ${guardianID}`;
@@ -241,7 +241,11 @@ let endClass = (req, res) => {
                     });
                   }
                   // check if class starting date between invoice createdAT and payEvery of gaurdian
-                  if (allHoursIsZero && invoiceStatus == 1) {
+                  if (
+                    allHoursIsZero &&
+                    invoiceStatus == 1 &&
+                    data[0].paid == 1
+                  ) {
                     //Step5.1: Get startingDate of first not paid class (invoiceID IS NULL) of this guardian
                     // let query = `SELECT classes.id
                     //   FROM classes
@@ -868,11 +872,13 @@ let updateClass = (req, res) => {
       ["1", "4"].includes(classStatus) &&
       !["1", "4"].includes(currentClassStatus)
     ) {
+      console.log("add hours");
       addHours = 1;
     } else if (
-      ["2", "3", "5", "6"].includes(classStatus) &&
+      ["2", "3", "5", "6", "0"].includes(classStatus) &&
       ["1", "4"].includes(currentClassStatus)
     ) {
+      console.log("remove hours");
       addHours = 2;
     }
 
@@ -1858,13 +1864,6 @@ let RescheduleClasses = (req, res) => {
     classes.forEach((obj) => {
       obj.scheduleID = scheduleID;
     });
-
-    // update invoice
-    let totalHours = 0;
-    classes.forEach((obj) => (totalHours += parseInt(obj.duration)));
-    let query = `UPDATE guardianinvoices SET ? WHERE guardianID = ${guardianID} ORDER BY guardianinvoices.createdAt DESC LIMIT 1`;
-    dataBase.query(query, { savedPaidHours: totalHours });
-    // update invoice
 
     //Convert the array of objects to array of arrays
     sqlValues = classes.map((object) => Object.values(object));
