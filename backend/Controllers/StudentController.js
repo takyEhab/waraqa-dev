@@ -233,7 +233,7 @@ let fetchWaitListStudent = (req, res, next) => {
 // Path 9: Update 1 Wait-list student
 let updateWaitListStudent = (req, res) => {
   let id = req.params.id; // student ID
-  let bodyData = req.body
+  let bodyData = req.body;
   console.log(bodyData);
   let query = `UPDATE waitlist SET ? WHERE id = ${id}`;
   dataBase.query(query, bodyData, (error, data) => {
@@ -246,7 +246,7 @@ let updateWaitListStudent = (req, res) => {
       msg: "Great, the data have been successfully updated.",
     });
   });
-}
+};
 
 // Path 10: Delete 1 Wait-list student
 let deleteWaitListStudent = (req, res) => {
@@ -264,7 +264,7 @@ let deleteWaitListStudent = (req, res) => {
       msg: "The student has been successfully deleted.",
     });
   });
-}
+};
 
 //Path 0: Fetch students of Teacher
 let studentsOfTeacher = (req, res, next) => {
@@ -307,39 +307,29 @@ let studentsOfGuardian = (req, res, next) => {
   let search = queryReq.search;
   let status = queryReq.status;
   let offset = queryReq.offset;
-  // let invoiceCreatedDate= `(SELECT createdAt FROM guardianinvoices WHERE guardianID=students.guardianID ORDER BY createdAt DESC LIMIT 1)`
-  let invoiceCreatedDate = `(SELECT establishedAt FROM guardianinvoices WHERE guardianID=students.guardianID ORDER BY establishedAt DESC LIMIT 1)`;
-  // (SELECT SUM(classes.duration) 
-  // FROM classes 
-  // WHERE classes.studentID = students.id 
-  // AND (status=1 OR status = 4) AND countForStudent = 1
-  // AND classes.startingDate BETWEEN ${invoiceCreatedDate} AND (${invoiceCreatedDate} + INTERVAL 1 MONTH)
-  // ) AS hours,
-  
-  // (SELECT SUM(classes.duration) 
-  // FROM classes 
-  // INNER JOIN students 
-  // ON classes.studentID = students.id
+  // (SELECT SUM(classes.duration)
+  // FROM classes
   // INNER JOIN guardianinvoices
-  // ON guardianinvoices.guardianID = students.guardianID
-  // WHERE classes.studentID != students.id AND countForStudent = 1
-  // AND (
-  //         (guardianinvoices.paid=1 AND classes.invoiceID=guardianinvoices.id) 
-  //     OR 
-  //         (guardianinvoices.paid!=1 AND classes.startingDate BETWEEN ${invoiceCreatedDate} AND (${invoiceCreatedDate} + INTERVAL 1 MONTH))
-  //     )
-  // ) AS hoursOfOthers
+  // ON classes.invoiceID = guardianinvoices.id
+  // WHERE classes.studentID = students.id
+  // AND classes.invoiceID IS NOT NULL
+  // AND countForStudent = 1
+  // ) AS savedPaidHours
+
   query = `SELECT students.*,count(*) OVER() AS fullCount, guardians.name AS guardianName,
 
-                    (SELECT SUM(classes.duration)
-                    FROM classes
-                    INNER JOIN guardianinvoices
-                    ON classes.invoiceID = guardianinvoices.id
-                    WHERE classes.studentID = students.id 
-                    AND classes.invoiceID IS NOT NULL
-                    AND countForStudent = 1
-                    ) AS savedPaidHours
 
+                    (SELECT SUM(savedPaidHours)
+                      FROM guardianinvoices
+                      INNER JOIN guardians 
+                      ON guardianinvoices.guardianID = guardians.id
+                      WHERE guardians.id = students.guardianID AND guardianinvoices.paid = 1 
+                    ) AS savedPaidHours,
+
+                    (SELECT SUM(students.attendedHours)
+                      FROM students
+                      WHERE students.guardianID = guardians.id AND students.id
+                    ) AS restStudentsHours
 
 
                     FROM students 

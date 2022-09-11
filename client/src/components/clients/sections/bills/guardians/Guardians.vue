@@ -53,10 +53,10 @@
         <div v-for="row in data" :key="row.id" class="table-row py-1">
           <div
             @click="
-                $router.push({
-                  name: 'ClientGuardianInvoiceInfo',
-                  params: { id: row.id },
-                })
+              $router.push({
+                name: 'ClientGuardianInvoiceInfo',
+                params: { id: row.id },
+              })
             "
             class="rowTable p-2 d-flex f-color-3"
           >

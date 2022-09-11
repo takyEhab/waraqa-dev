@@ -589,8 +589,7 @@ export default {
       axios
         .post(url, formData)
         .then((res) => {
-
-          console.log(res.data)
+          console.log(res.data);
           if (!res.data.success) {
             this.loadingBtn = false;
             return (this.alerts.error = res.data.msg);

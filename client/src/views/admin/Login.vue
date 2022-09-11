@@ -73,7 +73,7 @@
                   Forget Password ?
                 </button></span
               >
-              <ForgetPass userType='admin' />
+              <ForgetPass userType="admin" />
             </div>
             <!-- Submit -->
             <div class="mt-4 text-end">

@@ -566,9 +566,10 @@ export default {
       } else if (select == "rejectOfTeacher") {
         data.teacherReschedule = null;
       } else if (select == "acceptOfStudent") {
-        data.startingDate = moment(this.data[0].studentReschedule, "YYYY-MM-DD HH:mm").format(
+        data.startingDate = moment(
+          this.data[0].studentReschedule,
           "YYYY-MM-DD HH:mm"
-        );
+        ).format("YYYY-MM-DD HH:mm");
         data.studentReschedule = null;
         (data.startingDate = this.data[0].studentReschedule),
           (data.requesterName = this.data[0].studentName);

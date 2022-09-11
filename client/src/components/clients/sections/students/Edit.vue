@@ -40,7 +40,6 @@
               <div
                 class="mt-3 position-relative"
                 style="width: 90px; height: 100px"
-                
               >
                 <div
                   class="avatar-btn"

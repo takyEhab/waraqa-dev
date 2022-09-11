@@ -84,8 +84,18 @@ let updateGuardianInvoice = (req, res) => {
 
   //NOT Applied yet: IF PaidHours == countedHours => Get the DATE of last counted class of guardian, And create an inovice in that DATE
 
-  //Step1: Update Invoice
-  //Step2: IF classesIDs: Save invoiceID in classes as a paid classes
+  //Step1: IF classesIDs: Save invoiceID in classes as a paid classes
+  if (classesIDs) {
+    dataBase.query(
+      `UPDATE classes SET invoiceID = null WHERE invoiceID = ${id}`,
+      () => {
+        let query = `UPDATE classes SET ? WHERE id IN (${classesIDs})`;
+        let data = { invoiceID: id };
+        dataBase.query(query, data);
+      }
+    );
+  }
+  //Step2: Update Invoice
   let query = `UPDATE guardianinvoices SET ? WHERE id = ${id}`;
   dataBase.query(query, bodyData, (error, data) => {
     if (error || !data) {
@@ -93,17 +103,6 @@ let updateGuardianInvoice = (req, res) => {
         success: false,
         msg: "Failed update Invoice",
         error: error,
-      });
-    }
-    //Step2: IF classesIDs: Save invoiceID in classes as a paid classes
-    if (classesIDs) {
-      let query = `UPDATE classes SET ? WHERE id IN (${classesIDs})`;
-      let data = { invoiceID: id };
-      dataBase.query(query, data, (error, data) => {
-        if (error || !data) {
-          return console.log("Failed store invoiceID in this classes");
-        }
-        console.log("Saved invoiceID in this classes");
       });
     }
     res.json({

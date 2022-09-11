@@ -128,9 +128,11 @@
           <!-- <small class="col-1">More</small> -->
         </div>
         <div v-for="(row, i) in data" :key="row.id" class="table-row py-1">
-          <span class="position-absolute " style="margin-top: 22.5px; left: -10px">{{
-            i + 1 + pagination.offset
-          }}</span>
+          <span
+            class="position-absolute"
+            style="margin-top: 22.5px; left: -10px"
+            >{{ i + 1 + pagination.offset }}</span
+          >
           <div
             @click="
               $router.push({
@@ -174,10 +176,15 @@
               >{{
                 (
                   (row.savedPaidHours || 0) / 60 -
-                  (row.attendedHours || 0) / 60
-                ).toFixed(2)
-              }}</span
-            >
+                  (row.restStudentsHours || 0) / 60
+                )
+                  // (row.savedPaidHours || 0) / 60 -
+                  // (row.attendedHours || 0) / 60 -
+                  // ((row.restStudentsHours || 0) / 60 -
+                  //   (row.attendedHours || 0) / 60)
+                  .toFixed(2)
+              }}
+            </span>
 
             <span
               :class="[row.status == 1 ? 'f-color-1' : 'f-color-4', 'col-2']"

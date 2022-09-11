@@ -39,18 +39,6 @@
               <!-- monday input -->
               <div class="col-12 col-md-6 mt-3">
                 <label class="f-color-3 mb-1">Monday</label>
-                <!-- <Datepicker
-                  autoApply
-                  minutesGridIncrement="15"
-                  minutesIncrement="15"
-                  placeholder="Choose time"
-                  v-model="daysTime.Mon"
-                  :disabled="selectedDays.Mon ? disabled : ''"
-                  timePicker
-                  required
-                  textInput
-                  utc
-                /> -->
 
                 <input
                   type="time"
@@ -71,34 +59,10 @@
                   v-model="daysTime.Tue"
                   :disabled="selectedDays.Tue ? disabled : ''"
                 />
-                <!-- <Datepicker
-                  autoApply
-                  minutesGridIncrement="15"
-                  minutesIncrement="15"
-                  placeholder="Choose time"
-                  v-model="daysTime.Tue"
-                  :disabled="selectedDays.Tue ? disabled : ''"
-                  timePicker
-                  required
-                  textInput
-                  utc
-                /> -->
               </div>
               <!-- wednesday input -->
               <div class="col-12 col-md-6 mt-3">
                 <label class="f-color-3 mb-1">Wednesday</label>
-                <!-- <Datepicker
-                  autoApply
-                  minutesGridIncrement="15"
-                  minutesIncrement="15"
-                  placeholder="Choose time"
-                  v-model="daysTime.Wed"
-                  :disabled="selectedDays.Wed ? disabled : ''"
-                  timePicker
-                  required
-                  textInput
-                  utc
-                /> -->
 
                 <input
                   type="time"
@@ -112,19 +76,6 @@
               <div class="col-12 col-md-6 mt-3">
                 <label class="f-color-3 mb-1">Thursday</label>
 
-                <!-- <Datepicker
-                  autoApply
-                  minutesGridIncrement="15"
-                  minutesIncrement="15"
-                  placeholder="Choose time"
-                  v-model="daysTime.Thu"
-                  :disabled="selectedDays.Thu ? disabled : ''"
-                  timePicker
-                  required
-                  textInput
-                  utc
-                /> -->
-
                 <input
                   type="time"
                   class="form-control"
@@ -136,16 +87,7 @@
               <!-- friday input -->
               <div class="col-12 col-md-6 mt-3">
                 <label class="f-color-3 mb-1">Friday</label>
-                <!-- <Datepicker
-                  autoApply
-                  minutesGridIncrement="15"
-                  minutesIncrement="15"
-                  placeholder="Choose time"
-                  timePicker
-                  required
-                  textInput
-                  utc
-                /> -->
+
                 <input
                   type="time"
                   class="form-control"
@@ -189,6 +131,7 @@
               </button>
             </div>
           </form>
+          <div data-bs-toggle="modal" :data-bs-target="name" ref="open"></div>
         </div>
       </div>
     </div>
@@ -196,14 +139,9 @@
 </template>
 <script>
 import moment from "moment-timezone";
-// import "@vuepic/vue-datepicker/dist/main.css";
-// import Datepicker from "@vuepic/vue-datepicker";
 
 export default {
   props: ["selectedDays", "name"],
-  // components: {
-  //   Datepicker,
-  // },
   data() {
     return {
       loadingBtn: false,
@@ -229,15 +167,6 @@ export default {
         Fri: "",
         Sat: "",
       },
-      // selectedDays: {
-      //   Sun: "",
-      //   Mon: "",
-      //   Tue: "",
-      //   Wed: "",
-      //   Thu: "",
-      //   Fri: "",
-      //   Sat: "",
-      // },
     };
   },
   methods: {
@@ -246,33 +175,11 @@ export default {
     },
     selectDays(event) {
       this.$emit("selectDay", { event, daysTime: this.daysTime });
-      // let day = event.target.getAttribute("data-day");
-      // if (!this.selectedDays[day]) {
-      //   // Fill Day
-      //   this.selectedDays[day] = day;
-
-      // } else {
-      //   //Empty Day & time
-      //   this.selectedDays[day] = "";
-      //   this.daysTime[day] = "";
-      // }
-      // event.target.classList.toggle("selected-day");
     },
     submitForm() {
-      let btn = document.createElement("button");
-      btn.setAttribute("data-bs-toggle", "modal");
-      btn.setAttribute("data-bs-target", this.name);
-
-      document.body.appendChild(btn);
-      setTimeout(() => {
-        btn.click();
-      }, 500);
+      this.$refs.open.click();
     },
   },
-  // created() {
-  // console.log(this.day);
-  // this.day = 'other testing text'
-  // },
 };
 </script>
 <style scoped>

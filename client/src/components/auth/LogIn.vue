@@ -4,29 +4,29 @@
       <h3 class="f-color-3">Log In</h3>
     </div>
     <form class="mt-5" @submit.prevent="login">
-        <!-- Email -->
-        <div class="mt-3">
-          <!--/ Phone Number-->
-          <input
-            type="email"
-            v-model="email"
-            class="form-control"
-            placeholder="Enter your Email"
-            style="border-radius: 35px"
-            required
-          />
-        </div>
-        <!-- Password -->
-        <div class="mt-3">
-          <input
-            type="password"
-            v-model="password"
-            style="border-radius: 35px"
-            class="form-control"
-            placeholder="Enter your Passowrd"
-            required
-          />
-        </div>
+      <!-- Email -->
+      <div class="mt-3">
+        <!--/ Phone Number-->
+        <input
+          type="email"
+          v-model="email"
+          class="form-control"
+          placeholder="Enter your Email"
+          style="border-radius: 35px"
+          required
+        />
+      </div>
+      <!-- Password -->
+      <div class="mt-3">
+        <input
+          type="password"
+          v-model="password"
+          style="border-radius: 35px"
+          class="form-control"
+          placeholder="Enter your Passowrd"
+          required
+        />
+      </div>
 
       <!-- Forget Password -->
       <div class="mt-3">

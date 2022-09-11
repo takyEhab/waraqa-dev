@@ -147,11 +147,13 @@
                 'col-1',
               ]"
               >{{
-                // - (row.hoursOfOthers || 0)
                 (
                   (row.savedPaidHours || 0) / 60 -
-                  (row.attendedHours || 0) / 60
-                ).toFixed(2)
+                  (row.restStudentsHours || 0) / 60
+                )
+                  // (row.savedPaidHours || 0) / 60 -
+                  // (row.attendedHours || 0) / 60
+                  .toFixed(2)
               }}</span
             >
 
@@ -167,14 +169,6 @@
                   : "Vacation"
               }}
             </span>
-
-            <!-- <div class="col-1" v-if="this.userType != 'Teacher'">
-              <router-link
-                :to="{ name: 'ClientStudentInfo', params: { id: row.id } }"
-                class="f-color-1"
-                ><i class="fas fa-eye"></i
-              ></router-link>
-            </div> -->
           </div>
         </div>
         <!-- Alerts -->

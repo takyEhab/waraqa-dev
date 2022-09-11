@@ -13,7 +13,6 @@
         >
           <h5 class="m-0">Create new Class</h5>
           <button
-            ref="dismissModel"
             type="button"
             class="f-color-0 border-0 background-none"
             data-bs-dismiss="modal"
@@ -245,7 +244,6 @@ import Tz from "@/components/Tz.json";
 export default {
   components: {
     vSelect,
-    // Datepicker,
     RepeatingDays,
   },
   data() {
@@ -435,7 +433,6 @@ export default {
           this.teacherID = null;
           this.studentID = null;
           this.loadingBtn = false;
-          window.scrollTo(0, 0);
         })
         .catch(() => {
           console.log("Error catched");

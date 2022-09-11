@@ -294,7 +294,7 @@ export default {
     this.getData();
     let today = moment().format("YYYY-MM-DD");
     let firstDayOfMonth = moment().startOf("month").format("YYYY-MM-DD");
-    if (today == firstDayOfMonth) this.Paywages = true
+    if (today == firstDayOfMonth) this.Paywages = true;
   },
 };
 </script>

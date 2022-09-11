@@ -1,9 +1,7 @@
 <template>
   <div v-if="displayData" class="information">
     <div class="f-color-1">
-      <small
-        class="text-on-hover"
-        @click="$router.go(-1)"
+      <small class="text-on-hover" @click="$router.go(-1)"
         ><i class="fas fa-long-arrow-alt-left"></i> Back</small
       >
     </div>
@@ -277,7 +275,7 @@
                 <small class="col-2">{{ schClass.subject }}</small>
                 <small class="col-2">{{ schClass.studentName }}</small>
                 <small class="col-1">{{ schClass.duration }}</small>
-                
+
                 <small class="col-1">{{
                   schClass.Mon
                     ? moment(schClass.Mon).format("HH:mm")

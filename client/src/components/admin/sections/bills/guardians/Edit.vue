@@ -236,20 +236,24 @@ export default {
       this.alerts.error = "";
       this.alerts.success = "";
       this.loadingBtn = true;
-      console.log(this.$refs.totalHours.value);
       this.data.savedPaidHours =
         this.data.savedPaidHours != null
           ? this.data.savedPaidHours * 60
           : this.$refs.totalHours.value * 60; //Save as minutes
+
+      if (this.data.paymentType == 1) {
+        this.$parent.getPrepaidClasses(this.data.savedPaidHours);
+      }
+      console.log(this.classesIDs);
       this.data.classesIDs = this.classesIDs; //Store invoiceID as paid classes
       this.data.isSent = this.data.isSent ? 1 : 0;
       delete this.data.hoursPrice;
       delete this.data.transferPrice;
-      console.log(this.data);
       let url = `http://localhost:3300/api/v1/admin/bills/path4/${this.invoiceID}`;
       axios
         .post(url, this.data)
         .then((res) => {
+          this.data.savedPaidHours /= 60;
           if (!res.data.success) {
             this.loadingBtn = false;
             return (this.alerts.error = res.data.msg);
@@ -257,7 +261,6 @@ export default {
           this.alerts.success = res.data.msg;
           this.$parent.getData();
           this.loadingBtn = false;
-          this.data.savedPaidHours /= 60;
         })
         .catch(() => {
           console.log("Error catched");
