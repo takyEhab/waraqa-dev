@@ -373,10 +373,6 @@ export default {
           }
           this.alerts.error = null;
           this.data = res.data.rows;
-
-          // this.data.forEach((obj) => {
-          //   obj.status == 0 && this.noReportCount++;
-          // });
           this.pageCount = this.data[0].fullCount;
         })
         .catch((e) => {
@@ -398,9 +394,6 @@ export default {
           }
           this.alerts.error = null;
           this.data = res.data.rows;
-          // this.data.forEach((obj) => {
-          //   obj.status == 0 && this.noReportCount++;
-          // });
           this.pageCount = this.data[0].fullCount;
         })
         .catch(() => {
@@ -419,7 +412,7 @@ export default {
             }
 
             this.alerts.success = res.data.msg;
-            this.$router.push("/admin");
+            this.getData();
           });
       }
     },
@@ -431,15 +424,14 @@ export default {
       axios
         .post(url, data)
         .then((res) => {
-          if (!res.data.success) {
-            return (this.alerts.error = res.data.msg);
-          }
-          this.alerts.success = res.data.msg;
-
           window.scrollTo(
             0,
             document.body.scrollHeight || document.documentElement.scrollHeight
           );
+          if (!res.data.success) {
+            return (this.alerts.error = res.data.msg);
+          }
+          this.alerts.success = res.data.msg;
         })
         .catch(() => {
           console.log("Error catched");

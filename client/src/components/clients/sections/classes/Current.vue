@@ -238,14 +238,14 @@ export default {
       axios
         .post(url, data)
         .then((res) => {
-          if (!res.data.success) {
-            return (this.alerts.error = res.data.msg);
-          }
-          this.alerts.success = res.data.msg;
           window.scrollTo(
             0,
             document.body.scrollHeight || document.documentElement.scrollHeight
           );
+          if (!res.data.success) {
+            return (this.alerts.error = res.data.msg);
+          }
+          this.alerts.success = res.data.msg;
         })
         .catch(() => {
           console.log("Error catched");

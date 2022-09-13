@@ -176,13 +176,8 @@
               >{{
                 (
                   (row.savedPaidHours || 0) / 60 -
-                  (row.restStudentsHours || 0) / 60
-                )
-                  // (row.savedPaidHours || 0) / 60 -
-                  // (row.attendedHours || 0) / 60 -
-                  // ((row.restStudentsHours || 0) / 60 -
-                  //   (row.attendedHours || 0) / 60)
-                  .toFixed(2)
+                  (row.attendedHours || 0) / 60
+                ).toFixed(2)
               }}
             </span>
 

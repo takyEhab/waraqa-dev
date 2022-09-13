@@ -27,12 +27,7 @@
             <!-- Starting date -->
             <div class="col-12 col-md mt-3">
               <label class="f-color-3 mb-1">Choose a date</label>
-              <!-- <input
-                type="datetime-local"
-                class="form-control"
-                v-model="startingRescheduled"
-                required
-              /> -->
+
               <Datepicker
                 placeholder="Date"
                 v-model="startingRescheduled"
@@ -129,8 +124,5 @@ export default {
         });
     },
   },
-  // created() {
-  //   console.log("test");
-  // },
 };
 </script>

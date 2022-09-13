@@ -104,7 +104,6 @@
           <small class="col-1" v-if="this.userType != 'Teacher'">Hours</small>
           <small class="col-4" v-else>Time Zone</small>
           <small class="col-2">Status</small>
-          <!-- <small class="col-1" v-if="this.userType != 'Teacher'">Info</small> -->
         </div>
         <div v-for="row in data" :key="row.id" class="table-row py-1">
           <div
@@ -135,11 +134,9 @@
               row.email
             }}</span>
             <span class="col-2">{{ row.guardianName }}</span>
-            <!-- <span v-if="this.userType != 'Teacher'" :class="[((row.savedPaidHours - row.hoursOfOthers)/60)-(row.hours/60)<1 || !row.hours ? 'f-color-4':'','col-1']">{{row.hours? (((row.savedPaidHours - row.hoursOfOthers)/60)-(row.hours/60)).toFixed(2):0}}</span> -->
             <span
               v-if="this.userType != 'Teacher'"
               :class="[
-                // - (row.hoursOfOthers || 0)
                 (row.savedPaidHours || 0) / 60 - (row.attendedHours || 0) / 60 <
                 1
                   ? 'f-color-4'
@@ -149,11 +146,8 @@
               >{{
                 (
                   (row.savedPaidHours || 0) / 60 -
-                  (row.restStudentsHours || 0) / 60
-                )
-                  // (row.savedPaidHours || 0) / 60 -
-                  // (row.attendedHours || 0) / 60
-                  .toFixed(2)
+                  (row.attendedHours || 0) / 60
+                ).toFixed(2)
               }}</span
             >
 
@@ -265,10 +259,8 @@ export default {
       };
       let url =
         this.userType == "Teacher"
-          ? "http://localhost:3300/api/v1/teacher/students/path0"
-          : "http://localhost:3300/api/v1/teacher/students/path1";
-      // let url = 'http://localhost:3300/api/v1/teacher/students/path0'; //Teacher
-      // let url = 'http://localhost:3300/api/v1/teacher/students/path1'; //Guardian
+          ? "http://localhost:3300/api/v1/teacher/students/path0" //Teacher
+          : "http://localhost:3300/api/v1/teacher/students/path1"; //Guardian
       axios.defaults.headers.common["Authorization"] =
         localStorage.getItem("waraqaToken");
       axios

@@ -17,14 +17,11 @@ let allGuardians = (req, res) => {
                     (SELECT SUM(students.attendedHours) 
                         FROM students
                         WHERE students.guardianID = guardians.id 
-
                     ) AS hours,
 
                     (SELECT SUM(savedPaidHours)
                         FROM guardianinvoices
-                        INNER JOIN guardians 
-                        ON guardianinvoices.guardianID = guardians.id
-                        WHERE guardians.id = students.guardianID AND guardianinvoices.paid = 1 
+                        WHERE guardianinvoices.guardianID = guardians.id AND guardianinvoices.paid = 1 
                     ) AS savedPaidHours
 
                 FROM guardians
@@ -75,19 +72,24 @@ let allStudents = (req, res, next) => {
   //                     AND guardianinvoices.paid = 1
   //                     AND countForStudent = 1
   //                     ) AS savedPaidHours
+  // (SELECT SUM(savedPaidHours)
+  // FROM guardianinvoices
+  // INNER JOIN guardians
+  // ON guardianinvoices.guardianID = guardians.id
+  // WHERE guardians.id = students.guardianID AND guardianinvoices.paid = 1
+  // ) AS savedPaidHours,
 
   query = `SELECT students.*, count(*) OVER() AS fullCount, guardians.name AS guardianName, 
-                  (SELECT SUM(savedPaidHours)
-                    FROM guardianinvoices
-                    INNER JOIN guardians 
-                    ON guardianinvoices.guardianID = guardians.id
-                    WHERE guardians.id = students.guardianID AND guardianinvoices.paid = 1 
-                  ) AS savedPaidHours,
 
-                  (SELECT SUM(students.attendedHours)
-                    FROM students
-                    WHERE students.guardianID = guardians.id AND students.id
-                  ) AS restStudentsHours
+
+                  (SELECT SUM(classes.duration)
+                    FROM classes
+                    INNER JOIN guardianinvoices
+                    ON guardianinvoices.guardianID = guardianinvoices.guardianID
+                    WHERE classes.studentID = students.id
+                    AND classes.invoiceID = guardianinvoices.id
+                    AND countForStudent = 1
+                  ) AS savedPaidHours
 
                 FROM students
                 INNER JOIN guardians
@@ -102,12 +104,15 @@ let allStudents = (req, res, next) => {
                 ${offset ? `LIMIT 30 OFFSET ${offset}` : ""}
                 `;
 
-  //     (SELECT SUM(students.attendedHours)
-  //     FROM students
-
-  //     WHERE students.guardianID = guardians.id
-
+  //   (SELECT SUM(students.attendedHours)
+  //   FROM students
+  //   WHERE students.guardianID = guardians.id
   // ) AS restStudentsHours
+  //   (SELECT SUM(savedPaidHours)
+  //   FROM guardianinvoices
+  //   WHERE guardianinvoices.guardianID = guardians.id AND guardianinvoices.paid = 1
+  // ) AS savedPaidHours,
+
   msg = "There are no results available to display.";
   return next();
 };

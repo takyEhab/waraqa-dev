@@ -89,9 +89,11 @@ let updateGuardianInvoice = (req, res) => {
     dataBase.query(
       `UPDATE classes SET invoiceID = null WHERE invoiceID = ${id}`,
       () => {
-        let query = `UPDATE classes SET ? WHERE id IN (${classesIDs})`;
-        let data = { invoiceID: id };
-        dataBase.query(query, data);
+        if (bodyData.paid == 1) {
+          let query = `UPDATE classes SET ? WHERE id IN (${classesIDs})`;
+          let data = { invoiceID: id };
+          dataBase.query(query, data);
+        }
       }
     );
   }

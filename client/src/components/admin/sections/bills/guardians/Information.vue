@@ -380,7 +380,7 @@ export default {
           console.log("Invoice Info/Error catched");
         });
     },
-    getPrepaidClasses(paidHours) {
+    getPrepaidClasses() {
       let url = `http://localhost:3300/api/v1/admin/bills/path3/${this.invoiceID}`;
       axios
         .get(url)
@@ -392,9 +392,7 @@ export default {
           this.alerts.error = null;
           this.classes = res.data.rows;
 
-          let invoiceHours = paidHours
-            ? paidHours
-            : this.data[0].savedPaidHours;
+          let invoiceHours = this.data[0].savedPaidHours;
           this.classes = this.classes.filter((row) => {
             if (parseInt(row.countOnInvoice) === 1)
               invoiceHours -= row.duration;
@@ -414,7 +412,10 @@ export default {
           }
           this.classesIDs = ids.join(",");
           let url = `http://localhost:3300/api/v1/admin/bills/path4/${this.invoiceID}`;
-          axios.post(url, { classesIDs: this.classesIDs });
+          axios.post(url, {
+            classesIDs: this.classesIDs,
+            paid: this.data[0].paid,
+          });
         })
         .catch(() => {
           console.log("Invoice Info/Error catched");
