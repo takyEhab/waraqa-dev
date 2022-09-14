@@ -177,6 +177,7 @@
                   <input
                     required
                     type="number"
+                    step="any"
                     class="form-control"
                     placeholder="Hour fees"
                     v-model="data[0].hoursPrice"

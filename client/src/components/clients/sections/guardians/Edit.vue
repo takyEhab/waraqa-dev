@@ -344,14 +344,12 @@ export default {
         passError: null,
       },
       TimeZoneList: Tz,
-
       data: [],
       avatar: null,
       temporalPic: null,
       firstName: "",
       lastName: "",
       disablePaymenttypeSelection: false,
-
       password: "",
       newPassword: "",
     };
@@ -391,27 +389,6 @@ export default {
           console.log("Teacher Info/Error catched");
         });
     },
-    // openUpload() {
-    //   this.$refs.avatar.click();
-    // },
-    // selectFile(event) {
-    //   console.log(event.target);
-    //   this.avatar = event.target.files[0];
-    //   console.log(this.avatar);
-    //   // Update Preview Start
-    //   let files = event.target.files;
-    //   if (!files.length) {
-    //     console.log("file input is empty");
-    //     return;
-    //   }
-    //   let reader = new FileReader();
-    //   reader.onload = (event) => {
-    //     console.log(event.target.result);
-    //     this.temporalPic = event.target.result;
-    //   };
-    //   reader.readAsDataURL(files[0]);
-    //   // Update Preview End
-    // },
     updateUserData() {
       this.alerts.error = "";
       this.alerts.success = "";
@@ -424,18 +401,17 @@ export default {
       delete data[0].picture;
       delete data[0].studentsCount;
       delete data[0].lastPaid;
+      delete data[0].transferPrice;
 
       let name = this.firstName + " " + this.lastName;
       data[0].name = name;
 
       // Upload Image
-      console.log({ avatar: this.avatar });
       const formData = new FormData();
       formData.append("image", this.avatar);
       Object.entries(data[0]).forEach(([key, value]) =>
         formData.append(key, value)
       );
-      console.log(formData);
       let url = `http://localhost:3300/api/v1/admin/guardians/path2/${this.userID}`;
       axios
         .post(url, formData)
@@ -447,6 +423,7 @@ export default {
           this.alerts.success = res.data.msg;
           this.loadingBtn = false;
           this.$parent.getUserData();
+          this.getUserData();
         })
         .catch(() => {
           console.log("Error catched");

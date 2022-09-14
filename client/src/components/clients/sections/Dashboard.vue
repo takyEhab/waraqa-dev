@@ -104,8 +104,6 @@
               >From Here</ins
             >
           </div>
-          <!-- <div class="b-color-0 box-shadow-style px-3 px-md-4 py-4">
-                </div> -->
 
           <div v-if="nextClass" class="col-12">
             <div
@@ -210,8 +208,6 @@ export default {
       axios
         .get("http://localhost:3300/api/v1/client/classes/path0", queryReq)
         .then((res) => {
-          console.log(res.data);
-
           if (res.data.success) {
             (this.hours = res.data.rows[0].hours),
               (this.studentsCount = res.data.rows[0].activeStudentsCount);
@@ -221,7 +217,6 @@ export default {
               Date.parse(res.data.rows[0].nextClass)
             );
             this.nextClassStudent = res.data.rows[0].studentName;
-            // console.log(timeAgo.format(Date.parse('2022-08-21 19:57:21')))
           }
         })
         .catch(() => {
