@@ -194,21 +194,6 @@ let endClass = (req, res) => {
 
                   //Active In case A-B = 0 OR In case First class (invoice active = 0)
                   // let lastCountedStartingDate = data[0].startingDate;
-                  // let allHoursIsZero = false;
-                  // if (
-                  //   data[0].savedPaidHours &&
-                  //   data[0].hours &&
-                  //   data[0].savedPaidHours == data[0].hours
-                  // ) {
-                  //   allHoursIsZero = true;
-                  // }
-                  // console.log(
-                  //   "allHoursIsZero " + allHoursIsZero,
-                  //   data[0].savedPaidHours,
-                  //   data[0].hours
-                  // );
-                  //Active In case A-B = 0 OR In case First class (invoice active = 0)
-                  let lastCountedStartingDate = data[0].startingDate;
                   let allHoursIsZero = false;
                   let paidHours = data[0].savedPaidHours
                     ? parseInt(data[0].savedPaidHours)
@@ -249,29 +234,6 @@ let endClass = (req, res) => {
                     invoicePaid == 1
                   ) {
                     //Step5.1: Get startingDate of first not paid class (invoiceID IS NULL) of this guardian
-                    // let query = `SELECT classes.id
-                    //   FROM classes
-                    //   INNER JOIN students
-                    //   ON classes.studentID = students.id
-                    //   INNER JOIN guardians
-                    //   ON guardians.id = students.guardianID
-                    //   INNER JOIN guardianinvoices
-                    //   ON guardianinvoices.guardianID = guardians.id
-                    //   WHERE classes.countForStudent = 1
-                    //   AND (classes.status=0 OR classes.status=1 OR classes.status=4)
-                    //   AND guardianinvoices.guardianID = ${guardianID}
-                    //   AND (classes.invoiceID IS NULL AND classes.startingDate BETWEEN guardianinvoices.createdAt AND (guardianinvoices.createdAt + INTERVAL (SELECT payEvery FROM scheduledclasses WHERE guardianID = guardians.id ORDER BY payEvery DESC LIMIT 1) MONTH))
-                    // `;
-                    // dataBase.query(query, (error, data) => {
-                    //   if (!error && data.length >= 1) {
-                    //     const isFound = data.some((element) => {
-                    //       if (element.id === id) {
-                    //         return true;
-                    //       }
-                    //       return false;
-                    //     });
-                    //     if (isFound) return;
-                    //   }
                     let query = `SELECT classes.*
                                     FROM classes
                                     INNER JOIN students
@@ -311,66 +273,6 @@ let endClass = (req, res) => {
                             });
                           }
 
-                          //   let upcomingHours = null;
-                          //   if (data[0]) {
-                          //     data.forEach((obj) => {
-                          //       if (obj.duration)
-                          //         upcomingHours += parseInt(obj.duration);
-                          //     });
-                          //   }
-
-                          //   configAdminEmail = {
-                          //     subject: "A new invoice",
-                          //     html: `<p> Send (${guardianName}) a new invoice. His remaining hours are 0 or less.</p>`,
-                          //   };
-                          //   sendEmail(configAdminEmail);
-                          //   let expectedUpcomingClasses = data ? [] : null;
-                          //   for (i in data) {
-                          //     expectedUpcomingClasses.push(
-                          //       moment(data[i]?.startingDate).format(
-                          //         "dddd, D MMM , hh:mm A"
-                          //       )
-                          //     );
-                          //   }
-                          //   expectedUpcomingClasses =
-                          //     expectedUpcomingClasses.join(" <br/> ");
-
-                          //   let previousClasses = data2 ? [] : null;
-                          //   for (i in data2) {
-                          //     previousClasses.push(
-                          //       moment(data2[i]?.startingDate).format(
-                          //         "dddd, D MMM , hh:mm A"
-                          //       )
-                          //     );
-                          //   }
-                          //   previousClasses = previousClasses.join(" <br/> ");
-
-                          //   configGuardianEmail = {
-                          //     to: guardianEmail,
-                          //     subject: "A new invoice",
-                          //     html: `<p> Your paid hours have been completed. Here's a summary of the last payment period and the new one:
-                          // Previous classes from last payment report:
-                          // ${
-                          //   previousClasses
-                          //     ? previousClasses
-                          //     : "No Previous classes classes"
-                          // }
-
-                          // Expected upcoming classes within a month:
-                          // ${
-                          //   expectedUpcomingClasses
-                          //     ? expectedUpcomingClasses
-                          //     : "No Expected upcoming classes"
-                          // }
-                          // The due amount: ${
-                          //   upcomingHours == null
-                          //     ? "No upcoming classes"
-                          //     : upcomingHours * hoursPrice
-                          // }
-                          // </p>`,
-                          //   };
-                          //   sendEmail(configGuardianEmail);
-
                           notiConfig = {
                             type: 3,
                             admin: 1,
@@ -408,6 +310,7 @@ let endClass = (req, res) => {
                 return console.log("Failed find last class date");
               }
               lastClassDate = data[0].startingDate;
+
               let query = `SELECT * FROM scheduledclasses WHERE id = ${scheduleID}`;
               dataBase.query(query, (error, data) => {
                 if (error || !data.length) {
@@ -482,7 +385,10 @@ let endClass = (req, res) => {
                       day.add(7, "d");
                     }
                   }
-                  // The Next class(Index 0 = same lastClassDate)(Index 1 = The next class)
+                  classes = classes.sort(function (a, b) {
+                    return new Date(a.startingDate) - new Date(b.startingDate);
+                  });
+
                   let nextClass = classes[1];
                   // Add scheduleID
                   nextClass.scheduleID = scheduleID;
@@ -501,13 +407,11 @@ let endClass = (req, res) => {
               });
             });
           }
-          // check if missed by the student send email and notification
 
-          // Check if second time in row of missed by the student
           let query = `SELECT status FROM classes WHERE studentID = ${studentID} AND startingDate < NOW() ORDER BY startingDate DESC LIMIT 2`;
           dataBase.query(query, (error, data) => {
             if (error || !data.length) return;
-            // last class missed
+            // Check if second time in row of missed by the student
             if (data[1]?.status == 4 && data[0].status == 4) {
               //Send Notification
               notiConfig = {
@@ -541,6 +445,7 @@ let endClass = (req, res) => {
                 html: `${studentName} missed two or more consequent classs.`,
               };
               sendEmail(configAdminEmail);
+              // check if missed by the student send email and notification
             } else if (data[0].status == 4) {
               //Send Notification
               notiConfig = {

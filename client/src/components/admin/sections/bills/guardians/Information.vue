@@ -319,7 +319,7 @@ export default {
         })
         .catch((err) => console.log(err));
     },
-    getData() {
+    getData(isUpdateClasses) {
       let url = `http://localhost:3300/api/v1/admin/bills/path2/${this.invoiceID}`;
       axios
         .get(url)
@@ -333,10 +333,8 @@ export default {
           this.data[0].paymentMethod = this.data[0].paymentMethod
             ? this.data[0].paymentMethod
             : 0;
-          if (this.data[0].payFor) {
-            this.getPayEveryClasses();
-          } else if (this.data[0].paymentType == 1) {
-            this.getPrepaidClasses();
+          if (this.data[0].paymentType == 1) {
+            this.getPrepaidClasses(isUpdateClasses);
           } else if (this.data[0].paymentType == 2) {
             this.getPostPaidClasses();
           }
@@ -347,52 +345,20 @@ export default {
           console.log("Invoice Info/Error catched");
         });
     },
-    getPayEveryClasses() {
-      let url = `http://localhost:3300/api/v1/admin/bills/guardian/path10/${this.invoiceID}`;
-      axios
-        .get(url)
-        .then((res) => {
-          if (!res.data.success) {
-            // this.$router.push('/admin/bills');
-            return (this.alerts.error = res.data.msg);
-          }
-          this.alerts.error = null;
-          this.classes = res.data.rows;
 
-          this.totalHours = 0; // Re-Inisialization
-          this.classes.forEach((row) => {
-            if (parseInt(row.countOnInvoice) === 1)
-              this.totalHours += row.duration;
-          });
-
-          ///
-          let ids = [];
-          let arrayOfObject = this.classes;
-
-          for (let i in arrayOfObject) {
-            ids.push(arrayOfObject[i].id);
-          }
-          this.classesIDs = ids.join(",");
-
-          ///
-        })
-        .catch(() => {
-          console.log("Invoice Info/Error catched");
-        });
-    },
-    getPrepaidClasses() {
+    getPrepaidClasses(isUpdateClasses) {
       let url = `http://localhost:3300/api/v1/admin/bills/path3/${this.invoiceID}`;
       axios
         .get(url)
         .then((res) => {
           if (!res.data.success) {
-            // this.$router.push('/admin/bills');
             return (this.alerts.error = res.data.msg);
           }
           this.alerts.error = null;
           this.classes = res.data.rows;
 
           let invoiceHours = this.data[0].savedPaidHours;
+
           this.classes = this.classes.filter((row) => {
             if (parseInt(row.countOnInvoice) === 1)
               invoiceHours -= row.duration;
@@ -411,11 +377,13 @@ export default {
             ids.push(arrayOfObject[i].id);
           }
           this.classesIDs = ids.join(",");
-          let url = `http://localhost:3300/api/v1/admin/bills/path4/${this.invoiceID}`;
-          axios.post(url, {
-            classesIDs: this.classesIDs,
-            paid: this.data[0].paid,
-          });
+          if (isUpdateClasses) {
+            let url = `http://localhost:3300/api/v1/admin/bills/path4/${this.invoiceID}`;
+            axios.post(url, {
+              classesIDs: this.classesIDs,
+              paid: this.data[0].paid,
+            });
+          }
         })
         .catch(() => {
           console.log("Invoice Info/Error catched");

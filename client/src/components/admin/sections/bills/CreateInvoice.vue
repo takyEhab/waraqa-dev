@@ -54,6 +54,7 @@
                 <input
                   v-model="extraAmount"
                   type="number"
+                  step="any"
                   class="form-control"
                   placeholder="Enter Extra amount"
                 />
@@ -64,6 +65,7 @@
                 <input
                   v-model="paidHours"
                   type="number"
+                  step="any"
                   class="form-control"
                   placeholder="Enter Paid Hours"
                   :required="status == 1"
@@ -78,6 +80,7 @@
                 <input
                   v-model="totalAmountPaid"
                   type="number"
+                  step="any"
                   class="form-control"
                   placeholder="Edit total amount paid"
                   :required="status == 1"
@@ -109,32 +112,19 @@
                   required
                 />
               </div>
-
-              <!-- Invoice Number -->
-              <div class="col-12 col-md mt-3">
-                <label class="f-color-3 mb-1">Paid for</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  placeholder="Months"
-                  required
-                  min="1"
-                  v-model="payFor"
-                />
-              </div>
-            </div>
-            <div class="row flex-wrap">
               <!-- Transfer Fees -->
               <div class="col-12 col-md mt-3">
                 <label class="f-color-3 mb-1">Transfer Fees</label>
                 <input
                   v-model="transferFees"
                   type="number"
+                  step="any"
                   class="form-control"
                   placeholder="Transfer Fess"
                 />
               </div>
-
+            </div>
+            <div class="row flex-wrap">
               <div class="col-12 col-md-6 mt-3">
                 <label class="f-color-3 mb-1">Invoice Number</label>
                 <input
@@ -145,30 +135,25 @@
                   required
                 />
               </div>
-            </div>
-            <div class="row flex-wrap">
               <div v-if="status == 1" class="col-12 col-md-6 mt-3">
                 <label class="f-color-3 mb-1">Payment Date</label>
                 <input type="date" class="form-control" v-model="paymentDate" />
               </div>
-              <div
-                :class="['col-12', 'col-md', `mt-${status == 1 ? '5' : '3'}`]"
-              >
-                <div class="form-check">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    value=""
-                    id="flexCheckDefault"
-                    v-model="isSent"
-                    :checked="isSent"
-                  />
-                  <label class="form-check-label" for="flexCheckDefault">
-                    Sent
-                  </label>
-                </div>
+            </div>
+            <div class="col-12 col-md mt-3">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value=""
+                  id="flexCheckDefault"
+                  v-model="isSent"
+                  :checked="isSent"
+                />
+                <label class="form-check-label" for="flexCheckDefault">
+                  Sent
+                </label>
               </div>
-              <!-- sent -->
             </div>
 
             <!-- Submit -->
@@ -233,7 +218,6 @@ export default {
       startingDate: null,
       extraAmount: null,
       paymentMethod: 0,
-      payFor: null,
       invoiceNumber: null,
       transferFees: null,
       paymentDate: null,
@@ -270,7 +254,6 @@ export default {
         this.startingDate,
         "YYYY/MM/DD HH:mm:ss"
       ).format("YYYY-MM-DD HH:mm:ss");
-      data["payFor"] = this.payFor;
 
       this.isSent = this.isSent ? 1 : 0;
       data["isSent"] = this.isSent;
@@ -281,7 +264,6 @@ export default {
           )
         : null;
 
-      console.log(data);
       let url = "http://localhost:3300/api/v1/admin/bills/guardian/path9";
       axios
         .post(url, data)
@@ -290,7 +272,6 @@ export default {
             this.loadingBtn = false;
             return (this.alerts.error = res.data.msg);
           }
-          console.log(res.data);
           this.alerts.success = res.data.msg;
           this.loadingBtn = false;
         })

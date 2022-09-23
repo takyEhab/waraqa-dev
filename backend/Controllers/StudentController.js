@@ -322,7 +322,7 @@ let studentsOfGuardian = (req, res, next) => {
                       FROM classes
                       INNER JOIN guardianinvoices
                       ON guardianinvoices.guardianID = guardianinvoices.guardianID
-                      WHERE classes.studentID = students.id
+                      WHERE classes.studentID = students.id AND classes.countOnInvoice = 1
                       AND classes.invoiceID = guardianinvoices.id
                       AND countForStudent = 1
                       ) AS savedPaidHours

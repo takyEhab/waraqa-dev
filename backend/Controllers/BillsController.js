@@ -235,7 +235,6 @@ let teacherInvoiceClasses = (req, res, next) => {
   let queryReq = req.query;
   let id = queryReq.teacherID; // teacherID
   let fromActivatedAt = queryReq.InvoiceActivatedAt;
-  console.log(fromActivatedAt);
 
   let firstDateOfMonth = moment(fromActivatedAt)
     .subtract(1, "months")
@@ -245,8 +244,6 @@ let teacherInvoiceClasses = (req, res, next) => {
     .subtract(1, "months")
     .endOf("month")
     .format("YYYY-MM-DD HH:mm:ss"); //last date of last month DEPEND of fromActivatedAt
-  console.log(firstDateOfMonth);
-  console.log(lastDateOfMonth);
   // let firstDateOfMonth = moment(fromActivatedAt).startOf('month').format('YYYY-MM-DD HH:mm:ss'); // first date of the month DEPEND of fromActivatedAt
   // let lastDateOfMonth = moment(fromActivatedAt).endOf('month').format('YYYY-MM-DD HH:mm:ss'); //last date of the month DEPEND of fromActivatedAt
 
@@ -419,8 +416,6 @@ let openNewTeacherInvoiceFunc = async (id) => {
         `UPDATE teacherinvoices SET ? WHERE id = ? `,
         [invoiceData, invoiceID],
         (error, data) => {
-          console.log(error);
-          console.log(data);
           if (error || !data) {
             return console.log("Failed active the invoice of the teacher!");
           }
@@ -620,7 +615,6 @@ const changeClassInvoiceCount = (req, res) => {
     { countOnInvoice: CurrentCountOnInvoice === 1 ? 2 : 1 },
     (error, data) => {
       if (error) {
-        console.log(error);
         return res.json({
           success: false,
           msg: `error ${
@@ -629,7 +623,6 @@ const changeClassInvoiceCount = (req, res) => {
           error: error,
         });
       }
-      console.log(data);
       res.json({
         success: true,
         msg: `This class ${
@@ -659,8 +652,6 @@ const changeClassInvoiceCount = (req, res) => {
 //                     ORDER BY classes.startingDate
 //                     `;
 let activatePostPaidGuardianInvoice = (req, res) => {
-  console.log("activatePostPaidGuardianInvoice");
-
   let id = req.params.id;
   //Get the Invoice creted before the first of this month, if this guardian has students that they have [ classes(status=1 or status=4)
   let firstDateOfThisMonth = moment()
@@ -806,7 +797,6 @@ let activatePostPaidGuardianInvoice = (req, res) => {
 let sentInvoice = (req, res) => {
   let id = req.params.id;
   let { isSent } = req.body;
-  console.log(isSent);
   dataBase.query(
     `UPDATE guardianinvoices SET ? WHERE id=${id}`,
     { isSent: isSent ? 0 : 1 },
@@ -827,38 +817,14 @@ let addInvoice = (req, res) => {
   let query = `INSERT INTO guardianinvoices SET ?`;
   dataBase.query(query, req.body, (error, data) => {
     if (error) {
-      console.log(error);
       return res.json({
         success: false,
         msg: "Couldn't create the invoice",
         error,
       });
     }
-    console.log(data);
     return res.json({ success: true, msg: "Invoice created" });
   });
-};
-let getClassesForInvoice = (req, res, next) => {
-  let id = req.params.id;
-
-  query = `SELECT
-  classes.*,
-  teachers.name AS teacherName,
-  students.name AS studentName
-  FROM
-    classes
-  INNER JOIN teachers ON classes.teacherID = teachers.id
-  INNER JOIN students ON classes.studentID = students.id
-  INNER JOIN guardians ON guardians.id = students.guardianID
-  INNER JOIN guardianinvoices ON guardianinvoices.guardianID = guardians.id
-  WHERE
-  classes.countForStudent = 1 AND(
-      classes.status = 0 OR classes.status = 1 OR classes.status = 4
-  ) AND guardianinvoices.id = ${id} AND classes.invoiceID IS NULL AND classes.startingDate BETWEEN guardianinvoices.establishedAt AND(
-      guardianinvoices.establishedAt + INTERVAL guardianinvoices.payFor MONTH
-  )`;
-  msg = "There are no results available to display.";
-  return next();
 };
 module.exports = {
   oneGuardianInvoice,
@@ -879,5 +845,4 @@ module.exports = {
   sentInvoice,
   changeClassInvoiceCount,
   addInvoice,
-  getClassesForInvoice,
 };

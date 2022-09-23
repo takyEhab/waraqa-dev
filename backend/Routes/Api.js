@@ -74,7 +74,6 @@ const {
   sentInvoice,
   changeClassInvoiceCount,
   addInvoice,
-  getClassesForInvoice,
 } = require("../Controllers/BillsController");
 const {
   allGuardians,
@@ -473,13 +472,7 @@ router.post(
 );
 // path 9
 router.post("/v1/admin/bills/guardian/path9", adminVerifyToken, addInvoice);
-// path 10
-router.get(
-  "/v1/admin/bills/guardian/path10/:id",
-  VerifyToken,
-  getClassesForInvoice,
-  nextDbProccess
-);
+
 //path 11: change invoice count
 router.patch(
   "/v1/admin/bills/path11/:id",

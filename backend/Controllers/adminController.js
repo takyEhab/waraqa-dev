@@ -80,13 +80,11 @@ let allStudents = (req, res, next) => {
   // ) AS savedPaidHours,
 
   query = `SELECT students.*, count(*) OVER() AS fullCount, guardians.name AS guardianName, 
-
-
                   (SELECT SUM(classes.duration)
                     FROM classes
                     INNER JOIN guardianinvoices
                     ON guardianinvoices.guardianID = guardianinvoices.guardianID
-                    WHERE classes.studentID = students.id
+                    WHERE classes.studentID = students.id AND classes.countOnInvoice = 1
                     AND classes.invoiceID = guardianinvoices.id
                     AND countForStudent = 1
                   ) AS savedPaidHours

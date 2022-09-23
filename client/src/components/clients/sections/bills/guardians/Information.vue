@@ -243,38 +243,12 @@ export default {
           }
           this.alerts.error = null;
           this.data = res.data.rows;
-          if (this.data[0].payFor) {
-            this.getPayEveryClasses();
-          } else if (this.data[0].paymentType == 1) {
+          if (this.data[0].paymentType == 1) {
             this.getPrepaidClasses();
           } else if (this.data[0].paymentType == 2) {
             this.getPostPaidClasses();
           }
           this.displayData = true;
-        })
-        .catch(() => {
-          console.log("Invoice Info/Error catched");
-        });
-    },
-    getPayEveryClasses() {
-      let url = `http://localhost:3300/api/v1/admin/bills/guardian/path10/${this.invoiceID}`;
-      axios
-        .get(url)
-        .then((res) => {
-          if (!res.data.success) {
-            return (this.alerts.error = res.data.msg);
-          }
-          this.alerts.error = null;
-          this.classes = res.data.rows.filter(
-            (item) => item.countOnInvoice == 1
-          );
-          this.totalHours = 0; // Re-Inisialization
-          this.classes.forEach((row) => {
-            if (parseInt(row.countOnInvoice) === 1)
-              this.totalHours = this.totalHours + row.duration;
-          });
-
-          ///
         })
         .catch(() => {
           console.log("Invoice Info/Error catched");

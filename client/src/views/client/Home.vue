@@ -1,11 +1,15 @@
 <template>
   <!-- <div>Home Admin <span class="f-color-1" @click="logout()">Log Out</span></div> -->
   <div class="d-flex">
-    <!-- Admin Side-Bar -->
+    <i
+      v-if="!displaySidebarOnMobile"
+      :class="['fa', 'fa-bars', 'fixed-top', 'fa-2x', 'p-2', 'showMenu']"
+      @click="toggleDisplay"
+    ></i>
     <div
       :class="[
-        displaySidebarOnMobile ? 'aside-hide' : 'hideSidebar aside-show',
-        'aside-admin-bar col-1 b-color-1 f-color-0 text-center',
+        displaySidebarOnMobile ? '' : 'hideSidebar ',
+        'aside-admin-bar col-md-1 b-color-1 f-color-0 text-center',
       ]"
       @click="toggleDisplay"
     >
@@ -24,16 +28,7 @@
                 <span class="d-block">Home</span></router-link
               >
             </li>
-            <!-- <li>
-                            <router-link to="/teachers" class="d-block py-3 px-2">
-                            <i class="fad fa-chalkboard-teacher"></i>
-                            <span class="d-block">Teachers</span></router-link>
-                        </li> -->
-            <!-- <li>
-                            <router-link to="/guardians" class="d-block py-3 px-2">
-                            <i class="fas fa-user-friends"></i>
-                            <span class="d-block">Guardians</span></router-link>
-                        </li> -->
+
             <li>
               <router-link to="/students" class="d-block py-3 px-2">
                 <i class="fas fa-user-graduate"></i>
@@ -52,12 +47,7 @@
                 <span class="d-block">Bills</span></router-link
               >
             </li>
-            <!-- <li>
-                            <router-link to="/expenses" class="d-block py-3 px-2">
-                            <i class="fas fa-money-check-edit-alt"></i>
 
-                            <span class="d-block">Expenses</span></router-link>
-                        </li> -->
             <li>
               <router-link to="/library" class="d-block py-3 px-2">
                 <i class="fas fa-books"></i>
@@ -81,7 +71,6 @@
   </div>
 </template>
 <script>
-// import axios from 'axios'
 export default {
   props: ["userType", "timeZone"],
   data() {
