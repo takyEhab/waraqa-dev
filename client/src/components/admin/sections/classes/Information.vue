@@ -124,7 +124,9 @@
                 ? "Missed by student"
                 : data[0].status == 5
                 ? "Missed by teacher"
-                : "Cancelled by admin"
+                : data[0].status == 6
+                ? "Cancelled by admin"
+                : "Unreported"
             }}</span>
           </div>
           <div

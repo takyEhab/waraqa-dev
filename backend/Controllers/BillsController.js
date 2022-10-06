@@ -25,27 +25,6 @@ let oneGuardianInvoice = (req, res, next) => {
 */
 let prepaidClasses = (req, res, next) => {
   let id = req.params.id; // InvoiceID
-  // query = `SELECT classes.*, teachers.name AS teacherName, students.name AS studentName
-  //           FROM classes
-  //           INNER JOIN teachers
-  //           ON classes.teacherID = teachers.id
-  //           INNER JOIN students
-  //           ON classes.studentID = students.id
-  //           INNER JOIN guardians
-  //           ON guardians.id = students.guardianID
-  //           INNER JOIN guardianinvoices
-  //           ON guardianinvoices.guardianID = guardians.id
-  //           WHERE classes.countForStudent = 1
-  //           AND (classes.status=0 OR classes.status=1 OR classes.status=4)
-  //           AND guardianinvoices.id = ${id}
-  //           AND (
-  //                   (classes.invoiceID=${id})
-  //               OR
-  //                   (guardianinvoices.paid!=1 AND classes.invoiceID IS NULL AND classes.startingDate BETWEEN guardianinvoices.createdAt AND (guardianinvoices.createdAt + INTERVAL (SELECT payEvery FROM scheduledclasses WHERE guardianID = guardians.id ORDER BY payEvery DESC LIMIT 1) MONTH))
-  //               )
-  //           ORDER BY classes.startingDate
-  //   `;
-  // (guardianinvoices.paid=1 AND classes.invoiceID=${id})
 
   query = `SELECT classes.*, teachers.name AS teacherName, students.name AS studentName
             FROM classes 
@@ -304,7 +283,7 @@ let teachersPayWages = (req, res, next) => {
             WHERE (classes.status = 1 OR classes.status = 4)
             AND (classes.startingDate BETWEEN '${firstDateOfLastMonth}' AND '${lastDateOfLastMonth}')
             `;
-  dataBase.query(query, async (error, data) => {
+  dataBase.query(query, (error, data) => {
     if (error || !data.length) {
       return res.json({
         success: false,
@@ -331,7 +310,7 @@ let teachersPayWages = (req, res, next) => {
     };
     for (var i in data) {
       configTeacherEmail.to += data[i].email + ",";
-      await openNewTeacherInvoiceFunc(data[i].id);
+      openNewTeacherInvoiceFunc(data[i].id);
 
       // // // set hours to 0
       // let query2 = `UPDATE teachers SET hours = 0 WHERE id = ${data[i].id}`;
@@ -360,7 +339,7 @@ let teachersPayWages = (req, res, next) => {
   });
 };
 
-let openNewTeacherInvoiceFunc = async (id) => {
+let openNewTeacherInvoiceFunc = (id) => {
   // Notice : First invoice of teacher is must be created on his first counted class, but incactive invoice.
 
   // Step1 : Check if this Teacher has students that they have [ classes(status=1 or status=4) and classes.startingdate between last and first day of last month, AND no invoice After the first of this month
@@ -374,9 +353,6 @@ let openNewTeacherInvoiceFunc = async (id) => {
     .subtract(1, "months")
     .endOf("month")
     .format("YYYY-MM-DD HH:mm:ss"); //last date of the last month
-
-  // let firstDateOfMonth = moment().startOf('month').format('YYYY-MM-DD HH:mm:ss'); // first date of Current month
-  // let lastDateOfMonth = moment().endOf('month').format('YYYY-MM-DD HH:mm:ss'); //last date of Current month
 
   // Step1 : Check if this Teacher has students that they have [ classes(status=1 or status=4) and classes.startingdate between last and first day of last month, AND no invoice After the first of this month
   query = `SELECT DISTINCT teachers.id, teachers.hours AS teachingHours, teacherinvoices.createdAt AS invoiceDate, teacherinvoices.id AS invoiceID
@@ -461,9 +437,9 @@ let openNewTeacherInvoiceFunc = async (id) => {
   });
 };
 // Active & Open new
-let openNewTeacherInvoice = async (req, res) => {
+let openNewTeacherInvoice = (req, res) => {
   let id = req.params.id;
-  await openNewTeacherInvoiceFunc(id);
+  openNewTeacherInvoiceFunc(id);
   res.json({ msg: "done" });
 };
 

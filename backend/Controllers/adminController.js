@@ -82,11 +82,9 @@ let allStudents = (req, res, next) => {
   query = `SELECT students.*, count(*) OVER() AS fullCount, guardians.name AS guardianName, 
                   (SELECT SUM(classes.duration)
                     FROM classes
-                    INNER JOIN guardianinvoices
-                    ON guardianinvoices.guardianID = guardianinvoices.guardianID
                     WHERE classes.studentID = students.id AND classes.countOnInvoice = 1
-                    AND classes.invoiceID = guardianinvoices.id
-                    AND countForStudent = 1
+                    AND classes.invoiceID IS NOT NULL
+                    AND classes.countForStudent = 1
                   ) AS savedPaidHours
 
                 FROM students
@@ -644,8 +642,10 @@ let allClasses = (req, res, next) => {
                 }
                 ${
                   status == 3
-                    ? `AND classes.status != 0 AND classes.id NOT IN (SELECT classID FROM reportsubjects)`
-                    : ""
+                    ? `AND classes.status = 7`
+                    : // ? `AND classes.status != 0 AND classes.id NOT IN (SELECT classID FROM reportsubjects)`
+
+                      ""
                 }
                 ${
                   search

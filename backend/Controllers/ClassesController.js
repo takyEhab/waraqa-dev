@@ -975,7 +975,7 @@ let classesOfTeacher = (req, res, next) => {
                 ${status == 0 ? `AND classes.status = 0` : ""}
                 ${
                   status == 1
-                    ? `AND (classes.id IN (SELECT classID FROM reportsubjects)) AND (classes.status = 1 OR classes.status = 4 OR classes.status = 5)`
+                    ? `AND classes.status = 1 OR classes.status = 4 OR classes.status = 5`
                     : ""
                 }
                 ${
@@ -985,7 +985,7 @@ let classesOfTeacher = (req, res, next) => {
                 }
                 ${
                   status == 3
-                    ? `AND classes.status != 0 AND classes.id NOT IN (SELECT classID FROM reportsubjects)`
+                    ? `AND classes.status = 7`
                     : ""
                 }
                 ${

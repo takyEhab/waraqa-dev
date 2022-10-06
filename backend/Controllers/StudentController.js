@@ -319,13 +319,11 @@ let studentsOfGuardian = (req, res, next) => {
   query = `SELECT students.*,count(*) OVER() AS fullCount, guardians.name AS guardianName,
 
   (SELECT SUM(classes.duration)
-                      FROM classes
-                      INNER JOIN guardianinvoices
-                      ON guardianinvoices.guardianID = guardianinvoices.guardianID
-                      WHERE classes.studentID = students.id AND classes.countOnInvoice = 1
-                      AND classes.invoiceID = guardianinvoices.id
-                      AND countForStudent = 1
-                      ) AS savedPaidHours
+                    FROM classes
+                    WHERE classes.studentID = students.id AND classes.countOnInvoice = 1
+                    AND classes.invoiceID IS NOT NULL
+                    AND classes.countForStudent = 1
+                  ) AS savedPaidHours
 
                     FROM students 
                     INNER JOIN guardians
@@ -342,15 +340,6 @@ let studentsOfGuardian = (req, res, next) => {
                     ${offset ? `LIMIT 30 OFFSET ${offset}` : ""}
                     `;
 
-  // (SELECT SUM(savedPaidHours)
-  //   FROM guardianinvoices
-  //   WHERE guardianinvoices.guardianID = guardians.id AND guardianinvoices.paid = 1
-  // ) AS savedPaidHours,
-
-  // (SELECT SUM(students.attendedHours)
-  //   FROM students
-  //   WHERE students.guardianID = guardians.id
-  // ) AS restStudentsHours
   msg = "There are no results available to display.";
   return next();
 };

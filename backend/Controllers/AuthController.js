@@ -427,7 +427,7 @@ let recheckauth = (req, res) => {
 
           //Update Each class => canReport to = 0
           let query = `UPDATE classes SET ? WHERE id = ${classID}`;
-          dataBase.query(query, { status: 5 });
+          dataBase.query(query, { status: 7 });
         }
       });
 

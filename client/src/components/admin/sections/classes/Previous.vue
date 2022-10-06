@@ -160,7 +160,9 @@
                 ? "Missed by student"
                 : row.status == 5
                 ? "Missed by teacher"
-                : "Cancelled by admin"
+                : row.status == 6
+                ? "Cancelled by admin"
+                : "Unreported"
             }}</span>
             <span class="col-1">{{
               row.status == 0
