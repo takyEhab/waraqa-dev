@@ -307,17 +307,8 @@ let studentsOfGuardian = (req, res, next) => {
   let search = queryReq.search;
   let status = queryReq.status;
   let offset = queryReq.offset;
-  // (SELECT SUM(classes.duration)
-  // FROM classes
-  // INNER JOIN guardianinvoices
-  // ON classes.invoiceID = guardianinvoices.id
-  // WHERE classes.studentID = students.id
-  // AND classes.invoiceID IS NOT NULL
-  // AND countForStudent = 1
-  // ) AS savedPaidHours
 
   query = `SELECT students.*,count(*) OVER() AS fullCount, guardians.name AS guardianName,
-
   (SELECT SUM(classes.duration)
                     FROM classes
                     WHERE classes.studentID = students.id AND classes.countOnInvoice = 1

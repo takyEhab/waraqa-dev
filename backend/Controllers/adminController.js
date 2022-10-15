@@ -56,29 +56,6 @@ let allStudents = (req, res, next) => {
   let status = queryReq.status;
   let offset = queryReq.offset;
 
-  //   (SELECT SUM(savedPaidHours)
-  //   FROM guardianinvoices
-  //   INNER JOIN guardians
-  //   ON guardianinvoices.guardianID = guardians.id
-  //   WHERE guardians.id = students.guardianID AND guardianinvoices.paid = 1
-  // ) AS savedPaidHours
-
-  // (SELECT SUM(classes.duration)
-  //                     FROM classes
-  //                     INNER JOIN guardianinvoices
-  //                     ON classes.invoiceID = guardianinvoices.id
-  //                     WHERE classes.studentID = students.id
-  //                     AND classes.invoiceID IS NOT NULL
-  //                     AND guardianinvoices.paid = 1
-  //                     AND countForStudent = 1
-  //                     ) AS savedPaidHours
-  // (SELECT SUM(savedPaidHours)
-  // FROM guardianinvoices
-  // INNER JOIN guardians
-  // ON guardianinvoices.guardianID = guardians.id
-  // WHERE guardians.id = students.guardianID AND guardianinvoices.paid = 1
-  // ) AS savedPaidHours,
-
   query = `SELECT students.*, count(*) OVER() AS fullCount, guardians.name AS guardianName, 
                   (SELECT SUM(classes.duration)
                     FROM classes
@@ -99,15 +76,6 @@ let allStudents = (req, res, next) => {
                 ORDER BY students.name
                 ${offset ? `LIMIT 30 OFFSET ${offset}` : ""}
                 `;
-
-  //   (SELECT SUM(students.attendedHours)
-  //   FROM students
-  //   WHERE students.guardianID = guardians.id
-  // ) AS restStudentsHours
-  //   (SELECT SUM(savedPaidHours)
-  //   FROM guardianinvoices
-  //   WHERE guardianinvoices.guardianID = guardians.id AND guardianinvoices.paid = 1
-  // ) AS savedPaidHours,
 
   msg = "There are no results available to display.";
   return next();

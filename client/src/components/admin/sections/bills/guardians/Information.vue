@@ -377,7 +377,9 @@ export default {
             ids.push(arrayOfObject[i].id);
           }
           this.classesIDs = ids.join(",");
+          console.log(ids.length);
           if (isUpdateClasses) {
+            console.log('true');
             let url = `http://localhost:3300/api/v1/admin/bills/path4/${this.invoiceID}`;
             axios.post(url, {
               classesIDs: this.classesIDs,

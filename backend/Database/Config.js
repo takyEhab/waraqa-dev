@@ -8,7 +8,7 @@ module.exports = con = mysql.createPool({
   port: 3306,
   user: "root",
   password: "",
-  database: "test",
+  database: "waraqa",
 });
 // con.connect(function (err) {
 //   if (err) throw err;

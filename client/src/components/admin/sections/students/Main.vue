@@ -350,6 +350,7 @@ export default {
           this.alerts.error = null;
           this.data = res.data.rows;
           this.pageCount = this.data[0].fullCount;
+          console.log(this.data);
         })
         .catch(() => {
           console.log("students/Error catched");

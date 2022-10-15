@@ -757,13 +757,11 @@ let updateClass = (req, res) => {
       ["1", "4"].includes(classStatus) &&
       !["1", "4"].includes(currentClassStatus)
     ) {
-      console.log("add hours");
       addHours = 1;
     } else if (
       ["2", "3", "5", "6", "0"].includes(classStatus) &&
       ["1", "4"].includes(currentClassStatus)
     ) {
-      console.log("remove hours");
       addHours = 2;
     }
 
@@ -1939,26 +1937,13 @@ let getHoursAndStudentsNum = (req, res, next) => {
                 (SELECT COUNT(teachers.id) FROM teachers WHERE status=1) AS activeTeachersCount,
                 (SELECT COUNT(teachers.id) FROM teachers WHERE status=2) AS inactiveTeachersCount,
                 (SELECT COUNT(teachers.id) FROM teachers WHERE status=3) AS vacationTeachersCount,
-                (SELECT SUM(classes.duration) FROM classes WHERE status=1 OR status=4) AS attendedClassHours,
+                (SELECT SUM(classes.duration) FROM classes WHERE startingDate between DATE_FORMAT(NOW() ,'%Y-%m-01') AND NOW() AND status=1 OR status=4) AS attendedClassHours,
                 (SELECT SUM(classes.duration) FROM classes WHERE startingDate BETWEEN now() and date_sub( last_day( date_add(now(), interval 1 month) ), interval day( last_day( date_add(now(), interval 1 month) ) )-1 DAY)) AS scheduledClassHours,
                 (SELECT SUM(savedPaidHours) - (SELECT sum(attendedHours) from students) FROM guardianinvoices) AS paidClassHours,
                 (SELECT SUM(savedPaidHours) FROM guardianinvoices) AS paidInvoicesHours,
                 (SELECT COUNT(id) FROM guardians WHERE paymentType = 1) AS AdvancePay,
                 (SELECT COUNT(id) FROM guardians WHERE paymentType = 2) AS ArrearsPay`;
   }
-  /*
-  
-        (SELECT COUNT(classes.id)
-            FROM classes 
-            WHERE classes.teacherID = ${id}) AS classes
-        (SELECT COUNT(classes.id)
-            FROM classes 
-            INNER JOIN students
-            ON classes.studentID=students.id
-            INNER JOIN guardians
-            ON guardians.id = students.guardianID
-            WHERE guardians.id = ${id}) AS classes
-     */
   msg = "There are no results available to display.";
   return next();
 };
