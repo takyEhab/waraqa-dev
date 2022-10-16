@@ -315,7 +315,7 @@ export default {
           const objIndex = this.classes.findIndex((item) => item.id == classID);
           this.classes[objIndex].countOnInvoice =
             CurrentCountOnInvoice === 1 ? 2 : 1;
-          this.getData();
+          this.getData(true);
         })
         .catch((err) => console.log(err));
     },
@@ -379,7 +379,7 @@ export default {
           this.classesIDs = ids.join(",");
           console.log(ids.length);
           if (isUpdateClasses) {
-            console.log('true');
+            console.log("true");
             let url = `http://localhost:3300/api/v1/admin/bills/path4/${this.invoiceID}`;
             axios.post(url, {
               classesIDs: this.classesIDs,
