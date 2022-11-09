@@ -171,7 +171,10 @@ let endClass = (req, res) => {
               }
               if (data.length) {
                 //Invoice that created on first class
-                let invoicePaid = data[0].paid;
+                // let invoicePaid = data[0].paid;
+                const found = data.find(invoice => parseInt(invoice.paid) == 2);
+                const isAllInvoicePaid = found ? false : true
+
                 invoiceStatus = data[0].active;
                 //Step5: If "Paid hours of last paid invoice" - "submit classes(status = 1 or 4 and count for student)" of all students of this guardian = 0 FROM last invoice : Active the invoice
                 let query = `SELECT 
@@ -231,7 +234,8 @@ let endClass = (req, res) => {
                   if (
                     allHoursIsZero &&
                     invoiceStatus == 1 &&
-                    invoicePaid == 1
+                    // invoicePaid == 1
+                    isAllInvoicePaid
                   ) {
                     //Step5.1: Get startingDate of first not paid class (invoiceID IS NULL) of this guardian
                     let query = `SELECT classes.*

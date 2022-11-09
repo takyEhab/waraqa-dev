@@ -277,7 +277,7 @@ let teachersPayWages = (req, res, next) => {
     .format("YYYY-MM-DD HH:mm:ss"); //last date of the last month
 
   // Get Emails of all teachers who has classes(status = 1 or 4)
-  query = `SELECT teachers.email, teachers.id FROM teachers
+  query = `SELECT DISTINCT teachers.email, teachers.id FROM teachers
             INNER JOIN classes
             ON classes.teacherID = teachers.id
             WHERE (classes.status = 1 OR classes.status = 4)
@@ -634,7 +634,7 @@ let activatePostPaidGuardianInvoice = (req, res) => {
     .startOf("month")
     .format("YYYY-MM-DD HH:mm:ss"); // first date of Current month
 
-  let query = `SELECT guardians.id,guardians.name,guardians.email,guardianinvoices.id AS invoiceID
+  let query = `SELECT DISTINCT guardians.id,guardians.name,guardians.email,guardianinvoices.id AS invoiceID
                 FROM guardians
                 INNER JOIN students
                 ON students.guardianID = guardians.id

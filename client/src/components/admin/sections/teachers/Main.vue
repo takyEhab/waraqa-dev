@@ -151,23 +151,6 @@
                   : "Vacation"
               }}
             </span>
-            <!-- <div class="col-1">
-              <router-link
-                :to="{
-                  name: 'TeacherInfo',
-                  params: {
-                    id: row.id,
-                    page: pagination.page,
-                    offset: pagination.offset,
-                    filter: Object.keys(filters).find(
-                      (key) => filters[key] == true
-                    ),
-                  },
-                }"
-                class="f-color-1"
-                ><i class="fas fa-eye"></i
-              ></router-link>
-            </div> -->
           </div>
         </div>
         <!-- Alerts -->
