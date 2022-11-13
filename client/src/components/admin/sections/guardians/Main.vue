@@ -222,8 +222,8 @@ export default {
 
     //PayDay for guardians(postpaid)
     let today = moment().format("YYYY-MM-DD");
-    let firstDayOfMonth = moment().startOf("month").format("YYYY-MM-DD");
-    if (today == firstDayOfMonth) {
+    let lastDayOfThisMonth = moment().format("YYYY-MM-28");
+    if (today == lastDayOfThisMonth) {
       this.payReq = true;
     }
   },

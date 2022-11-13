@@ -507,7 +507,7 @@ let billsOfGuardian = (req, res, next) => {
 };
 
 let guardianPaymentReq = (req, res) => {
-  //Get emails of guardian that their payment type is "postpaid", and has students that they have [ classes(status=1 or status=4) and classes.startingDate between first and last of last month
+  //Get emails of guardian that their payment type is "postpaid", and has students that they have [ classes(status=1 or status=4) and classes.startingDate between first and last date of last month
   let firstDateOfLastMonth = moment()
     .subtract(1, "months")
     .startOf("month")
@@ -536,31 +536,31 @@ let guardianPaymentReq = (req, res) => {
         msg: "There are no results available to display.",
       });
     }
-    ////////////////////////////////////////////////////////////////////////////////////////////
-    //Config Admin Email
-    configAdminEmail = {
-      subject: "A new invoice",
-      html: `<p>Guardians(Postpaid) have been notified that their invoices are now available on the platform.</p>
-                `,
-    };
-    sendEmail(configAdminEmail);
-    ////////////////////////////////////////////////////////////////////////////////////////////
-    //Config Teacher Email
-    configGuardianEmail = {
-      to: "",
-      subject: "A new invoice",
-      html: `
-                <p>Assalamu alaykum,</p>
-                <p>We hope you are doing well,</p>
-                <p>We'd like to let you know that your invoice is now available on the Waraqa web platform; please for more details check bills section in your account.</p>
-                <p>Best regards</p>
-                `,
-    };
-    for (var i in data) {
-      configGuardianEmail.to += data[i].email + ",";
-    }
+    // ////////////////////////////////////////////////////////////////////////////////////////////
+    // //Config Admin Email
+    // configAdminEmail = {
+    //   subject: "A new invoice",
+    //   html: `<p>Guardians(Postpaid) have been notified that their invoices are now available on the platform.</p>
+    //             `,
+    // };
+    // sendEmail(configAdminEmail);
+    // ////////////////////////////////////////////////////////////////////////////////////////////
+    // //Config Teacher Email
+    // configGuardianEmail = {
+    //   to: "",
+    //   subject: "A new invoice",
+    //   html: `
+    //             <p>Assalamu alaykum,</p>
+    //             <p>We hope you are doing well,</p>
+    //             <p>We'd like to let you know that your invoice is now available on the Waraqa web platform; please for more details check bills section in your account.</p>
+    //             <p>Best regards</p>
+    //             `,
+    // };
+    // for (var i in data) {
+    //   configGuardianEmail.to += data[i].email + ",";
+    // }
 
-    sendEmail(configGuardianEmail);
+    // sendEmail(configGuardianEmail);
     ////////////////////////////////////////////////////////////////////////////////////////////
     //Config Notification
     notiConfig = {
